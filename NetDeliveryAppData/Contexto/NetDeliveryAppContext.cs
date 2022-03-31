@@ -6,15 +6,9 @@ namespace NetDeliveryAppData.Contexto
 {
     public partial class NetDeliveryAppContext : DbContext
     {
-        private readonly IConfiguration _configuration;
-        public NetDeliveryAppContext(IConfiguration configuration)
+        public NetDeliveryAppContext()
         {
-            _configuration = configuration;
-        }
-
-        public NetDeliveryAppContext(DbContextOptions<NetDeliveryAppContext> options)
-            : base(options)
-        {
+            
         }
 
         public virtual DbSet<Cliente> Clientes { get; set; } = null!;
@@ -25,7 +19,7 @@ namespace NetDeliveryAppData.Contexto
         {
             if (!optionsBuilder.IsConfigured)
             {
-                string connection = _configuration.GetSection("ConnectionStrings").GetSection("default").Value;
+                string connection = "server=localhost;database=netdeliveryapp;user id=root;password=akamarus94";
                 optionsBuilder.UseMySql(connection, ServerVersion.AutoDetect(connection));
             }
         }

@@ -11,7 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Aplicacao", "Aplicacao", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{A35B5946-9808-439D-8CBF-2FB35C6D85A9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetDeliveryApp_Servicos", "NetDeliveryApp_Services\NetDeliveryApp_Servicos.csproj", "{E0341E4C-2ABC-4D2D-B044-E8CAAF1D97DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetDeliveryAppServicos", "NetDeliveryApp_Services\NetDeliveryAppServicos.csproj", "{E0341E4C-2ABC-4D2D-B044-E8CAAF1D97DE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{BA57300D-1679-49B1-BD1C-2D768CA13C05}"
 EndProject
