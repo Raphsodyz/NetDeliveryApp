@@ -1,0 +1,59 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32112.339
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Servicos", "Servicos", "{ADA26CF2-4BB9-43A6-8E85-73D6D319F505}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dominio", "Dominio", "{7A76E065-4315-4844-BBE2-14785A4BC652}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Aplicacao", "Aplicacao", "{FA1B3398-24EA-4005-908D-7B08B88DBDC1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{A35B5946-9808-439D-8CBF-2FB35C6D85A9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetDeliveryApp_Servicos", "NetDeliveryApp_Services\NetDeliveryApp_Servicos.csproj", "{E0341E4C-2ABC-4D2D-B044-E8CAAF1D97DE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{BA57300D-1679-49B1-BD1C-2D768CA13C05}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetDeliveryAppAplicacao", "NetDeliveryAppApplication\NetDeliveryAppAplicacao.csproj", "{CA0ADF26-8B89-42D9-A75E-7987D7AC5558}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetDeliveryAppData", "NetDeliveryAppData\NetDeliveryAppData.csproj", "{BACF7389-6D80-42BD-BD79-B11A6453388B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetDeliveryAppDominio", "NetDeliveryAppDomain\NetDeliveryAppDominio.csproj", "{898AEFB1-E1AC-411E-B489-E9770A0F3A08}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E0341E4C-2ABC-4D2D-B044-E8CAAF1D97DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0341E4C-2ABC-4D2D-B044-E8CAAF1D97DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0341E4C-2ABC-4D2D-B044-E8CAAF1D97DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0341E4C-2ABC-4D2D-B044-E8CAAF1D97DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA0ADF26-8B89-42D9-A75E-7987D7AC5558}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA0ADF26-8B89-42D9-A75E-7987D7AC5558}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA0ADF26-8B89-42D9-A75E-7987D7AC5558}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA0ADF26-8B89-42D9-A75E-7987D7AC5558}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BACF7389-6D80-42BD-BD79-B11A6453388B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BACF7389-6D80-42BD-BD79-B11A6453388B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BACF7389-6D80-42BD-BD79-B11A6453388B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BACF7389-6D80-42BD-BD79-B11A6453388B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{898AEFB1-E1AC-411E-B489-E9770A0F3A08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{898AEFB1-E1AC-411E-B489-E9770A0F3A08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{898AEFB1-E1AC-411E-B489-E9770A0F3A08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{898AEFB1-E1AC-411E-B489-E9770A0F3A08}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E0341E4C-2ABC-4D2D-B044-E8CAAF1D97DE} = {ADA26CF2-4BB9-43A6-8E85-73D6D319F505}
+		{CA0ADF26-8B89-42D9-A75E-7987D7AC5558} = {FA1B3398-24EA-4005-908D-7B08B88DBDC1}
+		{BACF7389-6D80-42BD-BD79-B11A6453388B} = {A35B5946-9808-439D-8CBF-2FB35C6D85A9}
+		{898AEFB1-E1AC-411E-B489-E9770A0F3A08} = {7A76E065-4315-4844-BBE2-14785A4BC652}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {17C58025-1176-4457-998D-0665A67B9430}
+	EndGlobalSection
+EndGlobal
