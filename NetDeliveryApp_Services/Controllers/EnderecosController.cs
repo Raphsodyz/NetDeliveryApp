@@ -32,7 +32,12 @@ namespace NetDeliveryAppServicos.Controllers
         [HttpGet("{id}")]
         public IActionResult GetEndereco(int id)
         {
-            return Ok(_enderecoRepository.Encontrar(id));
+            if (_enderecoRepository.Existe(id))
+            {
+                return Ok(_enderecoRepository.Encontrar(id));
+            }
+            else
+                return NotFound();
         }
 
         [HttpPut("{id}")]

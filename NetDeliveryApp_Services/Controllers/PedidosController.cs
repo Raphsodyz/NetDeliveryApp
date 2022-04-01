@@ -32,7 +32,12 @@ namespace NetDeliveryAppServicos.Controllers
         [HttpGet("{id}")]
         public IActionResult GetPedido(int id)
         {
-            return Ok(_pedidoRepository.Encontrar(id));
+            if (_pedidoRepository.Existe(id))
+            {
+                return Ok(_pedidoRepository.Encontrar(id));
+            }
+            else
+                return NotFound();
         }
 
         [HttpPut("{id}")]
