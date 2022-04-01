@@ -21,6 +21,11 @@ namespace NetDeliveryAppData.Repositorio
             _netDeliveryAppContext.Add(entidade);
         }
 
+        public void Editar(T entidade)
+        {
+            _netDeliveryAppContext.Update(entidade);
+        }
+
         public virtual void Deletar(T entidade)
         {
             _netDeliveryAppContext.Remove(entidade);

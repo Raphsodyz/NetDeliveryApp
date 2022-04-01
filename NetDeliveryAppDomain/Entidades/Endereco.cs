@@ -11,5 +11,7 @@ namespace NetDeliveryAppDominio.Entidades
         public string Bairro { get; set; } = null!;
         public string? Cidade { get; set; }
         public string? Observacao { get; set; }
+        public int? ClienteId { get; set; }
+        public Cliente Cliente { get; set; } = null!;
     }
 }

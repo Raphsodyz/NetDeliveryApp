@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NetDeliveryAppData.Contexto;
 using NetDeliveryAppDominio.Entidades;
+using NetDeliveryAppDominio.Interfaces.Repositorios;
 
 namespace NetDeliveryAppServicos.Controllers
 {
@@ -15,95 +16,61 @@ namespace NetDeliveryAppServicos.Controllers
     [ApiController]
     public class PedidosController : ControllerBase
     {
-        private readonly NetDeliveryAppContext _context;
+        private readonly IPedidoRepository _pedidoRepository;
 
-        public PedidosController(NetDeliveryAppContext context)
+        public PedidosController(IPedidoRepository pedidoRepository)
         {
-            _context = context;
+            _pedidoRepository = pedidoRepository;
         }
 
-        // GET: api/Pedidos
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Pedido>>> GetPedidos()
+        public IActionResult GetPedidos()
         {
-            return await _context.Pedidos.ToListAsync();
+            return Ok(_pedidoRepository.Listar());
         }
 
-        // GET: api/Pedidos/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Pedido>> GetPedido(int id)
+        public IActionResult GetPedido(int id)
         {
-            var pedido = await _context.Pedidos.FindAsync(id);
-
-            if (pedido == null)
-            {
-                return NotFound();
-            }
-
-            return pedido;
+            return Ok(_pedidoRepository.Encontrar(id));
         }
 
-        // PUT: api/Pedidos/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutPedido(int id, Pedido pedido)
+        public IActionResult PutPedido(int id, [FromBody] Pedido pedido)
         {
-            if (id != pedido.Id)
+            if (_pedidoRepository.Existe(id))
+            {
+                _pedidoRepository.Editar(pedido);
+                _pedidoRepository.Salvar();
+                return Ok();
+            }
+            else
             {
                 return BadRequest();
             }
-
-            _context.Entry(pedido).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PedidoExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
         }
 
-        // POST: api/Pedidos
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Pedido>> PostPedido(Pedido pedido)
+        public IActionResult PostPedido(Pedido pedido)
         {
-            _context.Pedidos.Add(pedido);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetPedido", new { id = pedido.Id }, pedido);
+            _pedidoRepository.Adicionar(pedido);
+            _pedidoRepository.Salvar();
+            return Ok();
         }
 
-        // DELETE: api/Pedidos/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePedido(int id)
+        public IActionResult DeletePedido(int id)
         {
-            var pedido = await _context.Pedidos.FindAsync(id);
-            if (pedido == null)
+            if (_pedidoRepository.Existe(id))
             {
-                return NotFound();
+                var pedido = _pedidoRepository.Encontrar(id);
+
+                _pedidoRepository.Deletar(pedido);
+                _pedidoRepository.Salvar();
+                return Ok();
             }
-
-            _context.Pedidos.Remove(pedido);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool PedidoExists(int id)
-        {
-            return _context.Pedidos.Any(e => e.Id == id);
+            else
+                return BadRequest();
         }
     }
 }

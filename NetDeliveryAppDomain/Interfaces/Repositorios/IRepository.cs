@@ -12,6 +12,7 @@ namespace NetDeliveryAppDominio.Interfaces.Repositorios
         List<T> Listar();
         T Encontrar(int id);
         void Adicionar(T entidade);
+        void Editar(T entidade);
         void Deletar(T entidade);
         bool Salvar();
         bool Existe(int id);

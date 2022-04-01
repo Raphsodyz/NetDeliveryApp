@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NetDeliveryAppData.Contexto;
 using NetDeliveryAppDominio.Entidades;
+using NetDeliveryAppDominio.Interfaces.Repositorios;
 
 namespace NetDeliveryAppServicos.Controllers
 {
@@ -15,95 +16,61 @@ namespace NetDeliveryAppServicos.Controllers
     [ApiController]
     public class EnderecosController : ControllerBase
     {
-        private readonly NetDeliveryAppContext _context;
+        private readonly IEnderecoRepository _enderecoRepository;
 
-        public EnderecosController(NetDeliveryAppContext context)
+        public EnderecosController(IEnderecoRepository enderecoRepository)
         {
-            _context = context;
+            _enderecoRepository = enderecoRepository;
         }
 
-        // GET: api/Enderecos
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Endereco>>> GetEnderecos()
+        public IActionResult GetEnderecos()
         {
-            return await _context.Enderecos.ToListAsync();
+            return Ok(_enderecoRepository.Listar());
         }
 
-        // GET: api/Enderecos/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Endereco>> GetEndereco(int id)
+        public IActionResult GetEndereco(int id)
         {
-            var endereco = await _context.Enderecos.FindAsync(id);
-
-            if (endereco == null)
-            {
-                return NotFound();
-            }
-
-            return endereco;
+            return Ok(_enderecoRepository.Encontrar(id));
         }
 
-        // PUT: api/Enderecos/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutEndereco(int id, Endereco endereco)
+        public IActionResult PutEndereco(int id, [FromBody] Endereco endereco)
         {
-            if (id != endereco.Id)
+            if (_enderecoRepository.Existe(id))
+            {
+                _enderecoRepository.Editar(endereco);
+                _enderecoRepository.Salvar();
+                return Ok();
+            }
+            else
             {
                 return BadRequest();
             }
-
-            _context.Entry(endereco).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!EnderecoExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
         }
 
-        // POST: api/Enderecos
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Endereco>> PostEndereco(Endereco endereco)
+        public IActionResult PostEndereco(Endereco endereco)
         {
-            _context.Enderecos.Add(endereco);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetEndereco", new { id = endereco.Id }, endereco);
+            _enderecoRepository.Adicionar(endereco);
+            _enderecoRepository.Salvar();
+            return Ok();
         }
 
-        // DELETE: api/Enderecos/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteEndereco(int id)
+        public IActionResult DeleteEndereco(int id)
         {
-            var endereco = await _context.Enderecos.FindAsync(id);
-            if (endereco == null)
+            if (_enderecoRepository.Existe(id))
             {
-                return NotFound();
+                var endereco = _enderecoRepository.Encontrar(id);
+
+                _enderecoRepository.Deletar(endereco);
+                _enderecoRepository.Salvar();
+                return Ok();
             }
-
-            _context.Enderecos.Remove(endereco);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool EnderecoExists(int id)
-        {
-            return _context.Enderecos.Any(e => e.Id == id);
+            else
+                return BadRequest();
         }
     }
 }

@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\NetDeliveryAppApplication\NetDeliveryAppAplicacao.csproj" />
     <ProjectReference Include="..\NetDeliveryAppData\NetDeliveryAppData.csproj" />
     <ProjectReference Include="..\NetDeliveryAppDomain\NetDeliveryAppDominio.csproj" />
   </ItemGroup>
