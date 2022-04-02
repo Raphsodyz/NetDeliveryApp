@@ -12,6 +12,9 @@ builder.Services.AddDbContext<NetDeliveryAppContext>();
 builder.Services.AddTransient<IClienteRepository, ClienteRepository>();
 builder.Services.AddTransient<IEnderecoRepository, EnderecoRepository>();
 builder.Services.AddTransient<IPedidoRepository, PedidoRepository>();
+builder.Services.AddTransient<IAcrescimoRepository, AcrescimoRepository>();
+builder.Services.AddTransient<IBebidaRepository, BebidaRepository>();
+builder.Services.AddTransient<IHamburguerRepository, HamburguerRepository>();
 
 
 var app = builder.Build();

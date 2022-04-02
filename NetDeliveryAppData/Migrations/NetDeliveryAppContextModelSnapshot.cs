@@ -19,6 +19,24 @@ namespace NetDeliveryAppData.Migrations
                 .HasAnnotation("ProductVersion", "6.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
+            modelBuilder.Entity("NetDeliveryAppDominio.Entidades.Acrescimo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<decimal>("Valor")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Acrescimos");
+                });
+
             modelBuilder.Entity("NetDeliveryAppDominio.Entidades.Bebida", b =>
                 {
                     b.Property<int>("Id")
@@ -49,6 +67,10 @@ namespace NetDeliveryAppData.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    b.Property<string>("Cpf")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime?>("DataCriacao")
                         .HasColumnType("datetime(6)");
@@ -94,7 +116,8 @@ namespace NetDeliveryAppData.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClienteId");
+                    b.HasIndex("ClienteId")
+                        .IsUnique();
 
                     b.ToTable("Enderecos");
                 });
@@ -104,6 +127,10 @@ namespace NetDeliveryAppData.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    b.Property<string>("Acrescimos")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Ingredientes")
                         .HasColumnType("longtext");
@@ -126,17 +153,15 @@ namespace NetDeliveryAppData.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("BebidaId")
-                        .HasColumnType("int");
-
                     b.Property<int>("ClienteId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DataPedido")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("HamburguerId")
-                        .HasColumnType("int");
+                    b.Property<string>("Itens")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Observacao")
                         .HasColumnType("longtext");
@@ -149,11 +174,7 @@ namespace NetDeliveryAppData.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BebidaId");
-
                     b.HasIndex("ClienteId");
-
-                    b.HasIndex("HamburguerId");
 
                     b.ToTable("Pedidos");
                 });
@@ -161,37 +182,29 @@ namespace NetDeliveryAppData.Migrations
             modelBuilder.Entity("NetDeliveryAppDominio.Entidades.Endereco", b =>
                 {
                     b.HasOne("NetDeliveryAppDominio.Entidades.Cliente", "Cliente")
-                        .WithMany()
-                        .HasForeignKey("ClienteId");
+                        .WithOne("Endereco")
+                        .HasForeignKey("NetDeliveryAppDominio.Entidades.Endereco", "ClienteId");
 
                     b.Navigation("Cliente");
                 });
 
             modelBuilder.Entity("NetDeliveryAppDominio.Entidades.Pedido", b =>
                 {
-                    b.HasOne("NetDeliveryAppDominio.Entidades.Bebida", "Bebida")
-                        .WithMany()
-                        .HasForeignKey("BebidaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("NetDeliveryAppDominio.Entidades.Cliente", "Cliente")
-                        .WithMany()
+                        .WithMany("Pedidos")
                         .HasForeignKey("ClienteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("NetDeliveryAppDominio.Entidades.Hamburguer", "Hamburguer")
-                        .WithMany()
-                        .HasForeignKey("HamburguerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                    b.Navigation("Cliente");
+                });
+
+            modelBuilder.Entity("NetDeliveryAppDominio.Entidades.Cliente", b =>
+                {
+                    b.Navigation("Endereco")
                         .IsRequired();
 
-                    b.Navigation("Bebida");
-
-                    b.Navigation("Cliente");
-
-                    b.Navigation("Hamburguer");
+                    b.Navigation("Pedidos");
                 });
 #pragma warning restore 612, 618
         }
