@@ -11,7 +11,7 @@ namespace NetDeliveryAppDominio.Entidades
         public string? Observacao { get; set; }
         public DateTime DataPedido { get; set; }
         public string Itens { get; set; } = null!;
-        public int ClienteId { get; set; }
-        public Cliente Cliente { get; set; } = null!;
+        public virtual int ClienteId { get; set; }
+        public virtual Cliente Cliente { get; set; } = null!;
     }
 }

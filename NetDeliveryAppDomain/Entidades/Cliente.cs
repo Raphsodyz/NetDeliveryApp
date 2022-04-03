@@ -10,7 +10,5 @@ namespace NetDeliveryAppDominio.Entidades
         public string Cpf { get; set; } = null!;
         public string Telefone { get; set; } = null!;
         public DateTime? DataCriacao { get; set; }
-        public ICollection<Pedido> Pedidos { get; set; } = null!;
-        public Endereco Endereco { get; set; } = null!;
     }
 }

@@ -1,4 +1,5 @@
-﻿using NetDeliveryAppData.Contexto;
+﻿using Microsoft.EntityFrameworkCore;
+using NetDeliveryAppData.Contexto;
 using NetDeliveryAppDominio.Entidades;
 using NetDeliveryAppDominio.Interfaces.Repositorios;
 using System;
@@ -18,12 +19,17 @@ namespace NetDeliveryAppData.Repositorio
 
         public override List<Pedido> Listar()
         {
-            return _netDeliveryAppContext.Pedidos.ToList();
+            return _netDeliveryAppContext.Pedidos
+                .Include(p => p.Cliente)
+                .ToList();
         }
 
         public override Pedido Encontrar(int id)
         {
-            return _netDeliveryAppContext.Pedidos.Where(p => p.Id == id).First();
+            return _netDeliveryAppContext.Pedidos
+                .Include(p => p.Cliente).
+                Where(p => p.Id == id)
+                .First();
         }
 
         public override void Deletar(Pedido entidade)

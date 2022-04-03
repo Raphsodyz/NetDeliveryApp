@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NetDeliveryAppData.Contexto;
 using NetDeliveryAppDominio.Entidades;
+using NetDeliveryAppDominio.Interfaces.Repositorios;
 
 namespace NetDeliveryAppServicos.Controllers
 {
@@ -15,95 +16,66 @@ namespace NetDeliveryAppServicos.Controllers
     [ApiController]
     public class HamburguersController : ControllerBase
     {
-        private readonly NetDeliveryAppContext _context;
+        private readonly IHamburguerRepository _hamburguerRepository;
 
-        public HamburguersController(NetDeliveryAppContext context)
+        public HamburguersController(IHamburguerRepository hamburguerRepository)
         {
-            _context = context;
+            _hamburguerRepository = hamburguerRepository;
         }
 
-        // GET: api/Hamburguers
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Hamburguer>>> GetHamburguers()
+        public IActionResult GetHamburguers()
         {
-            return await _context.Hamburguers.ToListAsync();
+            return Ok(_hamburguerRepository.Listar());
         }
 
-        // GET: api/Hamburguers/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Hamburguer>> GetHamburguer(int id)
+        public IActionResult GetHamburguer(int id)
         {
-            var hamburguer = await _context.Hamburguers.FindAsync(id);
-
-            if (hamburguer == null)
+            if (_hamburguerRepository.Existe(id))
             {
-                return NotFound();
+                return Ok(_hamburguerRepository.Encontrar(id));
             }
+            else
+                return NotFound();
 
-            return hamburguer;
         }
 
-        // PUT: api/Hamburguers/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutHamburguer(int id, Hamburguer hamburguer)
+        public IActionResult PutHamburguer(int id, [FromBody] Hamburguer hamburguer)
         {
-            if (id != hamburguer.Id)
+            if (_hamburguerRepository.Existe(id))
             {
-                return BadRequest();
+                _hamburguerRepository.Editar(hamburguer);
+                _hamburguerRepository.Salvar();
+                return Ok();
             }
-
-            _context.Entry(hamburguer).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!HamburguerExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Hamburguers
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Hamburguer>> PostHamburguer(Hamburguer hamburguer)
-        {
-            _context.Hamburguers.Add(hamburguer);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetHamburguer", new { id = hamburguer.Id }, hamburguer);
-        }
-
-        // DELETE: api/Hamburguers/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteHamburguer(int id)
-        {
-            var hamburguer = await _context.Hamburguers.FindAsync(id);
-            if (hamburguer == null)
-            {
+            else
                 return NotFound();
-            }
 
-            _context.Hamburguers.Remove(hamburguer);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
         }
 
-        private bool HamburguerExists(int id)
+        [HttpPost]
+        public IActionResult PostHamburguer(Hamburguer hamburguer)
         {
-            return _context.Hamburguers.Any(e => e.Id == id);
+            _hamburguerRepository.Adicionar(hamburguer);
+            _hamburguerRepository.Salvar();
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteHamburguer(int id)
+        {
+            if (_hamburguerRepository.Existe(id))
+            {
+                var hamburguer = _hamburguerRepository.Encontrar(id);
+
+                _hamburguerRepository.Deletar(hamburguer);
+                _hamburguerRepository.Salvar();
+                return Ok();
+            }
+            else
+                return NotFound();
         }
     }
 }

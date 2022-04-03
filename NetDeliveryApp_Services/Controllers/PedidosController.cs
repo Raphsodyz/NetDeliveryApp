@@ -51,7 +51,7 @@ namespace NetDeliveryAppServicos.Controllers
             }
             else
             {
-                return BadRequest();
+                return NotFound();
             }
         }
 
@@ -75,7 +75,7 @@ namespace NetDeliveryAppServicos.Controllers
                 return Ok();
             }
             else
-                return BadRequest();
+                return NotFound();
         }
     }
 }

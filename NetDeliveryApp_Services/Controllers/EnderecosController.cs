@@ -33,9 +33,7 @@ namespace NetDeliveryAppServicos.Controllers
         public IActionResult GetEndereco(int id)
         {
             if (_enderecoRepository.Existe(id))
-            {
                 return Ok(_enderecoRepository.Encontrar(id));
-            }
             else
                 return NotFound();
         }
@@ -51,7 +49,7 @@ namespace NetDeliveryAppServicos.Controllers
             }
             else
             {
-                return BadRequest();
+                return NotFound();
             }
         }
 
@@ -75,7 +73,7 @@ namespace NetDeliveryAppServicos.Controllers
                 return Ok();
             }
             else
-                return BadRequest();
+                return NotFound();
         }
     }
 }

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NetDeliveryAppData.Contexto;
 using NetDeliveryAppDominio.Entidades;
+using NetDeliveryAppDominio.Interfaces.Repositorios;
 
 namespace NetDeliveryAppServicos.Controllers
 {
@@ -15,95 +16,66 @@ namespace NetDeliveryAppServicos.Controllers
     [ApiController]
     public class BebidasController : ControllerBase
     {
-        private readonly NetDeliveryAppContext _context;
+        private readonly IBebidaRepository _bebidaRepository;
 
-        public BebidasController(NetDeliveryAppContext context)
+        public BebidasController(IBebidaRepository bebidaRepository)
         {
-            _context = context;
+            _bebidaRepository = bebidaRepository;
         }
 
-        // GET: api/Bebidas
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Bebida>>> GetBebidas()
+        public IActionResult GetBebidas()
         {
-            return await _context.Bebidas.ToListAsync();
+            return Ok(_bebidaRepository.Listar());
         }
 
-        // GET: api/Bebidas/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Bebida>> GetBebida(int id)
+        public IActionResult GetBebida(int id)
         {
-            var bebida = await _context.Bebidas.FindAsync(id);
-
-            if (bebida == null)
+            if (_bebidaRepository.Existe(id))
             {
-                return NotFound();
+                return Ok(_bebidaRepository.Encontrar(id));
             }
+            else
+                return NotFound();
 
-            return bebida;
         }
 
-        // PUT: api/Bebidas/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBebida(int id, Bebida bebida)
+        public IActionResult PutBebida(int id, [FromBody] Bebida bebida)
         {
-            if (id != bebida.Id)
+            if (_bebidaRepository.Existe(id))
             {
-                return BadRequest();
+                _bebidaRepository.Editar(bebida);
+                _bebidaRepository.Salvar();
+                return Ok();
             }
-
-            _context.Entry(bebida).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!BebidaExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Bebidas
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Bebida>> PostBebida(Bebida bebida)
-        {
-            _context.Bebidas.Add(bebida);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetBebida", new { id = bebida.Id }, bebida);
-        }
-
-        // DELETE: api/Bebidas/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBebida(int id)
-        {
-            var bebida = await _context.Bebidas.FindAsync(id);
-            if (bebida == null)
-            {
+            else
                 return NotFound();
-            }
 
-            _context.Bebidas.Remove(bebida);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
         }
 
-        private bool BebidaExists(int id)
+        [HttpPost]
+        public IActionResult PostBebida(Bebida bebida)
         {
-            return _context.Bebidas.Any(e => e.Id == id);
+            _bebidaRepository.Adicionar(bebida);
+            _bebidaRepository.Salvar();
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteBebida(int id)
+        {
+            if (_bebidaRepository.Existe(id))
+            {
+                var bebida = _bebidaRepository.Encontrar(id);
+
+                _bebidaRepository.Deletar(bebida);
+                _bebidaRepository.Salvar();
+                return Ok();
+            }
+            else
+                return NotFound();
         }
     }
 }

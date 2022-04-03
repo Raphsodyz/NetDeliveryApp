@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NetDeliveryAppData.Contexto;
 using NetDeliveryAppDominio.Entidades;
+using NetDeliveryAppDominio.Interfaces.Repositorios;
 
 namespace NetDeliveryAppServicos.Controllers
 {
@@ -15,95 +16,66 @@ namespace NetDeliveryAppServicos.Controllers
     [ApiController]
     public class AcrescimosController : ControllerBase
     {
-        private readonly NetDeliveryAppContext _context;
+        private readonly IAcrescimoRepository _acrescimoRepository;
 
-        public AcrescimosController(NetDeliveryAppContext context)
+        public AcrescimosController(IAcrescimoRepository acrescimoRepository)
         {
-            _context = context;
+            _acrescimoRepository = acrescimoRepository;
         }
 
-        // GET: api/Acrescimos
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Acrescimo>>> GetAcrescimos()
+        public IActionResult GetAcrescimos()
         {
-            return await _context.Acrescimos.ToListAsync();
+            return Ok(_acrescimoRepository.Listar());
         }
 
-        // GET: api/Acrescimos/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Acrescimo>> GetAcrescimo(int id)
+        public IActionResult GetAcrescimo(int id)
         {
-            var acrescimo = await _context.Acrescimos.FindAsync(id);
-
-            if (acrescimo == null)
+            if (_acrescimoRepository.Existe(id))
             {
-                return NotFound();
+                return Ok(_acrescimoRepository.Encontrar(id));
             }
+            else
+                return NotFound();
 
-            return acrescimo;
         }
 
-        // PUT: api/Acrescimos/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutAcrescimo(int id, Acrescimo acrescimo)
+        public IActionResult PutAcrescimo(int id, [FromBody] Acrescimo acrescimo)
         {
-            if (id != acrescimo.Id)
+            if (_acrescimoRepository.Existe(id))
             {
-                return BadRequest();
+                _acrescimoRepository.Editar(acrescimo);
+                _acrescimoRepository.Salvar();
+                return Ok();
             }
-
-            _context.Entry(acrescimo).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!AcrescimoExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/Acrescimos
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Acrescimo>> PostAcrescimo(Acrescimo acrescimo)
-        {
-            _context.Acrescimos.Add(acrescimo);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetAcrescimo", new { id = acrescimo.Id }, acrescimo);
-        }
-
-        // DELETE: api/Acrescimos/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAcrescimo(int id)
-        {
-            var acrescimo = await _context.Acrescimos.FindAsync(id);
-            if (acrescimo == null)
-            {
+            else
                 return NotFound();
-            }
 
-            _context.Acrescimos.Remove(acrescimo);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
         }
 
-        private bool AcrescimoExists(int id)
+        [HttpPost]
+        public IActionResult PostCliente(Acrescimo acrescimo)
         {
-            return _context.Acrescimos.Any(e => e.Id == id);
+            _acrescimoRepository.Adicionar(acrescimo);
+            _acrescimoRepository.Salvar();
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteCliente(int id)
+        {
+            if (_acrescimoRepository.Existe(id))
+            {
+                var acrescimo = _acrescimoRepository.Encontrar(id);
+
+                _acrescimoRepository.Deletar(acrescimo);
+                _acrescimoRepository.Salvar();
+                return Ok();
+            }
+            else
+                return NotFound();
         }
     }
 }

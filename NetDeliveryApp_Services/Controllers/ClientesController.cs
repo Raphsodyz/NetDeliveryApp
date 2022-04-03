@@ -1,14 +1,6 @@
-﻿#nullable disable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using NetDeliveryAppData.Contexto;
+﻿using Microsoft.AspNetCore.Mvc;
 using NetDeliveryAppDominio.Entidades;
-using NetDeliveryAppDominio.Interfaces.Repositorios;
+using NetDeliveryAppDominio.Interfaces.Aplicacao;
 
 namespace NetDeliveryAppServicos.Controllers
 {
@@ -16,66 +8,81 @@ namespace NetDeliveryAppServicos.Controllers
     [ApiController]
     public class ClientesController : ControllerBase
     {
-        private readonly IClienteRepository _clienteRepository;
+        private readonly IClienteAplicacao _clienteAplicacao;
 
-        public ClientesController(IClienteRepository clienteRepository)
+        public ClientesController(IClienteAplicacao clienteAplicacao)
         {
-            _clienteRepository = clienteRepository;
+            _clienteAplicacao = clienteAplicacao;
         }
 
         [HttpGet]
-        public IActionResult GetClientes()
+        public IActionResult Listar()
         {
-            return Ok(_clienteRepository.Listar());
+            try
+            {
+                return Ok(_clienteAplicacao.Listar());
+            }
+            catch(Exception)
+            {
+                return BadRequest("Erro ao retornar todos os clientes.");
+            }
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetCliente(int id)
+        public IActionResult Encontrar(int id)
         {
-            if (_clienteRepository.Existe(id))
+            try
             {
-                return Ok(_clienteRepository.Encontrar(id));
+                return Ok(_clienteAplicacao.Encontrar(id));
             }
-            else
-                return NotFound();
+            catch(Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
             
         }
 
         [HttpPut("{id}")]
-        public IActionResult PutCliente(int id, [FromBody] Cliente cliente)
+        public IActionResult Editar(int id, [FromBody] Cliente cliente)
         {
-            if (_clienteRepository.Existe(id))
+            try
             {
-                _clienteRepository.Editar(cliente);
-                _clienteRepository.Salvar();
+                _clienteAplicacao.Editar(cliente);
                 return Ok();
             }
-            else
-                return NotFound();
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
             
         }
 
         [HttpPost]
-        public IActionResult PostCliente(Cliente cliente)
+        public IActionResult Adicionar(Cliente cliente)
         {
-            _clienteRepository.Adicionar(cliente);
-            _clienteRepository.Salvar();
-            return Ok();
+            try
+            {
+                _clienteAplicacao.Adicionar(cliente);
+                return Created("Get", new {id = cliente.Id});
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteCliente(int id)
+        public IActionResult Deletar(int id)
         {
-            if (_clienteRepository.Existe(id))
+            try
             {
-                var cliente = _clienteRepository.Encontrar(id);
-
-                _clienteRepository.Deletar(cliente);
-                _clienteRepository.Salvar();
+                _clienteAplicacao.Deletar(id);
                 return Ok();
             }
-            else
-                return BadRequest();
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }   
         }
     }
 }

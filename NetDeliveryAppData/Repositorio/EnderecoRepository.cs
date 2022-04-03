@@ -1,4 +1,5 @@
-﻿using NetDeliveryAppData.Contexto;
+﻿using Microsoft.EntityFrameworkCore;
+using NetDeliveryAppData.Contexto;
 using NetDeliveryAppDominio.Entidades;
 using NetDeliveryAppDominio.Interfaces.Repositorios;
 using System;
@@ -18,12 +19,15 @@ namespace NetDeliveryAppData.Repositorio
 
         public override List<Endereco> Listar()
         {
-            return _netDeliveryAppContext.Enderecos.ToList();
+            return _netDeliveryAppContext.Enderecos.Include(p => p.Cliente).ToList();
         }
 
         public override Endereco Encontrar(int id)
         {
-            return _netDeliveryAppContext.Enderecos.Find(id);
+            return _netDeliveryAppContext.Enderecos
+                .Include(p => p.Cliente)
+                .Where(p => p.Id == id)
+                .First();
         }
 
         public override void Deletar(Endereco entidade)
