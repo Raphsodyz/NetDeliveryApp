@@ -7,12 +7,7 @@ using System.Threading.Tasks;
 
 namespace NetDeliveryAppDominio.Interfaces.Aplicacao
 {
-    public interface IHamburguerAplicacao
+    public interface IHamburguerAplicacao : IAplicacao<Hamburguer>
     {
-        List<Hamburguer> Listar();
-        Hamburguer Encontrar(int id);
-        void Editar(Hamburguer hamburguer);
-        void Adicionar(Hamburguer hamburguer);
-        void Deletar(int id);
     }
 }

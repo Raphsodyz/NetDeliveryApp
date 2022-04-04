@@ -25,6 +25,7 @@ builder.Services.AddTransient<IEnderecoAplicacao, EnderecoAplicacao>();
 builder.Services.AddTransient<IHamburguerAplicacao, HamburguerAplicacao>();
 builder.Services.AddTransient<IPedidoAplicacao, PedidoAplicacao>();
 
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();
 

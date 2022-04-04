@@ -7,12 +7,7 @@ using System.Threading.Tasks;
 
 namespace NetDeliveryAppDominio.Interfaces.Aplicacao
 {
-    public interface IAcrescimoAplicacao
+    public interface IAcrescimoAplicacao : IAplicacao<Acrescimo>
     {
-        List<Acrescimo> Listar();
-        Acrescimo Encontrar(int id);
-        void Editar(Acrescimo acrescimo);
-        void Adicionar(Acrescimo acrescimo);
-        void Deletar(int id);
     }
 }

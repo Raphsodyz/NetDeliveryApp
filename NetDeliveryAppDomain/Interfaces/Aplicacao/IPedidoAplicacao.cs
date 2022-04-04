@@ -7,12 +7,8 @@ using System.Threading.Tasks;
 
 namespace NetDeliveryAppDominio.Interfaces.Aplicacao
 {
-    public interface IPedidoAplicacao
+    public interface IPedidoAplicacao : IAplicacao<Pedido>
     {
-        List<Pedido> Listar();
-        Pedido Encontrar(int id);
-        void Editar(Pedido pedido);
-        void Adicionar(Pedido pedido);
-        void Deletar(int id);
+
     }
 }
