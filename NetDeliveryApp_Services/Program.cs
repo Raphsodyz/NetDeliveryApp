@@ -17,7 +17,13 @@ builder.Services.AddTransient<IPedidoRepository, PedidoRepository>();
 builder.Services.AddTransient<IAcrescimoRepository, AcrescimoRepository>();
 builder.Services.AddTransient<IBebidaRepository, BebidaRepository>();
 builder.Services.AddTransient<IHamburguerRepository, HamburguerRepository>();
+
 builder.Services.AddTransient<IClienteAplicacao, ClienteAplicacao>();
+builder.Services.AddTransient<IAcrescimoAplicacao, AcrescimoAplicacao>();
+builder.Services.AddTransient<IBebidaAplicacao, BebidaAplicacao>();
+builder.Services.AddTransient<IEnderecoAplicacao, EnderecoAplicacao>();
+builder.Services.AddTransient<IHamburguerAplicacao, HamburguerAplicacao>();
+builder.Services.AddTransient<IPedidoAplicacao, PedidoAplicacao>();
 
 
 var app = builder.Build();

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NetDeliveryAppData.Contexto;
 using NetDeliveryAppDominio.Entidades;
+using NetDeliveryAppDominio.Interfaces.Aplicacao;
 using NetDeliveryAppDominio.Interfaces.Repositorios;
 
 namespace NetDeliveryAppServicos.Controllers
@@ -16,66 +17,81 @@ namespace NetDeliveryAppServicos.Controllers
     [ApiController]
     public class AcrescimosController : ControllerBase
     {
-        private readonly IAcrescimoRepository _acrescimoRepository;
+        private readonly IAcrescimoAplicacao _acrescimoAplicacao;
 
-        public AcrescimosController(IAcrescimoRepository acrescimoRepository)
+        public AcrescimosController(IAcrescimoAplicacao acrescimoAplicacao)
         {
-            _acrescimoRepository = acrescimoRepository;
+            _acrescimoAplicacao = acrescimoAplicacao;
         }
 
         [HttpGet]
-        public IActionResult GetAcrescimos()
+        public IActionResult Listar()
         {
-            return Ok(_acrescimoRepository.Listar());
+            try
+            {
+                return Ok(_acrescimoAplicacao.Listar());
+            }
+            catch (Exception)
+            {
+                return BadRequest("Erro ao retornar todos os clientes.");
+            }
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetAcrescimo(int id)
+        public IActionResult Encontrar(int id)
         {
-            if (_acrescimoRepository.Existe(id))
+            try
             {
-                return Ok(_acrescimoRepository.Encontrar(id));
+                return Ok(_acrescimoAplicacao.Encontrar(id));
             }
-            else
-                return NotFound();
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
 
         }
 
         [HttpPut("{id}")]
-        public IActionResult PutAcrescimo(int id, [FromBody] Acrescimo acrescimo)
+        public IActionResult Editar(int id, [FromBody] Acrescimo acrescimo)
         {
-            if (_acrescimoRepository.Existe(id))
+            try
             {
-                _acrescimoRepository.Editar(acrescimo);
-                _acrescimoRepository.Salvar();
+                _acrescimoAplicacao.Editar(acrescimo);
                 return Ok();
             }
-            else
-                return NotFound();
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
         }
 
         [HttpPost]
-        public IActionResult PostCliente(Acrescimo acrescimo)
+        public IActionResult Adicionar(Acrescimo acrescimo)
         {
-            _acrescimoRepository.Adicionar(acrescimo);
-            _acrescimoRepository.Salvar();
-            return Ok();
+            try
+            {
+                _acrescimoAplicacao.Adicionar(acrescimo);
+                return Created("Get", new { id = acrescimo.Id });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteCliente(int id)
+        public IActionResult Deletar(int id)
         {
-            if (_acrescimoRepository.Existe(id))
+            try
             {
-                var acrescimo = _acrescimoRepository.Encontrar(id);
-
-                _acrescimoRepository.Deletar(acrescimo);
-                _acrescimoRepository.Salvar();
+                _acrescimoAplicacao.Deletar(id);
                 return Ok();
             }
-            else
-                return NotFound();
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }

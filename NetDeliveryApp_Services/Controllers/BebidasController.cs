@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NetDeliveryAppData.Contexto;
 using NetDeliveryAppDominio.Entidades;
+using NetDeliveryAppDominio.Interfaces.Aplicacao;
 using NetDeliveryAppDominio.Interfaces.Repositorios;
 
 namespace NetDeliveryAppServicos.Controllers
@@ -16,66 +17,81 @@ namespace NetDeliveryAppServicos.Controllers
     [ApiController]
     public class BebidasController : ControllerBase
     {
-        private readonly IBebidaRepository _bebidaRepository;
+        private readonly IBebidaAplicacao _bebidaAplicacao;
 
-        public BebidasController(IBebidaRepository bebidaRepository)
+        public BebidasController(IBebidaAplicacao bebidaAplicacao)
         {
-            _bebidaRepository = bebidaRepository;
+            _bebidaAplicacao = bebidaAplicacao;
         }
 
         [HttpGet]
-        public IActionResult GetBebidas()
+        public IActionResult Listar()
         {
-            return Ok(_bebidaRepository.Listar());
+            try
+            {
+                return Ok(_bebidaAplicacao.Listar());
+            }
+            catch (Exception)
+            {
+                return BadRequest("Erro ao retornar todos os clientes.");
+            }
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetBebida(int id)
+        public IActionResult Encontrar(int id)
         {
-            if (_bebidaRepository.Existe(id))
+            try
             {
-                return Ok(_bebidaRepository.Encontrar(id));
+                return Ok(_bebidaAplicacao.Encontrar(id));
             }
-            else
-                return NotFound();
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
 
         }
 
         [HttpPut("{id}")]
-        public IActionResult PutBebida(int id, [FromBody] Bebida bebida)
+        public IActionResult Editar(int id, [FromBody] Bebida bebida)
         {
-            if (_bebidaRepository.Existe(id))
+            try
             {
-                _bebidaRepository.Editar(bebida);
-                _bebidaRepository.Salvar();
+                _bebidaAplicacao.Editar(bebida);
                 return Ok();
             }
-            else
-                return NotFound();
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
         }
 
         [HttpPost]
-        public IActionResult PostBebida(Bebida bebida)
+        public IActionResult Adicionar(Bebida bebida)
         {
-            _bebidaRepository.Adicionar(bebida);
-            _bebidaRepository.Salvar();
-            return Ok();
+            try
+            {
+                _bebidaAplicacao.Adicionar(bebida);
+                return Created("Get", new { id = bebida.Id });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteBebida(int id)
+        public IActionResult Deletar(int id)
         {
-            if (_bebidaRepository.Existe(id))
+            try
             {
-                var bebida = _bebidaRepository.Encontrar(id);
-
-                _bebidaRepository.Deletar(bebida);
-                _bebidaRepository.Salvar();
+                _bebidaAplicacao.Deletar(id);
                 return Ok();
             }
-            else
-                return NotFound();
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }

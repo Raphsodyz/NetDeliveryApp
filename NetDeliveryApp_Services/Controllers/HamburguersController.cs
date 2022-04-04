@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NetDeliveryAppData.Contexto;
 using NetDeliveryAppDominio.Entidades;
+using NetDeliveryAppDominio.Interfaces.Aplicacao;
 using NetDeliveryAppDominio.Interfaces.Repositorios;
 
 namespace NetDeliveryAppServicos.Controllers
@@ -16,66 +17,81 @@ namespace NetDeliveryAppServicos.Controllers
     [ApiController]
     public class HamburguersController : ControllerBase
     {
-        private readonly IHamburguerRepository _hamburguerRepository;
+        private readonly IHamburguerAplicacao _hamburguerAplicacao;
 
-        public HamburguersController(IHamburguerRepository hamburguerRepository)
+        public HamburguersController(IHamburguerAplicacao hamburguerAplicacao)
         {
-            _hamburguerRepository = hamburguerRepository;
+            _hamburguerAplicacao = hamburguerAplicacao;
         }
 
         [HttpGet]
-        public IActionResult GetHamburguers()
+        public IActionResult Listar()
         {
-            return Ok(_hamburguerRepository.Listar());
+            try
+            {
+                return Ok(_hamburguerAplicacao.Listar());
+            }
+            catch (Exception)
+            {
+                return BadRequest("Erro ao retornar todos os clientes.");
+            }
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetHamburguer(int id)
+        public IActionResult Encontrar(int id)
         {
-            if (_hamburguerRepository.Existe(id))
+            try
             {
-                return Ok(_hamburguerRepository.Encontrar(id));
+                return Ok(_hamburguerAplicacao.Encontrar(id));
             }
-            else
-                return NotFound();
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
 
         }
 
         [HttpPut("{id}")]
-        public IActionResult PutHamburguer(int id, [FromBody] Hamburguer hamburguer)
+        public IActionResult Editar(int id, [FromBody] Hamburguer hamburguer)
         {
-            if (_hamburguerRepository.Existe(id))
+            try
             {
-                _hamburguerRepository.Editar(hamburguer);
-                _hamburguerRepository.Salvar();
+                _hamburguerAplicacao.Editar(hamburguer);
                 return Ok();
             }
-            else
-                return NotFound();
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
 
         }
 
         [HttpPost]
-        public IActionResult PostHamburguer(Hamburguer hamburguer)
+        public IActionResult Adicionar(Hamburguer hamburguer)
         {
-            _hamburguerRepository.Adicionar(hamburguer);
-            _hamburguerRepository.Salvar();
-            return Ok();
+            try
+            {
+                _hamburguerAplicacao.Adicionar(hamburguer);
+                return Created("Get", new { id = hamburguer.Id });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteHamburguer(int id)
+        public IActionResult Deletar(int id)
         {
-            if (_hamburguerRepository.Existe(id))
+            try
             {
-                var hamburguer = _hamburguerRepository.Encontrar(id);
-
-                _hamburguerRepository.Deletar(hamburguer);
-                _hamburguerRepository.Salvar();
+                _hamburguerAplicacao.Deletar(id);
                 return Ok();
             }
-            else
-                return NotFound();
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }

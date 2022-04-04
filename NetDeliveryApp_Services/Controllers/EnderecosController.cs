@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NetDeliveryAppData.Contexto;
 using NetDeliveryAppDominio.Entidades;
+using NetDeliveryAppDominio.Interfaces.Aplicacao;
 using NetDeliveryAppDominio.Interfaces.Repositorios;
 
 namespace NetDeliveryAppServicos.Controllers
@@ -16,64 +17,81 @@ namespace NetDeliveryAppServicos.Controllers
     [ApiController]
     public class EnderecosController : ControllerBase
     {
-        private readonly IEnderecoRepository _enderecoRepository;
+        private readonly IEnderecoAplicacao _enderecoAplicacao;
 
-        public EnderecosController(IEnderecoRepository enderecoRepository)
+        public EnderecosController(IEnderecoAplicacao enderecoAplicacao)
         {
-            _enderecoRepository = enderecoRepository;
+            _enderecoAplicacao = enderecoAplicacao;
         }
 
         [HttpGet]
-        public IActionResult GetEnderecos()
+        public IActionResult Listar()
         {
-            return Ok(_enderecoRepository.Listar());
+            try
+            {
+                return Ok(_enderecoAplicacao.Listar());
+            }
+            catch (Exception)
+            {
+                return BadRequest("Erro ao retornar todos os clientes.");
+            }
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetEndereco(int id)
+        public IActionResult Encontrar(int id)
         {
-            if (_enderecoRepository.Existe(id))
-                return Ok(_enderecoRepository.Encontrar(id));
-            else
-                return NotFound();
+            try
+            {
+                return Ok(_enderecoAplicacao.Encontrar(id));
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+
         }
 
         [HttpPut("{id}")]
-        public IActionResult PutEndereco(int id, [FromBody] Endereco endereco)
+        public IActionResult Editar(int id, [FromBody] Endereco endereco)
         {
-            if (_enderecoRepository.Existe(id))
+            try
             {
-                _enderecoRepository.Editar(endereco);
-                _enderecoRepository.Salvar();
+                _enderecoAplicacao.Editar(endereco);
                 return Ok();
             }
-            else
+            catch (Exception ex)
             {
-                return NotFound();
+                return BadRequest(ex.Message);
             }
+
         }
 
         [HttpPost]
-        public IActionResult PostEndereco(Endereco endereco)
+        public IActionResult Adicionar(Endereco endereco)
         {
-            _enderecoRepository.Adicionar(endereco);
-            _enderecoRepository.Salvar();
-            return Ok();
+            try
+            {
+                _enderecoAplicacao.Adicionar(endereco);
+                return Created("Get", new { id = endereco.Id });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteEndereco(int id)
+        public IActionResult Deletar(int id)
         {
-            if (_enderecoRepository.Existe(id))
+            try
             {
-                var endereco = _enderecoRepository.Encontrar(id);
-
-                _enderecoRepository.Deletar(endereco);
-                _enderecoRepository.Salvar();
+                _enderecoAplicacao.Deletar(id);
                 return Ok();
             }
-            else
-                return NotFound();
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }

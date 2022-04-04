@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NetDeliveryAppData.Contexto;
 using NetDeliveryAppDominio.Entidades;
+using NetDeliveryAppDominio.Interfaces.Aplicacao;
 using NetDeliveryAppDominio.Interfaces.Repositorios;
 
 namespace NetDeliveryAppServicos.Controllers
@@ -16,66 +17,81 @@ namespace NetDeliveryAppServicos.Controllers
     [ApiController]
     public class PedidosController : ControllerBase
     {
-        private readonly IPedidoRepository _pedidoRepository;
+        private readonly IPedidoAplicacao _pedidoAplicacao;
 
-        public PedidosController(IPedidoRepository pedidoRepository)
+        public PedidosController(IPedidoAplicacao pedidoAplicacao)
         {
-            _pedidoRepository = pedidoRepository;
+            _pedidoAplicacao = pedidoAplicacao;
         }
 
         [HttpGet]
-        public IActionResult GetPedidos()
+        public IActionResult Listar()
         {
-            return Ok(_pedidoRepository.Listar());
+            try
+            {
+                return Ok(_pedidoAplicacao.Listar());
+            }
+            catch (Exception)
+            {
+                return BadRequest("Erro ao retornar todos os clientes.");
+            }
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetPedido(int id)
+        public IActionResult Encontrar(int id)
         {
-            if (_pedidoRepository.Existe(id))
+            try
             {
-                return Ok(_pedidoRepository.Encontrar(id));
+                return Ok(_pedidoAplicacao.Encontrar(id));
             }
-            else
-                return NotFound();
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+
         }
 
         [HttpPut("{id}")]
-        public IActionResult PutPedido(int id, [FromBody] Pedido pedido)
+        public IActionResult Editar(int id, [FromBody] Pedido pedido)
         {
-            if (_pedidoRepository.Existe(id))
+            try
             {
-                _pedidoRepository.Editar(pedido);
-                _pedidoRepository.Salvar();
+                _pedidoAplicacao.Editar(pedido);
                 return Ok();
             }
-            else
+            catch (Exception ex)
             {
-                return NotFound();
+                return BadRequest(ex.Message);
             }
+
         }
 
         [HttpPost]
-        public IActionResult PostPedido(Pedido pedido)
+        public IActionResult Adicionar(Pedido pedido)
         {
-            _pedidoRepository.Adicionar(pedido);
-            _pedidoRepository.Salvar();
-            return Ok();
+            try
+            {
+                _pedidoAplicacao.Adicionar(pedido);
+                return Created("Get", new { id = pedido.Id });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeletePedido(int id)
+        public IActionResult Deletar(int id)
         {
-            if (_pedidoRepository.Existe(id))
+            try
             {
-                var pedido = _pedidoRepository.Encontrar(id);
-
-                _pedidoRepository.Deletar(pedido);
-                _pedidoRepository.Salvar();
+                _pedidoAplicacao.Deletar(id);
                 return Ok();
             }
-            else
-                return NotFound();
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }
