@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetDeliveryAppData.Contexto;
 
@@ -10,9 +11,10 @@ using NetDeliveryAppData.Contexto;
 namespace NetDeliveryAppData.Migrations
 {
     [DbContext(typeof(NetDeliveryAppContext))]
-    partial class NetDeliveryAppContextModelSnapshot : ModelSnapshot
+    [Migration("20220406025337_tabelasCorrecao")]
+    partial class tabelasCorrecao
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -13,5 +13,6 @@ namespace NetDeliveryAppDominio.Entidades
         public string? Sabor { get; set; } = null!;
         public string Volume { get; set; } = null!;
         public decimal Valor { get; set; }
+        public string? Foto { get; set; } = null!;  
     }
 }

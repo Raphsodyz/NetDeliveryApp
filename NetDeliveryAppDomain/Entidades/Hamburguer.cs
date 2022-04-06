@@ -12,6 +12,6 @@ namespace NetDeliveryAppDominio.Entidades
         public string Nome { get; set; } = null!;
         public string? Ingredientes { get; set; }
         public decimal Valor { get; set; }
-        public string? Acrescimos { get; set; } = null!;
+        public string? Foto { get; set; } = null!;
     }
 }

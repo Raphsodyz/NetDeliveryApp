@@ -8,8 +8,9 @@ namespace NetDeliveryAppDominio.Entidades
 {
     public class Carrinho
     {
-        public virtual ICollection<Hamburguer> Hamburguers { get; set; } = null!;
-        public virtual ICollection<Bebida> Bebidas { get; set; } = null!;
+        public virtual ICollection<Acrescimo>? Acrescimos { get; set; } = null!;
+        public virtual ICollection<Hamburguer>? Hamburguers { get; set; } = null!;
+        public virtual ICollection<Bebida>? Bebidas { get; set; } = null!;
         public decimal Valor { get; set; }
     }
 }
