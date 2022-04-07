@@ -3,6 +3,8 @@ using NetDeliveryAppData.Contexto;
 using NetDeliveryAppData.Repositorio;
 using NetDeliveryAppDominio.Interfaces.Repositorios;
 using NetDeliveryAppDominio.Interfaces.Aplicacao;
+using NetDeliveryAppServicos;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
