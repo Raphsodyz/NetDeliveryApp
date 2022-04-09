@@ -8,18 +8,22 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Date</th>
-                        <th>Temp. (C)</th>
-                        <th>Temp. (F)</th>
-                        <th>Summary</th>
+                        <th>id</th>
+                        <th>nome</th>
+                        <th>cpf</th>
+                        <th>telefone</th>
+                        <th>datacricao</th>
+                        <th>foto</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="forecast in post" :key="forecast.date">
-                        <td>{{ forecast.date }}</td>
-                        <td>{{ forecast.temperatureC }}</td>
-                        <td>{{ forecast.temperatureF }}</td>
-                        <td>{{ forecast.summary }}</td>
+                    <tr v-for="clientes in post" :key="clientes.id">
+                        <td>{{ clientes.id }}</td>
+                        <td>{{ clientes.nome }}</td>
+                        <td>{{ clientes.cpf }}</td>
+                        <td>{{ clientes.telefone }}</td>
+                        <td>{{ clientes.datacricao }}</td>
+                        <td>{{ clientes.foto }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -51,7 +55,7 @@
                 this.post = null;
                 this.loading = true;
 
-                fetch('weatherforecast')
+                fetch('clientes')
                     .then(r => r.json())
                     .then(json => {
                         this.post = json;
