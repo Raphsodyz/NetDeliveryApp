@@ -9,10 +9,10 @@ namespace NetDeliveryAppAplicacao.Mapper
         public NetDeliveryAppMapper()
         {
             CreateMap<AcrescimoDTO, Acrescimo>().ReverseMap();
-            CreateMap<BebidaDTO, Bebida>().ReverseMap();
+            CreateMap<CategoriaDTO, Categoria>().ReverseMap();
             CreateMap<ClienteDTO, Cliente>().ReverseMap();
             CreateMap<EnderecoDTO, Endereco>().ReverseMap();
-            CreateMap<HamburguerDTO, Hamburguer>().ReverseMap();
+            CreateMap<ProdutoDTO, Produto>().ReverseMap();
             CreateMap<PedidoDTO, Pedido>().ReverseMap();
         }
     }

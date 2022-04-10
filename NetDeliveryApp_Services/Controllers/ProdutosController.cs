@@ -7,13 +7,13 @@ namespace NetDeliveryAppServicos.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class HamburguersController : ControllerBase
+    public class ProdutosController : ControllerBase
     {
-        private readonly IHamburguerAplicacao _hamburguerAplicacao;
+        private readonly IProdutoAplicacao _produtoAplicacao;
 
-        public HamburguersController(IHamburguerAplicacao hamburguerAplicacao)
+        public ProdutosController(IProdutoAplicacao produtoAplicacao)
         {
-            _hamburguerAplicacao = hamburguerAplicacao;
+            _produtoAplicacao = produtoAplicacao;
         }
 
         [HttpGet("Listar")]
@@ -21,11 +21,11 @@ namespace NetDeliveryAppServicos.Controllers
         {
             try
             {
-                return Ok(_hamburguerAplicacao.Listar());
+                return Ok(_produtoAplicacao.Listar());
             }
             catch (Exception)
             {
-                return BadRequest("Erro ao retornar todos os hamburguers.");
+                return BadRequest("Erro ao retornar todos os produtos.");
             }
         }
 
@@ -34,7 +34,7 @@ namespace NetDeliveryAppServicos.Controllers
         {
             try
             {
-                return Ok(_hamburguerAplicacao.Encontrar(id));
+                return Ok(_produtoAplicacao.Encontrar(id));
             }
             catch (Exception ex)
             {
@@ -44,11 +44,11 @@ namespace NetDeliveryAppServicos.Controllers
         }
 
         [HttpPut("Editar/{id}")]
-        public IActionResult Editar([FromBody] HamburguerDTO hamburguerDTO)
+        public IActionResult Editar([FromBody] ProdutoDTO produtoDTO)
         {
             try
             {
-                _hamburguerAplicacao.Editar(hamburguerDTO);
+                _produtoAplicacao.Editar(produtoDTO);
                 return Ok();
             }
             catch (Exception ex)
@@ -59,12 +59,12 @@ namespace NetDeliveryAppServicos.Controllers
         }
 
         [HttpPost("Adicionar")]
-        public IActionResult Adicionar(HamburguerDTO hamburguerDTO)
+        public IActionResult Adicionar(ProdutoDTO produtoDTO)
         {
             try
             {
-                _hamburguerAplicacao.Adicionar(hamburguerDTO);
-                return Created("Get", new { id = hamburguerDTO.Id });
+                _produtoAplicacao.Adicionar(produtoDTO);
+                return Created("Get", new { id = produtoDTO.Id });
             }
             catch (Exception ex)
             {
@@ -77,7 +77,7 @@ namespace NetDeliveryAppServicos.Controllers
         {
             try
             {
-                _hamburguerAplicacao.Deletar(id);
+                _produtoAplicacao.Deletar(id);
                 return Ok();
             }
             catch (Exception ex)

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace NetDeliveryAppAplicacao.Comandos.Hamburguer
 {
-    public class DeleteHamburguer : IRequest<string>
+    public class DeleteProduto : IRequest<string>
     {
         public int Id { get; set; }
     }

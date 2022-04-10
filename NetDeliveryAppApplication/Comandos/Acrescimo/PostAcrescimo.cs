@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using NetDeliveryAppAplicacao.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,7 @@ namespace NetDeliveryAppAplicacao.Comandos.Acrescimo
     {
         public string Nome { get; set; } = null!;
         public decimal Valor { get; set; }
+        public int? CategoriaId { get; set; }
+        public CategoriaDTO Categoria { get; set; } = null!;
     }
 }

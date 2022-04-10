@@ -2,7 +2,7 @@
 
 namespace NetDeliveryAppAplicacao.Interfaces
 {
-    public interface IBebidaAplicacao : IAplicacao<BebidaDTO>
+    public interface IProdutoAplicacao : IAplicacao<ProdutoDTO>
     {
     }
 }

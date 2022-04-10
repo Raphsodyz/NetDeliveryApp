@@ -15,14 +15,14 @@ builder.Services.AddTransient<IClienteRepository, ClienteRepository>();
 builder.Services.AddTransient<IEnderecoRepository, EnderecoRepository>();
 builder.Services.AddTransient<IPedidoRepository, PedidoRepository>();
 builder.Services.AddTransient<IAcrescimoRepository, AcrescimoRepository>();
-builder.Services.AddTransient<IBebidaRepository, BebidaRepository>();
-builder.Services.AddTransient<IHamburguerRepository, HamburguerRepository>();
+builder.Services.AddTransient<ICategoriaRepository, CategoriaRepository>();
+builder.Services.AddTransient<IProdutoRepository, ProdutosRepository>();
 
 builder.Services.AddTransient<IClienteAplicacao, ClienteAplicacao>();
 builder.Services.AddTransient<IAcrescimoAplicacao, AcrescimoAplicacao>();
-builder.Services.AddTransient<IBebidaAplicacao, BebidaAplicacao>();
+builder.Services.AddTransient<ICategoriaAplicacao, CategoriaAplicacao>();
 builder.Services.AddTransient<IEnderecoAplicacao, EnderecoAplicacao>();
-builder.Services.AddTransient<IHamburguerAplicacao, HamburguerAplicacao>();
+builder.Services.AddTransient<IProdutoAplicacao, ProdutoAplicacao>();
 builder.Services.AddTransient<IPedidoAplicacao, PedidoAplicacao>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

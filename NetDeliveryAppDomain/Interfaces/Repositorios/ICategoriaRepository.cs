@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace NetDeliveryAppDominio.Interfaces.Repositorios
 {
-    public interface IBebidaRepository : IRepository<Bebida>
+    public interface ICategoriaRepository : IRepository<Categoria>
     {
     }
 }

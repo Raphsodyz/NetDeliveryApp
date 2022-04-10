@@ -15,9 +15,9 @@ namespace NetDeliveryAppData.Contexto
         public virtual DbSet<Cliente> Clientes { get; set; } = null!;
         public virtual DbSet<Endereco> Enderecos { get; set; } = null!;
         public virtual DbSet<Pedido> Pedidos { get; set; } = null!;
-        public virtual DbSet<Hamburguer> Hamburguers { get; set; } = null!;
-        public virtual DbSet<Bebida> Bebidas { get; set; } = null!;
         public virtual DbSet<Acrescimo> Acrescimos { get; set; } = null!;
+        public virtual DbSet<Produto> Produtos { get; set; } = null!;
+        public virtual DbSet<Categoria> Categorias { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

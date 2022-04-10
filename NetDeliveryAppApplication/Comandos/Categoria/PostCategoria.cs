@@ -7,12 +7,8 @@ using System.Threading.Tasks;
 
 namespace NetDeliveryAppAplicacao.Comandos.Bebida
 {
-    public class PostBebida : IRequest<string>
+    public class PostCategoria : IRequest<string>
     {
         public string Nome { get; set; } = null!;
-        public string? Sabor { get; set; } = null!;
-        public string Volume { get; set; } = null!;
-        public decimal Valor { get; set; }
-        public string? Foto { get; set; } = null!;
     }
 }

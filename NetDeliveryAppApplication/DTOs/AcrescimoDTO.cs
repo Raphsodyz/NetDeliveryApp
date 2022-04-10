@@ -19,5 +19,9 @@ namespace NetDeliveryAppAplicacao.DTOs
         [Display(Name = "Valor")]
         [Range(0, double.MaxValue, ErrorMessage = "Por favor, digite somente números.")]
         public decimal Valor { get; set; }
+
+        [Display(Name = "Categoria")]
+        public virtual int CategoriaId { get; set; }
+        public virtual CategoriaDTO? Categoria { get; set; } = null!;
     }
 }
