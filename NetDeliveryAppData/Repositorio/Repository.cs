@@ -1,4 +1,5 @@
-﻿using NetDeliveryAppData.Contexto;
+﻿using AutoMapper;
+using NetDeliveryAppData.Contexto;
 using NetDeliveryAppDominio.Interfaces.Repositorios;
 using System;
 using System.Collections.Generic;

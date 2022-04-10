@@ -1,10 +1,8 @@
 using NetDeliveryAppAplicacao;
+using NetDeliveryAppAplicacao.Interfaces;
 using NetDeliveryAppData.Contexto;
 using NetDeliveryAppData.Repositorio;
 using NetDeliveryAppDominio.Interfaces.Repositorios;
-using NetDeliveryAppDominio.Interfaces.Aplicacao;
-using Newtonsoft.Json.Serialization;
-using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 

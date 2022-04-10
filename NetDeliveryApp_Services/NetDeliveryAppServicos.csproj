@@ -27,13 +27,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\NetDeliveryAppApplication\NetDeliveryAppAplicacao.csproj" />
-    <ProjectReference Include="..\NetDeliveryAppData\NetDeliveryAppData.csproj" />
-    <ProjectReference Include="..\NetDeliveryAppDomain\NetDeliveryAppDominio.csproj" />
+    <Folder Include="Fotos\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Fotos\" />
+    <ProjectReference Include="..\NetDeliveryAppApplication\NetDeliveryAppAplicacao.csproj" />
+    <ProjectReference Include="..\NetDeliveryAppDomain\NetDeliveryAppDominio.csproj" />
   </ItemGroup>
 
 </Project>

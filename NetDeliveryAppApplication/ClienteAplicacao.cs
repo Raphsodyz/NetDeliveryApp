@@ -1,6 +1,7 @@
-﻿using NetDeliveryAppData.Repositorio;
+﻿using AutoMapper;
+using NetDeliveryAppAplicacao.DTOs;
+using NetDeliveryAppAplicacao.Interfaces;
 using NetDeliveryAppDominio.Entidades;
-using NetDeliveryAppDominio.Interfaces.Aplicacao;
 using NetDeliveryAppDominio.Interfaces.Repositorios;
 
 namespace NetDeliveryAppAplicacao
@@ -8,39 +9,48 @@ namespace NetDeliveryAppAplicacao
     public class ClienteAplicacao : IClienteAplicacao
     {
         private readonly IClienteRepository _clienteRepository;
-        public ClienteAplicacao(IClienteRepository clienteRepository)
+        private readonly IMapper _mapper;
+        public ClienteAplicacao(IClienteRepository clienteRepository, IMapper mapper)
         {
             _clienteRepository = clienteRepository;
+            _mapper = mapper;
         }
 
-        public List<Cliente> Listar()
+        public List<ClienteDTO> Listar()
         {
-            return _clienteRepository.Listar();
+            var cliente = _clienteRepository.Listar();
+
+            return _mapper.Map<List<ClienteDTO>>(cliente);
         }
-        public Cliente Encontrar(int id)
+        public ClienteDTO Encontrar(int id)
         {
             if (_clienteRepository.Existe(id))
             {
-                return _clienteRepository.Encontrar(id);
+                var cliente = _clienteRepository.Encontrar(id);
+                return _mapper.Map<ClienteDTO>(cliente);    
             }
             else
                 throw new Exception("Cliente não existe.");
         }
 
-        public void Editar(Cliente cliente)
+        public void Editar(ClienteDTO clientedto)
         {
-            if (_clienteRepository.Existe(cliente.Id))
+            var clienteMap = _mapper.Map<Cliente>(clientedto);
+
+            if (_clienteRepository.Existe(clientedto.Id))
             {
-                _clienteRepository.Editar(cliente);
+                _clienteRepository.Editar(clienteMap);
                 _clienteRepository.Salvar();
             }
             else
                 throw new Exception("Cliente não existe.");
         }
 
-        public void Adicionar(Cliente cliente)
+        public void Adicionar(ClienteDTO clientedto)
         {
-            _clienteRepository.Adicionar(cliente);
+            var clienteMap = _mapper.Map<Cliente>(clientedto);
+
+            _clienteRepository.Adicionar(clienteMap);
             _clienteRepository.Salvar();
         }
 
@@ -49,8 +59,9 @@ namespace NetDeliveryAppAplicacao
             if (_clienteRepository.Existe(id))
             {
                 var cliente = _clienteRepository.Encontrar(id);
+                var clienteMap = _mapper.Map<Cliente>(cliente);
 
-                _clienteRepository.Deletar(cliente);
+                _clienteRepository.Deletar(clienteMap);
                 _clienteRepository.Salvar();
             }
             else

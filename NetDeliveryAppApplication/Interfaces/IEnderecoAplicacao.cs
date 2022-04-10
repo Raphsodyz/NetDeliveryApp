@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NetDeliveryAppDominio.Interfaces.Aplicacao
+namespace NetDeliveryAppAplicacao.Interfaces
 {
     public interface IEnderecoAplicacao : IAplicacao<Endereco>
     {

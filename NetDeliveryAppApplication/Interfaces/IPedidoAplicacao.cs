@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NetDeliveryAppDominio.Interfaces.Aplicacao
+namespace NetDeliveryAppAplicacao.Interfaces
 {
-    public interface IClienteAplicacao : IAplicacao<Cliente>
+    public interface IPedidoAplicacao : IAplicacao<Pedido>
     {
 
     }

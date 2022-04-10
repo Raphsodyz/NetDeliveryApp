@@ -24,8 +24,23 @@ module.exports = {
             cert: fs.readFileSync(certFilePath),
         },
         proxy: {
-            '^/clientes': {
-                target: 'https://localhost:5001/api/Clientes'
+            '^/Clientes': {
+                target: 'https://localhost:5001/api/'
+            },
+            '^/Acrescimo': {
+                target: 'https://localhost:5001/api/'
+            },
+            '^/Bebida': {
+                target: 'https://localhost:5001/api/'
+            },
+            '^/Endereco': {
+                target: 'https://localhost:5001/api/'
+            },
+            '^/Hamburguer': {
+                target: 'https://localhost:5001/api/'
+            },
+            '^/Pedido': {
+                target: 'https://localhost:5001/api/'
             }
         },
         port: 5002

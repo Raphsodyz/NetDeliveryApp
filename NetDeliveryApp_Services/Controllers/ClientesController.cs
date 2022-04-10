@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NetDeliveryAppAplicacao.DTOs;
+using NetDeliveryAppAplicacao.Interfaces;
 using NetDeliveryAppDominio.Entidades;
-using NetDeliveryAppDominio.Interfaces.Aplicacao;
 
 namespace NetDeliveryAppServicos.Controllers
 {
@@ -43,11 +44,11 @@ namespace NetDeliveryAppServicos.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Editar(int id, [FromBody] Cliente cliente)
+        public IActionResult Editar([FromBody] ClienteDTO clientedto)
         {
             try
             {
-                _clienteAplicacao.Editar(cliente);
+                _clienteAplicacao.Editar(clientedto);
                 return Ok();
             }
             catch(Exception ex)
@@ -58,12 +59,12 @@ namespace NetDeliveryAppServicos.Controllers
         }
 
         [HttpPost]
-        public IActionResult Adicionar(Cliente cliente)
+        public IActionResult Adicionar(ClienteDTO clientedto)
         {
             try
             {
-                _clienteAplicacao.Adicionar(cliente);
-                return Created("Get", new {id = cliente.Id});
+                _clienteAplicacao.Adicionar(clientedto);
+                return Created("Get", new {id = clientedto.Id});
             }
             catch(Exception ex)
             {
