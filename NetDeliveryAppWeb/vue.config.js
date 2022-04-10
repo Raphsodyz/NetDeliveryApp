@@ -24,7 +24,7 @@ module.exports = {
             cert: fs.readFileSync(certFilePath),
         },
         proxy: {
-            '^/Clientes': {
+            '^/Clientes/Listar': {
                 target: 'https://localhost:5001/api/'
             },
             '^/Acrescimo': {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NetDeliveryAppAplicacao.DTOs;
 using NetDeliveryAppAplicacao.Interfaces;
 using NetDeliveryAppDominio.Entidades;
 
@@ -15,7 +16,7 @@ namespace NetDeliveryAppServicos.Controllers
             _hamburguerAplicacao = hamburguerAplicacao;
         }
 
-        [HttpGet]
+        [HttpGet("Listar")]
         public IActionResult Listar()
         {
             try
@@ -24,11 +25,11 @@ namespace NetDeliveryAppServicos.Controllers
             }
             catch (Exception)
             {
-                return BadRequest("Erro ao retornar todos os clientes.");
+                return BadRequest("Erro ao retornar todos os hamburguers.");
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("Encontrar/{id}")]
         public IActionResult Encontrar(int id)
         {
             try
@@ -42,12 +43,12 @@ namespace NetDeliveryAppServicos.Controllers
 
         }
 
-        [HttpPut("{id}")]
-        public IActionResult Editar(int id, [FromBody] Hamburguer hamburguer)
+        [HttpPut("Editar/{id}")]
+        public IActionResult Editar([FromBody] HamburguerDTO hamburguerDTO)
         {
             try
             {
-                _hamburguerAplicacao.Editar(hamburguer);
+                _hamburguerAplicacao.Editar(hamburguerDTO);
                 return Ok();
             }
             catch (Exception ex)
@@ -57,13 +58,13 @@ namespace NetDeliveryAppServicos.Controllers
 
         }
 
-        [HttpPost]
-        public IActionResult Adicionar(Hamburguer hamburguer)
+        [HttpPost("Adicionar")]
+        public IActionResult Adicionar(HamburguerDTO hamburguerDTO)
         {
             try
             {
-                _hamburguerAplicacao.Adicionar(hamburguer);
-                return Created("Get", new { id = hamburguer.Id });
+                _hamburguerAplicacao.Adicionar(hamburguerDTO);
+                return Created("Get", new { id = hamburguerDTO.Id });
             }
             catch (Exception ex)
             {
@@ -71,7 +72,7 @@ namespace NetDeliveryAppServicos.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("Deletar/{id}")]
         public IActionResult Deletar(int id)
         {
             try

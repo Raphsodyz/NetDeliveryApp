@@ -1,13 +1,8 @@
-﻿using NetDeliveryAppDominio.Entidades;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using NetDeliveryAppAplicacao.DTOs;
 
 namespace NetDeliveryAppAplicacao.Interfaces
 {
-    public interface IEnderecoAplicacao : IAplicacao<Endereco>
+    public interface IEnderecoAplicacao : IAplicacao<EnderecoDTO>
     {
     }
 }

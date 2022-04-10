@@ -20,12 +20,14 @@ namespace NetDeliveryAppAplicacao.DTOs
         [Required(ErrorMessage = "O campo 'CPF' não pode estar vazio.")]
         [Display(Name = "CPF")]
         [StringLength(20, ErrorMessage = "Digite um CPF válido.", MinimumLength = 11)]
+        [Range(0, int.MaxValue, ErrorMessage = "Por favor, digite somente números.")]
         public string Cpf { get; set; } = null!;
 
         [Required(ErrorMessage = "O campo 'Telefone' não pode estar vazio.")]
         [Phone(ErrorMessage = "O campo deve estar no formato de telefone")]
         [Display(Name = "Telefone")]
         [StringLength(25, ErrorMessage = "Digite um telefone válido.", MinimumLength = 10)]
+        [Range(0, int.MaxValue, ErrorMessage = "Por favor, digite somente números.")]
         public string Telefone { get; set; } = null!;
         [DataType(DataType.Date)]
         public DateTime? DataCriacao { get; set; }

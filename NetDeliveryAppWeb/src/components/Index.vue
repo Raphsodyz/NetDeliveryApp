@@ -55,7 +55,7 @@
                 this.post = null;
                 this.loading = true;
 
-                fetch('Clientes')
+                fetch('Clientes/Listar')
                     .then(r => r.json())
                     .then(json => {
                         this.post = json;

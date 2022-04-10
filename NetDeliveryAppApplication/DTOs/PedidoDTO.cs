@@ -17,6 +17,7 @@ namespace NetDeliveryAppAplicacao.DTOs
         [DisplayFormat(DataFormatString = "{0:C2}")]
         [DataType(DataType.Currency)]
         [Display(Name = "Valor")]
+        [Range(0, double.MaxValue, ErrorMessage = "Por favor, digite somente números.")]
         public decimal Valor { get; set; }
 
         [Display(Name = "Observação")]
@@ -48,6 +49,6 @@ namespace NetDeliveryAppAplicacao.DTOs
 
         [Display(Name = "Cliente")]
         public virtual int ClienteId { get; set; }
-        public virtual Cliente? Cliente { get; set; } = null!;
+        public virtual ClienteDTO? Cliente { get; set; } = null!;
     }
 }

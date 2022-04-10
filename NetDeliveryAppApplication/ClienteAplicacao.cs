@@ -18,39 +18,32 @@ namespace NetDeliveryAppAplicacao
 
         public List<ClienteDTO> Listar()
         {
-            var cliente = _clienteRepository.Listar();
-
-            return _mapper.Map<List<ClienteDTO>>(cliente);
+            return _mapper.Map<List<ClienteDTO>>(_clienteRepository.Listar());
         }
         public ClienteDTO Encontrar(int id)
         {
             if (_clienteRepository.Existe(id))
             {
-                var cliente = _clienteRepository.Encontrar(id);
-                return _mapper.Map<ClienteDTO>(cliente);    
+                return _mapper.Map<ClienteDTO>(_clienteRepository.Encontrar(id));    
             }
             else
                 throw new Exception("Cliente não existe.");
         }
 
-        public void Editar(ClienteDTO clientedto)
+        public void Editar(ClienteDTO clienteDTO)
         {
-            var clienteMap = _mapper.Map<Cliente>(clientedto);
-
-            if (_clienteRepository.Existe(clientedto.Id))
+            if (_clienteRepository.Existe(clienteDTO.Id))
             {
-                _clienteRepository.Editar(clienteMap);
+                _clienteRepository.Editar(_mapper.Map<Cliente>(clienteDTO));
                 _clienteRepository.Salvar();
             }
             else
                 throw new Exception("Cliente não existe.");
         }
 
-        public void Adicionar(ClienteDTO clientedto)
+        public void Adicionar(ClienteDTO clienteDTO)
         {
-            var clienteMap = _mapper.Map<Cliente>(clientedto);
-
-            _clienteRepository.Adicionar(clienteMap);
+            _clienteRepository.Adicionar(_mapper.Map<Cliente>(clienteDTO));
             _clienteRepository.Salvar();
         }
 
@@ -58,10 +51,9 @@ namespace NetDeliveryAppAplicacao
         {
             if (_clienteRepository.Existe(id))
             {
-                var cliente = _clienteRepository.Encontrar(id);
-                var clienteMap = _mapper.Map<Cliente>(cliente);
+                var clienteDTO = _mapper.Map<Cliente>(_clienteRepository.Encontrar(id));
 
-                _clienteRepository.Deletar(clienteMap);
+                _clienteRepository.Deletar(clienteDTO);
                 _clienteRepository.Salvar();
             }
             else

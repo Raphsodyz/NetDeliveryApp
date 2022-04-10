@@ -1,13 +1,8 @@
-﻿using NetDeliveryAppDominio.Entidades;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using NetDeliveryAppAplicacao.DTOs;
 
 namespace NetDeliveryAppAplicacao.Interfaces
 {
-    public interface IPedidoAplicacao : IAplicacao<Pedido>
+    public interface IPedidoAplicacao : IAplicacao<PedidoDTO>
     {
 
     }

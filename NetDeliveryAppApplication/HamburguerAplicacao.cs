@@ -1,4 +1,6 @@
-﻿using NetDeliveryAppAplicacao.Interfaces;
+﻿using AutoMapper;
+using NetDeliveryAppAplicacao.DTOs;
+using NetDeliveryAppAplicacao.Interfaces;
 using NetDeliveryAppDominio.Entidades;
 using NetDeliveryAppDominio.Interfaces.Repositorios;
 using System;
@@ -12,39 +14,41 @@ namespace NetDeliveryAppAplicacao
     public class HamburguerAplicacao : IHamburguerAplicacao
     {
         private readonly IHamburguerRepository _hamburguerRepository;
-        public HamburguerAplicacao(IHamburguerRepository hamburguerRepository)
+        private readonly IMapper _mapper;
+        public HamburguerAplicacao(IHamburguerRepository hamburguerRepository, IMapper mapper)
         {
             _hamburguerRepository = hamburguerRepository;
+            _mapper = mapper;
         }
 
-        public List<Hamburguer> Listar()
+        public List<HamburguerDTO> Listar()
         {
-            return _hamburguerRepository.Listar();
+            return _mapper.Map<List<HamburguerDTO>>(_hamburguerRepository.Listar());
         }
-        public Hamburguer Encontrar(int id)
+        public HamburguerDTO Encontrar(int id)
         {
             if (_hamburguerRepository.Existe(id))
             {
-                return _hamburguerRepository.Encontrar(id);
+                return _mapper.Map<HamburguerDTO>(_hamburguerRepository.Encontrar(id));
             }
             else
-                throw new Exception("Cliente não existe.");
+                throw new Exception("Hamburguer não existe.");
         }
 
-        public void Editar(Hamburguer hamburguer)
+        public void Editar(HamburguerDTO hamburguerDTO)
         {
-            if (_hamburguerRepository.Existe(hamburguer.Id))
+            if (_hamburguerRepository.Existe(hamburguerDTO.Id))
             {
-                _hamburguerRepository.Editar(hamburguer);
+                _hamburguerRepository.Editar(_mapper.Map<Hamburguer>(hamburguerDTO));
                 _hamburguerRepository.Salvar();
             }
             else
-                throw new Exception("Cliente não existe.");
+                throw new Exception("Hamburguer não existe.");
         }
 
-        public void Adicionar(Hamburguer hamburguer)
+        public void Adicionar(HamburguerDTO hamburguerDTO)
         {
-            _hamburguerRepository.Adicionar(hamburguer);
+            _hamburguerRepository.Adicionar(_mapper.Map<Hamburguer>(hamburguerDTO));
             _hamburguerRepository.Salvar();
         }
 
@@ -52,13 +56,13 @@ namespace NetDeliveryAppAplicacao
         {
             if (_hamburguerRepository.Existe(id))
             {
-                var hamburguer = _hamburguerRepository.Encontrar(id);
+                var hamburguerDTO = _mapper.Map<Hamburguer>(_hamburguerRepository.Encontrar(id));
 
-                _hamburguerRepository.Deletar(hamburguer);
+                _hamburguerRepository.Deletar(hamburguerDTO);
                 _hamburguerRepository.Salvar();
             }
             else
-                throw new Exception("Cliente não existe.");
+                throw new Exception("Hamburguer não existe.");
         }
     }
 }

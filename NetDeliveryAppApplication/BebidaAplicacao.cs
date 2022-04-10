@@ -1,4 +1,6 @@
-﻿using NetDeliveryAppAplicacao.Interfaces;
+﻿using AutoMapper;
+using NetDeliveryAppAplicacao.DTOs;
+using NetDeliveryAppAplicacao.Interfaces;
 using NetDeliveryAppDominio.Entidades;
 using NetDeliveryAppDominio.Interfaces.Repositorios;
 using System;
@@ -12,39 +14,41 @@ namespace NetDeliveryAppAplicacao
     public class BebidaAplicacao : IBebidaAplicacao
     {
         private readonly IBebidaRepository _bebidaRepository;
-        public BebidaAplicacao(IBebidaRepository bebidaRepository)
+        private readonly IMapper _mapper;
+        public BebidaAplicacao(IBebidaRepository bebidaRepository, IMapper mapper)
         {
             _bebidaRepository = bebidaRepository;
+            _mapper = mapper;
         }
 
-        public List<Bebida> Listar()
+        public List<BebidaDTO> Listar()
         {
-            return _bebidaRepository.Listar();
+            return _mapper.Map<List<BebidaDTO>>(_bebidaRepository.Listar());
         }
-        public Bebida Encontrar(int id)
+        public BebidaDTO Encontrar(int id)
         {
             if (_bebidaRepository.Existe(id))
             {
-                return _bebidaRepository.Encontrar(id);
+                return _mapper.Map<BebidaDTO>(_bebidaRepository.Encontrar(id));
             }
             else
-                throw new Exception("Cliente não existe.");
+                throw new Exception("Bebida não existe.");
         }
 
-        public void Editar(Bebida bebida)
+        public void Editar(BebidaDTO bebidaDTO)
         {
-            if (_bebidaRepository.Existe(bebida.Id))
+            if (_bebidaRepository.Existe(bebidaDTO.Id))
             {
-                _bebidaRepository.Editar(bebida);
+                _bebidaRepository.Editar(_mapper.Map<Bebida>(bebidaDTO));
                 _bebidaRepository.Salvar();
             }
             else
-                throw new Exception("Cliente não existe.");
+                throw new Exception("Bebida não existe.");
         }
 
-        public void Adicionar(Bebida bebida)
+        public void Adicionar(BebidaDTO bebidaDTO)
         {
-            _bebidaRepository.Adicionar(bebida);
+            _bebidaRepository.Adicionar(_mapper.Map<Bebida>(bebidaDTO));
             _bebidaRepository.Salvar();
         }
 
@@ -52,13 +56,13 @@ namespace NetDeliveryAppAplicacao
         {
             if (_bebidaRepository.Existe(id))
             {
-                var bebida = _bebidaRepository.Encontrar(id);
+                var bebidaDTO = _mapper.Map<Bebida>(_bebidaRepository.Encontrar(id));
 
-                _bebidaRepository.Deletar(bebida);
+                _bebidaRepository.Deletar(bebidaDTO);
                 _bebidaRepository.Salvar();
             }
             else
-                throw new Exception("Cliente não existe.");
+                throw new Exception("Bebida não existe.");
         }
     }
 }

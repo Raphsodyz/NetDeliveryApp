@@ -1,4 +1,6 @@
-﻿using NetDeliveryAppAplicacao.Interfaces;
+﻿using AutoMapper;
+using NetDeliveryAppAplicacao.DTOs;
+using NetDeliveryAppAplicacao.Interfaces;
 using NetDeliveryAppDominio.Entidades;
 using NetDeliveryAppDominio.Interfaces.Repositorios;
 
@@ -7,39 +9,41 @@ namespace NetDeliveryAppAplicacao
     public class PedidoAplicacao : IPedidoAplicacao
     {
         private readonly IPedidoRepository _pedidoRepository;
-        public PedidoAplicacao(IPedidoRepository pedidoRepository)
+        private readonly IMapper _mapper;
+        public PedidoAplicacao(IPedidoRepository pedidoRepository, IMapper mapper)
         {
             _pedidoRepository = pedidoRepository;
+            _mapper = mapper;
         }
 
-        public List<Pedido> Listar()
+        public List<PedidoDTO> Listar()
         {
-            return _pedidoRepository.Listar();
+            return _mapper.Map<List<PedidoDTO>>(_pedidoRepository.Listar());
         }
-        public Pedido Encontrar(int id)
+        public PedidoDTO Encontrar(int id)
         {
             if (_pedidoRepository.Existe(id))
             {
-                return _pedidoRepository.Encontrar(id);
+                return _mapper.Map<PedidoDTO>(_pedidoRepository.Encontrar(id));
             }
             else
-                throw new Exception("Cliente não existe.");
+                throw new Exception("Pedido não existe.");
         }
 
-        public void Editar(Pedido pedido)
+        public void Editar(PedidoDTO pedidoDTO)
         {
-            if (_pedidoRepository.Existe(pedido.Id))
+            if (_pedidoRepository.Existe(pedidoDTO.Id))
             {
-                _pedidoRepository.Editar(pedido);
+                _pedidoRepository.Editar(_mapper.Map<Pedido>(pedidoDTO));
                 _pedidoRepository.Salvar();
             }
             else
-                throw new Exception("Cliente não existe.");
+                throw new Exception("Pedido não existe.");
         }
 
-        public void Adicionar(Pedido pedido)
+        public void Adicionar(PedidoDTO pedidoDTO)
         {
-            _pedidoRepository.Adicionar(pedido);
+            _pedidoRepository.Adicionar(_mapper.Map<Pedido>(pedidoDTO));
             _pedidoRepository.Salvar();
         }
 
@@ -47,13 +51,13 @@ namespace NetDeliveryAppAplicacao
         {
             if (_pedidoRepository.Existe(id))
             {
-                var pedido = _pedidoRepository.Encontrar(id);
+                var pedidoDTO = _mapper.Map<Pedido>(_pedidoRepository.Encontrar(id));
 
-                _pedidoRepository.Deletar(pedido);
+                _pedidoRepository.Deletar(pedidoDTO);
                 _pedidoRepository.Salvar();
             }
             else
-                throw new Exception("Cliente não existe.");
+                throw new Exception("Pedido não existe.");
         }
     }
 }

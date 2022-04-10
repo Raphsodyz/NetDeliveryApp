@@ -1,4 +1,6 @@
-﻿using NetDeliveryAppAplicacao.Interfaces;
+﻿using AutoMapper;
+using NetDeliveryAppAplicacao.DTOs;
+using NetDeliveryAppAplicacao.Interfaces;
 using NetDeliveryAppDominio.Entidades;
 using NetDeliveryAppDominio.Interfaces.Repositorios;
 
@@ -8,39 +10,41 @@ namespace NetDeliveryAppAplicacao
     public class EnderecoAplicacao : IEnderecoAplicacao
     {
         private readonly IEnderecoRepository _enderecoRepository;
-        public EnderecoAplicacao(IEnderecoRepository enderecoRepository)
+        private readonly IMapper _mapper;
+        public EnderecoAplicacao(IEnderecoRepository enderecoRepository, IMapper mapper)
         {
             _enderecoRepository = enderecoRepository;
+            _mapper = mapper;
         }
 
-        public List<Endereco> Listar()
+        public List<EnderecoDTO> Listar()
         {
-            return _enderecoRepository.Listar();
+            return _mapper.Map<List<EnderecoDTO>>(_enderecoRepository.Listar());
         }
-        public Endereco Encontrar(int id)
+        public EnderecoDTO Encontrar(int id)
         {
             if (_enderecoRepository.Existe(id))
             {
-                return _enderecoRepository.Encontrar(id);
+                return _mapper.Map<EnderecoDTO>(_enderecoRepository.Encontrar(id));
             }
             else
-                throw new Exception("Cliente não existe.");
+                throw new Exception("Endereco não existe.");
         }
 
-        public void Editar(Endereco endereco)
+        public void Editar(EnderecoDTO enderecoDTO)
         {
-            if (_enderecoRepository.Existe(endereco.Id))
+            if (_enderecoRepository.Existe(enderecoDTO.Id))
             {
-                _enderecoRepository.Editar(endereco);
+                _enderecoRepository.Editar(_mapper.Map<Endereco>(enderecoDTO));
                 _enderecoRepository.Salvar();
             }
             else
-                throw new Exception("Cliente não existe.");
+                throw new Exception("Endereco não existe.");
         }
 
-        public void Adicionar(Endereco endereco)
+        public void Adicionar(EnderecoDTO enderecoDTO)
         {
-            _enderecoRepository.Adicionar(endereco);
+            _enderecoRepository.Adicionar(_mapper.Map<Endereco>(enderecoDTO));
             _enderecoRepository.Salvar();
         }
 
@@ -48,13 +52,13 @@ namespace NetDeliveryAppAplicacao
         {
             if (_enderecoRepository.Existe(id))
             {
-                var endereco = _enderecoRepository.Encontrar(id);
+                var enderecoDTO = _mapper.Map<Endereco>(_enderecoRepository.Encontrar(id));
 
-                _enderecoRepository.Deletar(endereco);
+                _enderecoRepository.Deletar(enderecoDTO);
                 _enderecoRepository.Salvar();
             }
             else
-                throw new Exception("Cliente não existe.");
+                throw new Exception("Endereco não existe.");
         }
     }
 }

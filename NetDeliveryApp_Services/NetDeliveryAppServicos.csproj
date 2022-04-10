@@ -27,10 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Fotos\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\NetDeliveryAppApplication\NetDeliveryAppAplicacao.csproj" />
     <ProjectReference Include="..\NetDeliveryAppDomain\NetDeliveryAppDominio.csproj" />
   </ItemGroup>

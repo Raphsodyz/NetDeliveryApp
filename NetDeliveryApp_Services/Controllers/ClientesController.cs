@@ -16,7 +16,7 @@ namespace NetDeliveryAppServicos.Controllers
             _clienteAplicacao = clienteAplicacao;
         }
 
-        [HttpGet]
+        [HttpGet("Listar")]
         public IActionResult Listar()
         {
             try
@@ -29,7 +29,7 @@ namespace NetDeliveryAppServicos.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("Encontrar/{id}")]
         public IActionResult Encontrar(int id)
         {
             try
@@ -43,12 +43,12 @@ namespace NetDeliveryAppServicos.Controllers
             
         }
 
-        [HttpPut("{id}")]
-        public IActionResult Editar([FromBody] ClienteDTO clientedto)
+        [HttpPut("Editar/{id}")]
+        public IActionResult Editar([FromBody] ClienteDTO clienteDTO)
         {
             try
             {
-                _clienteAplicacao.Editar(clientedto);
+                _clienteAplicacao.Editar(clienteDTO);
                 return Ok();
             }
             catch(Exception ex)
@@ -58,7 +58,7 @@ namespace NetDeliveryAppServicos.Controllers
             
         }
 
-        [HttpPost]
+        [HttpPost("Adicionar")]
         public IActionResult Adicionar(ClienteDTO clientedto)
         {
             try
@@ -72,7 +72,7 @@ namespace NetDeliveryAppServicos.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("Deletar/{id}")]
         public IActionResult Deletar(int id)
         {
             try

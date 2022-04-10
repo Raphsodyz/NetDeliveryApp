@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NetDeliveryAppAplicacao.DTOs;
 using NetDeliveryAppAplicacao.Interfaces;
 using NetDeliveryAppDominio.Entidades;
 
@@ -16,7 +17,7 @@ namespace NetDeliveryAppServicos.Controllers
             _enderecoAplicacao = enderecoAplicacao;
         }
 
-        [HttpGet]
+        [HttpGet("Listar")]
         public IActionResult Listar()
         {
             try
@@ -25,11 +26,11 @@ namespace NetDeliveryAppServicos.Controllers
             }
             catch (Exception)
             {
-                return BadRequest("Erro ao retornar todos os clientes.");
+                return BadRequest("Erro ao retornar todos os enderecos.");
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("Encontrar/{id}")]
         public IActionResult Encontrar(int id)
         {
             try
@@ -43,12 +44,12 @@ namespace NetDeliveryAppServicos.Controllers
 
         }
 
-        [HttpPut("{id}")]
-        public IActionResult Editar(int id, [FromBody] Endereco endereco)
+        [HttpPut("Editar/{id}")]
+        public IActionResult Editar([FromBody] EnderecoDTO enderecoDTO)
         {
             try
             {
-                _enderecoAplicacao.Editar(endereco);
+                _enderecoAplicacao.Editar(enderecoDTO);
                 return Ok();
             }
             catch (Exception ex)
@@ -58,13 +59,13 @@ namespace NetDeliveryAppServicos.Controllers
 
         }
 
-        [HttpPost]
-        public IActionResult Adicionar(Endereco endereco)
+        [HttpPost("Adicionar")]
+        public IActionResult Adicionar(EnderecoDTO enderecoDTO)
         {
             try
             {
-                _enderecoAplicacao.Adicionar(endereco);
-                return Created("Get", new { id = endereco.Id });
+                _enderecoAplicacao.Adicionar(enderecoDTO);
+                return Created("Get", new { id = enderecoDTO.Id });
             }
             catch (Exception ex)
             {
@@ -72,7 +73,7 @@ namespace NetDeliveryAppServicos.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("Deletar/{id}")]
         public IActionResult Deletar(int id)
         {
             try
