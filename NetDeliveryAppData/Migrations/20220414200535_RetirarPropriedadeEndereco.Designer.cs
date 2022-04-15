@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetDeliveryAppData.Contexto;
 
@@ -10,9 +11,10 @@ using NetDeliveryAppData.Contexto;
 namespace NetDeliveryAppData.Migrations
 {
     [DbContext(typeof(NetDeliveryAppContext))]
-    partial class NetDeliveryAppContextModelSnapshot : ModelSnapshot
+    [Migration("20220414200535_RetirarPropriedadeEndereco")]
+    partial class RetirarPropriedadeEndereco
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -141,6 +143,35 @@ namespace NetDeliveryAppData.Migrations
                     b.ToTable("Categorias");
                 });
 
+            modelBuilder.Entity("NetDeliveryAppDominio.Entidades.Cliente", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Cpf")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime?>("DataCriacao")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Foto")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Telefone")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Clientes");
+                });
+
             modelBuilder.Entity("NetDeliveryAppDominio.Entidades.Endereco", b =>
                 {
                     b.Property<int>("Id")
@@ -154,8 +185,11 @@ namespace NetDeliveryAppData.Migrations
                     b.Property<string>("Cidade")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("Numero")
+                    b.Property<int>("ClienteId")
                         .HasColumnType("int");
+
+                    b.Property<sbyte>("Numero")
+                        .HasColumnType("tinyint");
 
                     b.Property<string>("Observacao")
                         .HasColumnType("longtext");
@@ -166,6 +200,8 @@ namespace NetDeliveryAppData.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ClienteId");
+
                     b.ToTable("Enderecos");
                 });
 
@@ -173,6 +209,9 @@ namespace NetDeliveryAppData.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("ClienteId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DataPedido")
@@ -199,15 +238,12 @@ namespace NetDeliveryAppData.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("Valor")
                         .HasColumnType("decimal(65,30)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UsuarioId");
+                    b.HasIndex("ClienteId");
 
                     b.ToTable("Pedidos");
                 });
@@ -288,18 +324,11 @@ namespace NetDeliveryAppData.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("varchar(256)");
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("tinyint(1)");
-
-                    b.Property<int?>("EnderecoId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Foto")
-                        .HasColumnType("longtext");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("tinyint(1)");
@@ -316,11 +345,9 @@ namespace NetDeliveryAppData.Migrations
                         .HasColumnType("varchar(256)");
 
                     b.Property<string>("PasswordHash")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("PhoneNumber")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<bool>("PhoneNumberConfirmed")
@@ -333,13 +360,10 @@ namespace NetDeliveryAppData.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("UserName")
-                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("varchar(256)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("EnderecoId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -359,9 +383,19 @@ namespace NetDeliveryAppData.Migrations
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
+                    b.Property<int>("TipoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
                     b.HasKey("UserId", "RoleId");
 
                     b.HasIndex("RoleId");
+
+                    b.HasIndex("TipoId");
+
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
@@ -411,15 +445,26 @@ namespace NetDeliveryAppData.Migrations
                     b.Navigation("Categoria");
                 });
 
-            modelBuilder.Entity("NetDeliveryAppDominio.Entidades.Pedido", b =>
+            modelBuilder.Entity("NetDeliveryAppDominio.Entidades.Endereco", b =>
                 {
-                    b.HasOne("NetDeliveryAppDominio.Identity.Usuarios.Usuario", "Usuario")
+                    b.HasOne("NetDeliveryAppDominio.Entidades.Cliente", "Cliente")
                         .WithMany()
-                        .HasForeignKey("UsuarioId")
+                        .HasForeignKey("ClienteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Usuario");
+                    b.Navigation("Cliente");
+                });
+
+            modelBuilder.Entity("NetDeliveryAppDominio.Entidades.Pedido", b =>
+                {
+                    b.HasOne("NetDeliveryAppDominio.Entidades.Cliente", "Cliente")
+                        .WithMany()
+                        .HasForeignKey("ClienteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cliente");
                 });
 
             modelBuilder.Entity("NetDeliveryAppDominio.Entidades.Produto", b =>
@@ -431,26 +476,29 @@ namespace NetDeliveryAppData.Migrations
                     b.Navigation("Categoria");
                 });
 
-            modelBuilder.Entity("NetDeliveryAppDominio.Identity.Usuarios.Usuario", b =>
-                {
-                    b.HasOne("NetDeliveryAppDominio.Entidades.Endereco", "Endereco")
-                        .WithMany()
-                        .HasForeignKey("EnderecoId");
-
-                    b.Navigation("Endereco");
-                });
-
             modelBuilder.Entity("NetDeliveryAppDominio.Identity.Usuarios.UsuarioTipo", b =>
                 {
+                    b.HasOne("NetDeliveryAppDominio.Identity.Usuarios.Tipos", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("NetDeliveryAppDominio.Identity.Usuarios.Tipos", "Tipo")
                         .WithMany("UsuariosTipo")
-                        .HasForeignKey("RoleId")
+                        .HasForeignKey("TipoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("NetDeliveryAppDominio.Identity.Usuarios.Usuario", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("NetDeliveryAppDominio.Identity.Usuarios.Usuario", "Usuario")
                         .WithMany("UsuariosTipo")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

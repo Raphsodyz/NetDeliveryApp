@@ -46,9 +46,9 @@ namespace NetDeliveryAppAplicacao.DTOs
         [Display(Name = "Entregue?")]
         [Range(typeof(bool), "true", "true", ErrorMessage = "O campo deve estar selecionado.")]
         public bool Entregue { get; set; }
+        public int UsuarioId { get; set; }
 
-        [Display(Name = "Cliente")]
-        public virtual int ClienteId { get; set; }
-        public virtual ClienteDTO? Cliente { get; set; } = null!;
+        [Display(Name = "Usuario")]
+        public UsuarioDTO Usuario { get; set; }
     }
 }

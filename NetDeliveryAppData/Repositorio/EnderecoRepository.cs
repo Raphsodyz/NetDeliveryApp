@@ -19,13 +19,12 @@ namespace NetDeliveryAppData.Repositorio
 
         public override List<Endereco> Listar()
         {
-            return _netDeliveryAppContext.Enderecos.Include(p => p.Cliente).ToList();
+            return _netDeliveryAppContext.Enderecos.ToList();
         }
 
         public override Endereco Encontrar(int id)
         {
             return _netDeliveryAppContext.Enderecos
-                .Include(p => p.Cliente)
                 .Where(p => p.Id == id)
                 .First();
         }

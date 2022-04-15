@@ -1,10 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using NetDeliveryAppDominio.Entidades;
+using NetDeliveryAppDominio.Identity.Usuarios;
 
 namespace NetDeliveryAppData.Contexto
 {
-    public partial class NetDeliveryAppContext : DbContext
+    public partial class NetDeliveryAppContext : IdentityDbContext<Usuario, Tipos, int,
+                                                                    IdentityUserClaim<int>, UsuarioTipo,
+                                                                    IdentityUserLogin<int>, IdentityRoleClaim<int>,
+                                                                    IdentityUserToken<int>>
     {
         private readonly IConfiguration _configuration;
         public NetDeliveryAppContext(IConfiguration configuration)
@@ -12,7 +18,6 @@ namespace NetDeliveryAppData.Contexto
             _configuration = configuration;
         }
 
-        public virtual DbSet<Cliente> Clientes { get; set; } = null!;
         public virtual DbSet<Endereco> Enderecos { get; set; } = null!;
         public virtual DbSet<Pedido> Pedidos { get; set; } = null!;
         public virtual DbSet<Acrescimo> Acrescimos { get; set; } = null!;

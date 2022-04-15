@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using NetDeliveryAppDominio.Identity.Usuarios;
+using System;
 using System.Collections.Generic;
 
 namespace NetDeliveryAppDominio.Entidades
@@ -14,7 +16,7 @@ namespace NetDeliveryAppDominio.Entidades
         public string Pagamento { get; set; } = null!;
         public string Troco { get; set; } = null!;
         public bool Entregue { get; set; }
-        public virtual int ClienteId { get; set; }
-        public virtual Cliente? Cliente { get; set; } = null!;
+        public int UsuarioId { get; set; }
+        public Usuario Usuario { get; set; }
     }
 }

@@ -16,7 +16,5 @@ namespace NetDeliveryAppAplicacao.Comandos.Endereco
         public string Bairro { get; set; } = null!;
         public string? Cidade { get; set; }
         public string? Observacao { get; set; }
-        public virtual int ClienteId { get; set; }
-        public virtual ClienteDTO? Cliente { get; set; } = null!;
     }
 }

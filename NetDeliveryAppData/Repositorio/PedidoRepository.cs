@@ -20,14 +20,14 @@ namespace NetDeliveryAppData.Repositorio
         public override List<Pedido> Listar()
         {
             return _netDeliveryAppContext.Pedidos
-                .Include(p => p.Cliente)
+                .Include(p => p.Usuario)
                 .ToList();
         }
 
         public override Pedido Encontrar(int id)
         {
             return _netDeliveryAppContext.Pedidos
-                .Include(p => p.Cliente).
+                .Include(p => p.Usuario).
                 Where(p => p.Id == id)
                 .First();
         }

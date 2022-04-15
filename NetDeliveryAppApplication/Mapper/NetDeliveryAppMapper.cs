@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using NetDeliveryAppDominio.Entidades;
 using NetDeliveryAppAplicacao.DTOs;
+using NetDeliveryAppDominio.Identity.Usuarios;
 
 namespace NetDeliveryAppAplicacao.Mapper
 {
@@ -10,10 +11,11 @@ namespace NetDeliveryAppAplicacao.Mapper
         {
             CreateMap<AcrescimoDTO, Acrescimo>().ReverseMap();
             CreateMap<CategoriaDTO, Categoria>().ReverseMap();
-            CreateMap<ClienteDTO, Cliente>().ReverseMap();
             CreateMap<EnderecoDTO, Endereco>().ReverseMap();
             CreateMap<ProdutoDTO, Produto>().ReverseMap();
             CreateMap<PedidoDTO, Pedido>().ReverseMap();
+            CreateMap<UsuarioDTO, Usuario>().ReverseMap();
+            CreateMap<LoginDTO, Usuario>().ReverseMap();
         }
     }
 }

@@ -7,11 +7,9 @@ namespace NetDeliveryAppDominio.Entidades
     {
         public int Id { get; set; }
         public string Rua { get; set; } = null!;
-        public sbyte Numero { get; set; }
+        public int Numero { get; set; }
         public string Bairro { get; set; } = null!;
         public string? Cidade { get; set; }
         public string? Observacao { get; set; }
-        public virtual int ClienteId { get; set; }
-        public virtual Cliente? Cliente { get; set; } = null!;
     }
 }

@@ -20,7 +20,7 @@ namespace NetDeliveryAppAplicacao.DTOs
 
         [Required(ErrorMessage = "O campo 'Número' não pode estar vazio.")]
         [Display(Name = "Número")]
-        [Range(0, int.MaxValue, ErrorMessage = "Por favor, digite somente números.")]
+        [Range(0.0, int.MaxValue, ErrorMessage = "O campo {0} tem que ser maior que {1}.")]
         public int Numero { get; set; }
 
         [Required(ErrorMessage = "O campo 'Bairro' não pode estar vazio.")]
@@ -35,9 +35,5 @@ namespace NetDeliveryAppAplicacao.DTOs
         [Display(Name = "Observação")]
         [StringLength(2000, ErrorMessage = "Digite uma observação válida.", MinimumLength = 2)]
         public string? Observacao { get; set; }
-
-        [Display(Name = "Cliente")]
-        public virtual int ClienteId { get; set; }
-        public virtual ClienteDTO? Cliente { get; set; } = null!;
     }
 }

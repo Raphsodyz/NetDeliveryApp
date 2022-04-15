@@ -18,7 +18,5 @@ namespace NetDeliveryAppAplicacao.Comandos.Pedido
         public string Pagamento { get; set; } = null!;
         public string Troco { get; set; } = null!;
         public bool Entregue { get; set; }
-        public virtual int ClienteId { get; set; }
-        public virtual ClienteDTO? Cliente { get; set; } = null!;
     }
 }

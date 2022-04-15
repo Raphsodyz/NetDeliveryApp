@@ -27,7 +27,7 @@ module.exports = {
             '^/Clientes/Listar': {
                 target: 'https://localhost:5001/api/'
             },
-            '^/Acrescimo': {
+            '^/Acrescimo/Listar': {
                 target: 'https://localhost:5001/api/'
             },
             '^/Bebida': {

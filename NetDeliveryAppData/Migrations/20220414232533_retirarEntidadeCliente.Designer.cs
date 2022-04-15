@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetDeliveryAppData.Contexto;
 
@@ -10,9 +11,10 @@ using NetDeliveryAppData.Contexto;
 namespace NetDeliveryAppData.Migrations
 {
     [DbContext(typeof(NetDeliveryAppContext))]
-    partial class NetDeliveryAppContextModelSnapshot : ModelSnapshot
+    [Migration("20220414232533_retirarEntidadeCliente")]
+    partial class retirarEntidadeCliente
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -154,8 +156,8 @@ namespace NetDeliveryAppData.Migrations
                     b.Property<string>("Cidade")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("Numero")
-                        .HasColumnType("int");
+                    b.Property<sbyte>("Numero")
+                        .HasColumnType("tinyint");
 
                     b.Property<string>("Observacao")
                         .HasColumnType("longtext");
@@ -359,9 +361,19 @@ namespace NetDeliveryAppData.Migrations
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
+                    b.Property<int>("TipoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
                     b.HasKey("UserId", "RoleId");
 
                     b.HasIndex("RoleId");
+
+                    b.HasIndex("TipoId");
+
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
@@ -442,15 +454,27 @@ namespace NetDeliveryAppData.Migrations
 
             modelBuilder.Entity("NetDeliveryAppDominio.Identity.Usuarios.UsuarioTipo", b =>
                 {
+                    b.HasOne("NetDeliveryAppDominio.Identity.Usuarios.Tipos", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("NetDeliveryAppDominio.Identity.Usuarios.Tipos", "Tipo")
                         .WithMany("UsuariosTipo")
-                        .HasForeignKey("RoleId")
+                        .HasForeignKey("TipoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("NetDeliveryAppDominio.Identity.Usuarios.Usuario", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("NetDeliveryAppDominio.Identity.Usuarios.Usuario", "Usuario")
                         .WithMany("UsuariosTipo")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
