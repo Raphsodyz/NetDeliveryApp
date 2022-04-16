@@ -21,6 +21,7 @@ namespace NetDeliveryAppAplicacao.DTOs
         [Required(ErrorMessage = "O campo 'Número' não pode estar vazio.")]
         [Display(Name = "Número")]
         [Range(0.0, int.MaxValue, ErrorMessage = "O campo {0} tem que ser maior que {1}.")]
+        [RegularExpression("^[0-9]*$", ErrorMessage = "Digite somente números.")]
         public int Numero { get; set; }
 
         [Required(ErrorMessage = "O campo 'Bairro' não pode estar vazio.")]

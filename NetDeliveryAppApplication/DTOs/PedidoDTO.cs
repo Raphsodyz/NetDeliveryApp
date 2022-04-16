@@ -18,6 +18,7 @@ namespace NetDeliveryAppAplicacao.DTOs
         [DataType(DataType.Currency)]
         [Display(Name = "Valor")]
         [Range(0, double.MaxValue, ErrorMessage = "Por favor, digite somente números.")]
+        [RegularExpression(@"-?\d+(?:\.\d+)?", ErrorMessage = "Por favor, digite somente números.")]
         public decimal Valor { get; set; }
 
         [Display(Name = "Observação")]
@@ -47,8 +48,5 @@ namespace NetDeliveryAppAplicacao.DTOs
         [Range(typeof(bool), "true", "true", ErrorMessage = "O campo deve estar selecionado.")]
         public bool Entregue { get; set; }
         public int UsuarioId { get; set; }
-
-        [Display(Name = "Usuario")]
-        public UsuarioDTO Usuario { get; set; }
     }
 }

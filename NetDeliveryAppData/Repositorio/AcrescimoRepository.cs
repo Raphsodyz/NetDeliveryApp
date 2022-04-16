@@ -1,4 +1,5 @@
-﻿using NetDeliveryAppData.Contexto;
+﻿using Microsoft.EntityFrameworkCore;
+using NetDeliveryAppData.Contexto;
 using NetDeliveryAppDominio.Entidades;
 using NetDeliveryAppDominio.Interfaces.Repositorios;
 using System;
@@ -18,12 +19,12 @@ namespace NetDeliveryAppData.Repositorio
 
         public override List<Acrescimo> Listar()
         {
-            return _netDeliveryAppContext.Acrescimos.ToList();
+            return _netDeliveryAppContext.Acrescimos.Include(a => a.Categoria).ToList();
         }
 
         public override Acrescimo Encontrar(int id)
         {
-            return _netDeliveryAppContext.Acrescimos.Where(c => c.Id == id).First();
+            return _netDeliveryAppContext.Acrescimos.Include(a => a.Categoria).Where(c => c.Id == id).First();
         }
 
         public override void Deletar(Acrescimo entidade)

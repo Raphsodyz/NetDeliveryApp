@@ -44,6 +44,6 @@ namespace NetDeliveryAppAplicacao.DTOs
 
         [Display(Name = "Categoria")]
         public virtual int CategoriaId { get; set; }
-        public virtual CategoriaDTO? Categoria { get; set; } = null!;
+        public CategoriaDTO? Categoria { get; set; }
     }
 }

@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NetDeliveryAppAplicacao.DTOs;
 using NetDeliveryAppAplicacao.Interfaces;
-using NetDeliveryAppDominio.Entidades;
 
 
 namespace NetDeliveryAppServicos.Controllers
@@ -18,6 +18,7 @@ namespace NetDeliveryAppServicos.Controllers
         }
 
         [HttpGet("Listar")]
+        [AllowAnonymous]
         public IActionResult Listar()
         {
             try
@@ -31,6 +32,7 @@ namespace NetDeliveryAppServicos.Controllers
         }
 
         [HttpGet("Encontrar/{id}")]
+        [AllowAnonymous]
         public IActionResult Encontrar(int id)
         {
             try
@@ -60,6 +62,7 @@ namespace NetDeliveryAppServicos.Controllers
         }
 
         [HttpPost("Adicionar")]
+        [AllowAnonymous]
         public IActionResult Adicionar(AcrescimoDTO acrescimoDTO)
         {
             try

@@ -17,11 +17,14 @@ namespace NetDeliveryAppAplicacao.DTOs
         [DisplayFormat(DataFormatString = "{0:C2}")]
         [DataType(DataType.Currency)]
         [Display(Name = "Valor")]
-        [Range(0, double.MaxValue, ErrorMessage = "Por favor, digite somente números.")]
+        [Range(0, double.MaxValue, ErrorMessage = "Por favor, digite número válido.")]
+        [RegularExpression(@"-?\d+(?:\.\d+)?", ErrorMessage = "Por favor, digite somente números.")]
         public decimal Valor { get; set; }
 
         [Display(Name = "Categoria")]
+        [Required(ErrorMessage = "O campo não pode estar vazio.")]
+        [RegularExpression("^[0-9]*$", ErrorMessage = "Digite somente números.")]
         public virtual int CategoriaId { get; set; }
-        public virtual CategoriaDTO? Categoria { get; set; } = null!;
+        public CategoriaDTO? Categoria { get; set; }
     }
 }

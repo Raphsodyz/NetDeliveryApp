@@ -10,20 +10,16 @@
                     <tr>
                         <th scope="col">ID</th>
                         <th scope="col">Nome</th>
-                        <th scope="col">CPF</th>
-                        <th scope="col">Telefone</th>
-                        <th scope="col">Data de Criação</th>
-                        <th scope="col">Foto</th>
+                        <th scope="col">Valor</th>
+                        <th scope="col">Categoria</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="Clientes in post" :key="Clientes.id">
-                        <th scope="row">{{ Clientes.id }}</th>
-                        <td>{{ Clientes.nome }}</td>
-                        <td>{{ Clientes.cpf }}</td>
-                        <td>{{ Clientes.telefone }}</td>
-                        <td>{{ Clientes.dataCriacao }}</td>
-                        <td>{{ Clientes.foto }}</td>
+                    <tr v-for="Acrescimos in post" :key="Acrescimos.id">
+                        <th scope="row">{{ Acrescimos.id }}</th>
+                        <td>{{ Acrescimos.nome }}</td>
+                        <td>{{ Acrescimos.valor }}</td>
+                        <td>{{ Acrescimos.categoria.nome }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -55,7 +51,7 @@
                 this.post = null;
                 this.loading = true;
 
-                fetch('Clientes/Listar')
+                fetch('Acrescimos/Listar')
                     .then(r => r.json())
                     .then(json => {
                         this.post = json;
