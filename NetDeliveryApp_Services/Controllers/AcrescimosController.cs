@@ -47,6 +47,7 @@ namespace NetDeliveryAppServicos.Controllers
         }
 
         [HttpPut("Editar/{id}")]
+        [Authorize(Roles = "Administrador")]
         public IActionResult Editar([FromBody] AcrescimoDTO acrescimoDTO)
         {
             try
@@ -62,7 +63,7 @@ namespace NetDeliveryAppServicos.Controllers
         }
 
         [HttpPost("Adicionar")]
-        [AllowAnonymous]
+        [Authorize(Roles = "Administrador")]
         public IActionResult Adicionar(AcrescimoDTO acrescimoDTO)
         {
             try
@@ -77,6 +78,7 @@ namespace NetDeliveryAppServicos.Controllers
         }
 
         [HttpDelete("Deletar/{id}")]
+        [Authorize(Roles = "Administrador")]
         public IActionResult Deletar(int id)
         {
             try

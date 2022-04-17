@@ -69,6 +69,12 @@ namespace NetDeliveryAppServicos
                     };
                 });
 
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+                options.LoginPath = "/api/Usuarios/Login";
+            });
+
             services.AddCors();
 
             services.AddTransient<IEnderecoRepository, EnderecoRepository>();

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using NetDeliveryAppAplicacao.DTOs;
 using NetDeliveryAppAplicacao.Interfaces;
 using NetDeliveryAppDominio.Entidades;
@@ -17,6 +18,7 @@ namespace NetDeliveryAppServicos.Controllers
         }
 
         [HttpGet("Listar")]
+        [Authorize(Roles = "Administrador")]
         public IActionResult Listar()
         {
             try
@@ -44,6 +46,7 @@ namespace NetDeliveryAppServicos.Controllers
         }
 
         [HttpPut("Editar/{id}")]
+        [Authorize(Roles = "Administrador")]
         public IActionResult Editar([FromBody] PedidoDTO pedidoDTO)
         {
             try
@@ -73,6 +76,7 @@ namespace NetDeliveryAppServicos.Controllers
         }
 
         [HttpDelete("Deletar/{id}")]
+        [Authorize(Roles = "Administrador")]
         public IActionResult Deletar(int id)
         {
             try
