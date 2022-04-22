@@ -38,6 +38,8 @@ namespace NetDeliveryAppAplicacao.DTOs
         [Display(Name = "Confirme sua senha")]
         [Compare("PasswordHash", ErrorMessage = "As senhas são diferentes.")]
         public string ConfirmarSenha { get; set; }
+        [Required]
+        public string Codigo { get; set; }
 
         [Display(Name = "Foto")]
         [DataType(DataType.ImageUrl)]

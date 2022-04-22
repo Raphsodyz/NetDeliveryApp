@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using NetDeliveryAppDominio.Entidades;
+using NetDeliveryAppDominio.Identity;
 using NetDeliveryAppDominio.Identity.Usuarios;
 
 namespace NetDeliveryAppData.Contexto
@@ -23,6 +24,7 @@ namespace NetDeliveryAppData.Contexto
         public virtual DbSet<Acrescimo> Acrescimos { get; set; } = null!;
         public virtual DbSet<Produto> Produtos { get; set; } = null!;
         public virtual DbSet<Categoria> Categorias { get; set; } = null!;
+        public virtual DbSet<ResetarSenha> ResetarSenhas { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

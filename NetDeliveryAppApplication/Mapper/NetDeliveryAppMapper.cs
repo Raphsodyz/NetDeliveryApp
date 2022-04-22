@@ -2,6 +2,7 @@
 using NetDeliveryAppDominio.Entidades;
 using NetDeliveryAppAplicacao.DTOs;
 using NetDeliveryAppDominio.Identity.Usuarios;
+using NetDeliveryAppDominio.Identity;
 
 namespace NetDeliveryAppAplicacao.Mapper
 {
@@ -16,6 +17,7 @@ namespace NetDeliveryAppAplicacao.Mapper
             CreateMap<PedidoDTO, Pedido>().ReverseMap();
             CreateMap<UsuarioDTO, Usuario>().ReverseMap();
             CreateMap<LoginDTO, Usuario>().ReverseMap();
+            CreateMap<ResetarSenhaDTO, ResetarSenha>().ReverseMap();
         }
     }
 }

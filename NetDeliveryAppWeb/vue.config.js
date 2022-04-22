@@ -24,22 +24,91 @@ module.exports = {
             cert: fs.readFileSync(certFilePath),
         },
         proxy: {
-            '^/Clientes/Listar': {
-                target: 'https://localhost:5001/api/'
-            },
             '^/Acrescimos/Listar': {
                 target: 'https://localhost:5001/api/'
             },
-            '^/Bebida': {
+            '^/Acrescimos/Encontrar/': {
                 target: 'https://localhost:5001/api/'
             },
-            '^/Endereco': {
+            '^/Acrescimos/Editar/': {
                 target: 'https://localhost:5001/api/'
             },
-            '^/Hamburguer': {
+            '^/Acrescimos/Adicionar': {
                 target: 'https://localhost:5001/api/'
             },
-            '^/Pedido': {
+            '^/Acrescimos/Deletar/': {
+                target: 'https://localhost:5001/api/'
+            },
+            '^/Categorias/Listar': {
+                target: 'https://localhost:5001/api/'
+            },
+            '^/Categorias/Encontrar/': {
+                target: 'https://localhost:5001/api/'
+            },
+            '^/Categorias/Editar/': {
+                target: 'https://localhost:5001/api/'
+            },
+            '^/Categorias/Adicionar': {
+                target: 'https://localhost:5001/api/'
+            },
+            '^/Categorias/Deletar/': {
+                target: 'https://localhost:5001/api/'
+            },
+            '^/Enderecos/Listar': {
+                target: 'https://localhost:5001/api/'
+            },
+            '^/Enderecos/Encontrar/': {
+                target: 'https://localhost:5001/api/'
+            },
+            '^/Enderecos/Editar/': {
+                target: 'https://localhost:5001/api/'
+            },
+            '^/Enderecos/Adicionar': {
+                target: 'https://localhost:5001/api/'
+            },
+            '^/Enderecos/Deletar/': {
+                target: 'https://localhost:5001/api/'
+            },
+            '^/Pedidos/Listar': {
+                target: 'https://localhost:5001/api/'
+            },
+            '^/Pedidos/Encontrar/': {
+                target: 'https://localhost:5001/api/'
+            },
+            '^/Pedidos/Editar/': {
+                target: 'https://localhost:5001/api/'
+            },
+            '^/Pedidos/Adicionar': {
+                target: 'https://localhost:5001/api/'
+            },
+            '^/Pedidos/Deletar/': {
+                target: 'https://localhost:5001/api/'
+            },
+            '^/Produtos/Listar': {
+                target: 'https://localhost:5001/api/'
+            },
+            '^/Pedidos/Encontrar/': {
+                target: 'https://localhost:5001/api/'
+            },
+            '^/Pedidos/Editar/': {
+                target: 'https://localhost:5001/api/'
+            },
+            '^/Pedidos/Adicionar': {
+                target: 'https://localhost:5001/api/'
+            },
+            '^/Pedidos/Deletar/': {
+                target: 'https://localhost:5001/api/'
+            },
+            '^/Pedidos/Listar': {
+                target: 'https://localhost:5001/api/'
+            },
+            '^/Usuarios/Encontrar': {
+                target: 'https://localhost:5001/api/'
+            },
+            '^/Usuarios/Registro': {
+                target: 'https://localhost:5001/api/'
+            },
+            '^/Usuarios/Login': {
                 target: 'https://localhost:5001/api/'
             }
         },

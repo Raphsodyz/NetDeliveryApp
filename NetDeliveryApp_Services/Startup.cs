@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using NetDeliveryAppAplicacao;
 using NetDeliveryAppAplicacao.Interfaces;
 using NetDeliveryAppData.Contexto;
 using NetDeliveryAppData.Repositorio;
+using NetDeliveryAppDominio.Email;
 using NetDeliveryAppDominio.Identity.Usuarios;
 using NetDeliveryAppDominio.Interfaces.Repositorios;
 using System.Text;
@@ -29,6 +31,8 @@ namespace NetDeliveryAppServicos
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
             services.AddDbContext<NetDeliveryAppContext>();
+
+            services.AddTransient<IEmailSender, EmailSender>();
 
             IdentityBuilder builder = services.AddIdentityCore<Usuario>(options => {
                 options.SignIn.RequireConfirmedEmail = false;
@@ -82,12 +86,14 @@ namespace NetDeliveryAppServicos
             services.AddTransient<IAcrescimoRepository, AcrescimoRepository>();
             services.AddTransient<ICategoriaRepository, CategoriaRepository>();
             services.AddTransient<IProdutoRepository, ProdutosRepository>();
+            services.AddTransient<IResetarSenhaRepository, ResetarSenhaRepository>();
 
             services.AddTransient<IAcrescimoAplicacao, AcrescimoAplicacao>();
             services.AddTransient<ICategoriaAplicacao, CategoriaAplicacao>();
             services.AddTransient<IEnderecoAplicacao, EnderecoAplicacao>();
             services.AddTransient<IProdutoAplicacao, ProdutoAplicacao>();
             services.AddTransient<IPedidoAplicacao, PedidoAplicacao>();
+            services.AddTransient<IResetarSenhaAplicacao, ResetarSenhaAplicacao>();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         }

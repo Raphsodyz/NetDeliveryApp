@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using NetDeliveryAppAplicacao.DTOs;
 using NetDeliveryAppAplicacao.Interfaces;
-using NetDeliveryAppDominio.Entidades;
 
 namespace NetDeliveryAppServicos.Controllers
 {
