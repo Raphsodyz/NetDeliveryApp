@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/0.5.7-alpha">
   <PropertyGroup Label="Globals">
-    <ProjectGuid>233aa04d-873c-4cc1-b17f-925466cf9cc1</ProjectGuid>
+    <ProjectGuid>08f8d930-11c8-4441-afc9-3dcfc3fc1f44</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup>
     <StartupCommand>npm run serve</StartupCommand>
@@ -11,9 +11,7 @@
     <Script Include="**" Exclude="*.esproj;**\node_modules\**" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="public\" />
     <Folder Include="src\assets\" />
-    <Folder Include="src\components\UI\" />
   </ItemGroup>
   <!-- This target is copied from the ASP.NET SPA template in order to ensure node_modules are in place. -->
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
