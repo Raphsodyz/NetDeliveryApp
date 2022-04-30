@@ -170,8 +170,6 @@ namespace NetDeliveryAppServicos.Controllers
             }
 
             return Ok("Senha resetada com sucesso!");
-
-
         }
 
         private async Task<string> GerarJWT(Usuario usuario)

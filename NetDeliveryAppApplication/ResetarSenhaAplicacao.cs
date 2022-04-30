@@ -17,53 +17,58 @@ namespace NetDeliveryAppAplicacao
             _mapper = mapper;
         }
 
-        public List<ResetarSenhaDTO> Listar()
+        public async Task<List<ResetarSenhaDTO>> Listar()
         {
-            return _mapper.Map<List<ResetarSenhaDTO>>(_resetarSenhaRepository.Listar());
+            return _mapper.Map<List<ResetarSenhaDTO>>(await _resetarSenhaRepository.Listar());
         }
-        public ResetarSenhaDTO Encontrar(int id)
+        public async Task<ResetarSenhaDTO> Encontrar(int id)
         {
             if (_resetarSenhaRepository.Existe(id))
             {
-                return _mapper.Map<ResetarSenhaDTO>(_resetarSenhaRepository.Encontrar(id));
+                return _mapper.Map<ResetarSenhaDTO>(await _resetarSenhaRepository.Encontrar(id));
             }
             else
-                throw new Exception("Produto não existe.");
+                throw new Exception("Senha não existente.");
         }
 
-        public void Editar(ResetarSenhaDTO resetarSenhaDTO)
+        public async Task Editar(ResetarSenhaDTO resetarSenhaDTO)
         {
-            if (_resetarSenhaRepository.Existe(resetarSenhaDTO.Id))
+            var resetarSenha = await _resetarSenhaRepository.Achar(resetarSenhaDTO.Id);
+            if (resetarSenha == null)
             {
-                _resetarSenhaRepository.Editar(_mapper.Map<ResetarSenha>(resetarSenhaDTO));
-                _resetarSenhaRepository.Salvar();
+                throw new Exception("Senha não encontrada.");
             }
             else
-                throw new Exception("Produto não existe.");
+                _resetarSenhaRepository.Editar(_mapper.Map<ResetarSenha>(resetarSenhaDTO));
+        }
+
+        public async Task<bool> Salvar()
+        {
+            return await _resetarSenhaRepository.Salvar();
         }
 
         public void Adicionar(ResetarSenhaDTO resetarSenhaDTO)
         {
             _resetarSenhaRepository.Adicionar(_mapper.Map<ResetarSenha>(resetarSenhaDTO));
-            _resetarSenhaRepository.Salvar();
         }
 
-        public void Deletar(int id)
+        public async Task Deletar(int id)
         {
-            if (_resetarSenhaRepository.Existe(id))
+            var resetarSenha = await _resetarSenhaRepository.Achar(id);
+            if (resetarSenha == null)
             {
-                var resetarSenhaDTO = _mapper.Map<ResetarSenha>(_resetarSenhaRepository.Encontrar(id));
-
-                _resetarSenhaRepository.Deletar(resetarSenhaDTO);
-                _resetarSenhaRepository.Salvar();
+                throw new Exception("Senha não existe.");
             }
             else
-                throw new Exception("Produto não existe.");
+            {
+                var resetarSenhaDTO = _mapper.Map<ResetarSenhaDTO>(resetarSenha);
+                _resetarSenhaRepository.Deletar(resetarSenhaDTO.Id);
+            }
         }
 
         public ResetarSenhaDTO ResetarSenhaDetalhes(string otp, UsuarioDTO usuario)
         {
-            return _mapper.Map<ResetarSenhaDTO>(_resetarSenhaRepository.ResetarSenhaDetalhes(otp, _mapper.Map<Usuario>(usuario)));
+            return _mapper.Map<ResetarSenhaDTO>( _resetarSenhaRepository.ResetarSenhaDetalhes(otp, _mapper.Map<Usuario>(usuario)));
         }
     }
 }

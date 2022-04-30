@@ -12,6 +12,6 @@ namespace NetDeliveryAppDominio.Entidades
         public string Nome { get; set; } = null!;
         public decimal Valor { get; set; }
         public int? CategoriaId { get; set; }
-        public Categoria Categoria { get; set; } = null!;
+        public Categoria? Categoria { get; set; } = null!;
     }
 }

@@ -2,11 +2,6 @@
 using NetDeliveryAppData.Contexto;
 using NetDeliveryAppDominio.Entidades;
 using NetDeliveryAppDominio.Interfaces.Repositorios;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetDeliveryAppData.Repositorio
 {
@@ -17,24 +12,29 @@ namespace NetDeliveryAppData.Repositorio
 
         }
 
-        public override List<Acrescimo> Listar()
+        public override async Task<List<Acrescimo>> Listar()
         {
-            return _netDeliveryAppContext.Acrescimos.Include(a => a.Categoria).ToList();
+            return await _netDeliveryAppContext.Acrescimos.Include(a => a.Categoria).ToListAsync();
         }
 
-        public override Acrescimo Encontrar(int id)
+        public override async Task<Acrescimo> Encontrar(int id)
         {
-            return _netDeliveryAppContext.Acrescimos.Include(a => a.Categoria).Where(c => c.Id == id).First();
+            return await _netDeliveryAppContext.Acrescimos.Include(a => a.Categoria).Where(c => c.Id == id).FirstAsync();
         }
 
-        public override void Deletar(Acrescimo entidade)
+        public override async void Deletar(int id)
         {
-            base.Deletar(entidade);
+            var entidade = await _netDeliveryAppContext.Acrescimos.FindAsync(id);
+            _netDeliveryAppContext.Acrescimos.Remove(entidade);
         }
 
         public override bool Existe(int id)
         {
             return _netDeliveryAppContext.Acrescimos.Any(c => c.Id == id);
+        }
+        public override async Task<Acrescimo> Achar(int id)
+        {
+            return await _netDeliveryAppContext.Acrescimos.FindAsync(id);
         }
     }
 }

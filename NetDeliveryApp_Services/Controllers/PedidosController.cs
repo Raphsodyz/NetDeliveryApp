@@ -18,11 +18,11 @@ namespace NetDeliveryAppServicos.Controllers
 
         [HttpGet("Listar")]
         [Authorize(Roles = "Administrador")]
-        public IActionResult Listar()
+        public async Task<IActionResult> Listar()
         {
             try
             {
-                return Ok(_pedidoAplicacao.Listar());
+                return Ok(await _pedidoAplicacao.Listar());
             }
             catch (Exception)
             {
@@ -31,11 +31,11 @@ namespace NetDeliveryAppServicos.Controllers
         }
 
         [HttpGet("Encontrar/{id}")]
-        public IActionResult Encontrar(int id)
+        public async Task<IActionResult> Encontrar(int id)
         {
             try
             {
-                return Ok(_pedidoAplicacao.Encontrar(id));
+                return Ok(await _pedidoAplicacao.Encontrar(id));
             }
             catch (Exception ex)
             {
@@ -46,11 +46,12 @@ namespace NetDeliveryAppServicos.Controllers
 
         [HttpPut("Editar/{id}")]
         [Authorize(Roles = "Administrador")]
-        public IActionResult Editar([FromBody] PedidoDTO pedidoDTO)
+        public async Task<IActionResult> Editar([FromBody] PedidoDTO pedidoDTO)
         {
             try
             {
-                _pedidoAplicacao.Editar(pedidoDTO);
+                await _pedidoAplicacao.Editar(pedidoDTO);
+                await _pedidoAplicacao.Salvar();
                 return Ok();
             }
             catch (Exception ex)
@@ -61,11 +62,12 @@ namespace NetDeliveryAppServicos.Controllers
         }
 
         [HttpPost("Adicionar")]
-        public IActionResult Adicionar(PedidoDTO pedidoDTO)
+        public async Task<IActionResult> Adicionar(PedidoDTO pedidoDTO)
         {
             try
             {
                 _pedidoAplicacao.Adicionar(pedidoDTO);
+                await _pedidoAplicacao.Salvar();
                 return Created("Get", new { id = pedidoDTO.Id });
             }
             catch (Exception ex)
@@ -76,11 +78,12 @@ namespace NetDeliveryAppServicos.Controllers
 
         [HttpDelete("Deletar/{id}")]
         [Authorize(Roles = "Administrador")]
-        public IActionResult Deletar(int id)
+        public async Task<IActionResult> Deletar(int id)
         {
             try
             {
-                _pedidoAplicacao.Deletar(id);
+                await _pedidoAplicacao.Deletar(id);
+                await _pedidoAplicacao.Salvar();
                 return Ok();
             }
             catch (Exception ex)

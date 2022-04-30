@@ -19,11 +19,11 @@ namespace NetDeliveryAppServicos.Controllers
 
         [HttpGet("Listar")]
         [AllowAnonymous]
-        public IActionResult Listar()
+        public async Task<IActionResult> Listar()
         {
             try
             {
-                return Ok(_acrescimoAplicacao.Listar());
+                return Ok(await _acrescimoAplicacao.Listar());
             }
             catch (Exception)
             {
@@ -33,11 +33,11 @@ namespace NetDeliveryAppServicos.Controllers
 
         [HttpGet("Encontrar/{id}")]
         [AllowAnonymous]
-        public IActionResult Encontrar(int id)
+        public async Task<IActionResult> Encontrar(int id)
         {
             try
             {
-                return Ok(_acrescimoAplicacao.Encontrar(id));
+                return Ok(await _acrescimoAplicacao.Encontrar(id));
             }
             catch (Exception ex)
             {
@@ -48,11 +48,12 @@ namespace NetDeliveryAppServicos.Controllers
 
         [HttpPut("Editar/{id}")]
         [Authorize(Roles = "Administrador")]
-        public IActionResult Editar([FromBody] AcrescimoDTO acrescimoDTO)
+        public async Task<IActionResult> Editar([FromBody] AcrescimoDTO acrescimoDTO)
         {
             try
             {
-                _acrescimoAplicacao.Editar(acrescimoDTO);
+                await _acrescimoAplicacao.Editar(acrescimoDTO);
+                await _acrescimoAplicacao.Salvar();
                 return Ok();
             }
             catch (Exception ex)
@@ -64,11 +65,12 @@ namespace NetDeliveryAppServicos.Controllers
 
         [HttpPost("Adicionar")]
         [Authorize(Roles = "Administrador")]
-        public IActionResult Adicionar(AcrescimoDTO acrescimoDTO)
+        public async Task<IActionResult> Adicionar(AcrescimoDTO acrescimoDTO)
         {
             try
             {
                 _acrescimoAplicacao.Adicionar(acrescimoDTO);
+                await _acrescimoAplicacao.Salvar();
                 return Created("Get", new { id = acrescimoDTO.Id });
             }
             catch (Exception ex)
@@ -79,11 +81,12 @@ namespace NetDeliveryAppServicos.Controllers
 
         [HttpDelete("Deletar/{id}")]
         [Authorize(Roles = "Administrador")]
-        public IActionResult Deletar(int id)
+        public async Task<IActionResult> Deletar(int id)
         {
             try
             {
-                _acrescimoAplicacao.Deletar(id);
+                await _acrescimoAplicacao.Deletar(id);
+                await _acrescimoAplicacao.Salvar();
                 return Ok();
             }
             catch (Exception ex)

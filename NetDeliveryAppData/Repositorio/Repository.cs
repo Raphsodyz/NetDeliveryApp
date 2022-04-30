@@ -14,7 +14,7 @@ namespace NetDeliveryAppData.Repositorio
 
         public void Adicionar(T entidade)
         {
-            _netDeliveryAppContext.Add(entidade);
+           _netDeliveryAppContext.Add(entidade);
         }
 
         public void Editar(T entidade)
@@ -22,19 +22,20 @@ namespace NetDeliveryAppData.Repositorio
             _netDeliveryAppContext.Update(entidade);
         }
 
-        public virtual void Deletar(T entidade)
+        public virtual void Deletar(int id)
         {
-            _netDeliveryAppContext.Remove(entidade);
+           _netDeliveryAppContext.Remove(id);
         }
 
-        public bool Salvar()
+        public async Task<bool> Salvar()
         {
-            return _netDeliveryAppContext.SaveChanges() > 0;
+            return await _netDeliveryAppContext.SaveChangesAsync() > 0;
         }
 
         public abstract bool Existe(int id);
-        public abstract T Encontrar(int id);
-        public abstract List<T> Listar();
+        public abstract Task<T> Encontrar(int id);
+        public abstract Task<List<T>> Listar();
+        public abstract Task<T> Achar(int id);
 
     }
 }

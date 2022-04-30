@@ -8,10 +8,11 @@ namespace NetDeliveryAppAplicacao.Interfaces
 {
     public interface IAplicacao<T> where T : class
     {
-        List<T> Listar();
-        T Encontrar(int id);
-        void Editar(T entidade);
+        Task<List<T>> Listar();
+        Task<T> Encontrar(int id);
+        Task Editar(T entidade);
         void Adicionar(T entidade);
-        void Deletar(int id);
+        Task Deletar(int id);
+        Task<bool> Salvar();
     }
 }

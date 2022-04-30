@@ -16,6 +16,6 @@ namespace NetDeliveryAppDominio.Entidades
         public string? Volume { get; set; } = null!;
         public string? Foto { get; set; } = null!;
         public int? CategoriaId { get; set; }
-        public Categoria Categoria { get; set; }
+        public Categoria? Categoria { get; set; }
     }
 }

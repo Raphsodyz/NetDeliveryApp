@@ -17,26 +17,32 @@ namespace NetDeliveryAppData.Repositorio
 
         }
 
-        public override List<Endereco> Listar()
+        public override async Task<List<Endereco>> Listar()
         {
-            return _netDeliveryAppContext.Enderecos.ToList();
+            return await _netDeliveryAppContext.Enderecos.ToListAsync();
         }
 
-        public override Endereco Encontrar(int id)
+        public override async Task<Endereco> Encontrar(int id)
         {
-            return _netDeliveryAppContext.Enderecos
+            return await _netDeliveryAppContext.Enderecos
                 .Where(p => p.Id == id)
-                .First();
+                .FirstAsync();
         }
 
-        public override void Deletar(Endereco entidade)
+        public override async void Deletar(int id)
         {
+            var entidade = await _netDeliveryAppContext.Enderecos.FindAsync(id);
             _netDeliveryAppContext.Enderecos.Remove(entidade);
         }
 
         public override bool Existe(int id)
         {
             return _netDeliveryAppContext.Enderecos.Any(e => e.Id == id);
+        }
+
+        public override async Task<Endereco> Achar(int id)
+        {
+            return await _netDeliveryAppContext.Enderecos.FindAsync(id);
         }
     }
 }

@@ -12,24 +12,30 @@ namespace NetDeliveryAppData.Repositorio
 
         }
 
-        public override List<Produto> Listar()
+        public override async Task<List<Produto>> Listar()
         {
-            return _netDeliveryAppContext.Produtos.Include(a => a.Categoria).ToList();
+            return await _netDeliveryAppContext.Produtos.Include(a => a.Categoria).ToListAsync();
         }
 
-        public override Produto Encontrar(int id)
+        public override async Task<Produto> Encontrar(int id)
         {
-            return _netDeliveryAppContext.Produtos.Include(a => a.Categoria).Where(c => c.Id == id).First();
+            return await _netDeliveryAppContext.Produtos.Include(a => a.Categoria).Where(c => c.Id == id).FirstAsync();
         }
 
-        public override void Deletar(Produto entidade)
+        public override async void Deletar(int id)
         {
-            base.Deletar(entidade);
+            var entidade = await _netDeliveryAppContext.Produtos.FindAsync(id);
+            _netDeliveryAppContext.Produtos.Remove(entidade);
         }
 
         public override bool Existe(int id)
         {
             return _netDeliveryAppContext.Produtos.Any(c => c.Id == id);
+        }
+
+        public override async Task<Produto> Achar(int id)
+        {
+            return await _netDeliveryAppContext.Produtos.FindAsync(id);
         }
     }
 }

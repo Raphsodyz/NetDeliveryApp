@@ -43,7 +43,7 @@ namespace NetDeliveryAppAplicacao.DTOs
         public string? Foto { get; set; } = null!;
 
         [Display(Name = "Categoria")]
-        public virtual int CategoriaId { get; set; }
+        public virtual int? CategoriaId { get; set; }
         public CategoriaDTO? Categoria { get; set; }
     }
 }

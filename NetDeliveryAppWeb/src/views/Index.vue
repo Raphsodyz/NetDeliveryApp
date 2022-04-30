@@ -6,18 +6,20 @@
         <div v-if="post" class="content">
             <h1>Hamburguers</h1>
             <div id="features-wrapper">
-                <div class="row">
-                    <div class="col-4 col-12-medium" v-for="produtos in post" :key="produtos.id">
-                        <section class="box feature" v-if="produtos.categoria.id == 1">
-                            <a href="#" class="image featured"><img :src="produtos.foto" alt="" /></a>
-                            <div class="inner">
-                                <header>
-                                    <h2>{{produtos.nome}}</h2>
-                                    <h3>R${{produtos.valor}}</h3>
-                                </header>
-                                <p>{{produtos.ingredientes}}</p>
-                            </div>
-                        </section>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-4 col-12-medium" v-for="produtos in post" :key="produtos.id">
+                            <section class="box feature" v-if="produtos.categoria.id == 1">
+                                <a href="#" class="image featured"><img :src="produtos.foto" alt="" /></a>
+                                <div class="inner">
+                                    <header>
+                                        <h2>{{produtos.nome}}</h2>
+                                        <h3>R${{produtos.valor}}</h3>
+                                    </header>
+                                    <p>{{produtos.ingredientes}}</p>
+                                </div>
+                            </section>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -37,13 +39,10 @@
                 }
             },
             created() {
-                // fetch the data when the view is created and the data is
-                // already being observed
                 this.fetchData();
 
             },
             watch: {
-                // call again the method if the route changes
                 '$route': 'fetchData'
             },
             methods: {

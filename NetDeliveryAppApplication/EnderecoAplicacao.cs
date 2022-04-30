@@ -17,48 +17,53 @@ namespace NetDeliveryAppAplicacao
             _mapper = mapper;
         }
 
-        public List<EnderecoDTO> Listar()
+        public async Task<List<EnderecoDTO>> Listar()
         {
-            return _mapper.Map<List<EnderecoDTO>>(_enderecoRepository.Listar());
+            return _mapper.Map<List<EnderecoDTO>>(await _enderecoRepository.Listar());
         }
-        public EnderecoDTO Encontrar(int id)
+        public async Task<EnderecoDTO> Encontrar(int id)
         {
             if (_enderecoRepository.Existe(id))
             {
-                return _mapper.Map<EnderecoDTO>(_enderecoRepository.Encontrar(id));
+                return _mapper.Map<EnderecoDTO>(await _enderecoRepository.Encontrar(id));
             }
             else
                 throw new Exception("Endereco não existe.");
         }
 
-        public void Editar(EnderecoDTO enderecoDTO)
+        public async Task Editar(EnderecoDTO enderecoDTO)
         {
-            if (_enderecoRepository.Existe(enderecoDTO.Id))
+            var endereco = await _enderecoRepository.Achar(enderecoDTO.Id);
+            if (endereco == null)
             {
-                _enderecoRepository.Editar(_mapper.Map<Endereco>(enderecoDTO));
-                _enderecoRepository.Salvar();
+                throw new Exception("Endereco não encontrado.");
             }
             else
-                throw new Exception("Endereco não existe.");
+                _enderecoRepository.Editar(_mapper.Map<Endereco>(enderecoDTO));
+        }
+
+        public async Task<bool> Salvar()
+        {
+            return await _enderecoRepository.Salvar();
         }
 
         public void Adicionar(EnderecoDTO enderecoDTO)
         {
             _enderecoRepository.Adicionar(_mapper.Map<Endereco>(enderecoDTO));
-            _enderecoRepository.Salvar();
         }
 
-        public void Deletar(int id)
+        public async Task Deletar(int id)
         {
-            if (_enderecoRepository.Existe(id))
+            var endereco = await _enderecoRepository.Achar(id);
+            if (endereco == null)
             {
-                var enderecoDTO = _mapper.Map<Endereco>(_enderecoRepository.Encontrar(id));
-
-                _enderecoRepository.Deletar(enderecoDTO);
-                _enderecoRepository.Salvar();
+                throw new Exception("Produto não existe.");
             }
             else
-                throw new Exception("Endereco não existe.");
+            {
+                var enderecoDTO = _mapper.Map<EnderecoDTO>(endereco);
+                _enderecoRepository.Deletar(enderecoDTO.Id);
+            }
         }
     }
 }

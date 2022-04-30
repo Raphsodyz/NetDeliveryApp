@@ -3,11 +3,6 @@ using NetDeliveryAppAplicacao.DTOs;
 using NetDeliveryAppAplicacao.Interfaces;
 using NetDeliveryAppDominio.Entidades;
 using NetDeliveryAppDominio.Interfaces.Repositorios;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NetDeliveryAppAplicacao
 {
@@ -21,48 +16,53 @@ namespace NetDeliveryAppAplicacao
             _mapper = mapper;
         }
 
-        public List<CategoriaDTO> Listar()
+        public async Task<List<CategoriaDTO>> Listar()
         {
-            return _mapper.Map<List<CategoriaDTO>>(_categoriaRepository.Listar());
+            return _mapper.Map<List<CategoriaDTO>>(await _categoriaRepository.Listar());
         }
-        public CategoriaDTO Encontrar(int id)
+        public async Task<CategoriaDTO> Encontrar(int id)
         {
             if (_categoriaRepository.Existe(id))
             {
-                return _mapper.Map<CategoriaDTO>(_categoriaRepository.Encontrar(id));
+                return _mapper.Map<CategoriaDTO>(await _categoriaRepository.Encontrar(id));
             }
             else
                 throw new Exception("Categoria não existe.");
         }
 
-        public void Editar(CategoriaDTO categoriaDTO)
+        public async Task Editar(CategoriaDTO categoriaDTO)
         {
-            if (_categoriaRepository.Existe(categoriaDTO.Id))
+            var categoria = await _categoriaRepository.Achar(categoriaDTO.Id);
+            if (categoria == null)
             {
-                _categoriaRepository.Editar(_mapper.Map<Categoria>(categoriaDTO));
-                _categoriaRepository.Salvar();
+                throw new Exception("Categoria não encontrada.");
             }
             else
-                throw new Exception("Categoria não existe.");
+                _categoriaRepository.Editar(_mapper.Map<Categoria>(categoriaDTO));
+        }
+
+        public async Task<bool> Salvar()
+        {
+            return await _categoriaRepository.Salvar();
         }
 
         public void Adicionar(CategoriaDTO categoriaDTO)
         {
             _categoriaRepository.Adicionar(_mapper.Map<Categoria>(categoriaDTO));
-            _categoriaRepository.Salvar();
         }
 
-        public void Deletar(int id)
+        public async Task Deletar(int id)
         {
-            if (_categoriaRepository.Existe(id))
+            var categoria = await _categoriaRepository.Achar(id);
+            if (categoria == null)
             {
-                var categoriaDTO = _mapper.Map<Categoria>(_categoriaRepository.Encontrar(id));
-
-                _categoriaRepository.Deletar(categoriaDTO);
-                _categoriaRepository.Salvar();
+                throw new Exception("Produto não existe.");
             }
             else
-                throw new Exception("Categoria não existe.");
+            {
+                var categoriaDTO = _mapper.Map<ProdutoDTO>(categoria);
+                _categoriaRepository.Deletar(categoriaDTO.Id);
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using NetDeliveryAppData.Contexto;
+﻿using Microsoft.EntityFrameworkCore;
+using NetDeliveryAppData.Contexto;
 using NetDeliveryAppDominio.Identity;
 using NetDeliveryAppDominio.Identity.Usuarios;
 using NetDeliveryAppDominio.Interfaces.Repositorios;
@@ -17,19 +18,20 @@ namespace NetDeliveryAppData.Repositorio
 
         }
 
-        public override List<ResetarSenha> Listar()
+        public override async Task<List<ResetarSenha>> Listar()
         {
-            return _netDeliveryAppContext.ResetarSenhas.ToList();
+            return await _netDeliveryAppContext.ResetarSenhas.ToListAsync();
         }
 
-        public override ResetarSenha Encontrar(int id)
+        public override async Task<ResetarSenha> Encontrar(int id)
         {
-            return _netDeliveryAppContext.ResetarSenhas.Where(c => c.Id == id).First();
+            return await _netDeliveryAppContext.ResetarSenhas.Where(c => c.Id == id).FirstAsync();
         }
 
-        public override void Deletar(ResetarSenha entidade)
+        public override async void Deletar(int id)
         {
-            base.Deletar(entidade);
+            var entidade = await _netDeliveryAppContext.ResetarSenhas.FindAsync(id);
+            _netDeliveryAppContext.ResetarSenhas.Remove(entidade);
         }
 
         public override bool Existe(int id)
@@ -37,11 +39,16 @@ namespace NetDeliveryAppData.Repositorio
             return _netDeliveryAppContext.ResetarSenhas.Any(c => c.Id == id);
         }
 
-        public ResetarSenha ResetarSenhaDetalhes(string otp, Usuario usuario)
+        public async Task<ResetarSenha> ResetarSenhaDetalhes(string otp, Usuario usuario)
         {
-            return _netDeliveryAppContext.ResetarSenhas.Where(r => r.OTP == otp && r.UsuarioId == usuario.Id)
+            return await _netDeliveryAppContext.ResetarSenhas.Where(r => r.OTP == otp && r.UsuarioId == usuario.Id)
                 .OrderByDescending(r => r.Data)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
+        }
+
+        public override async Task<ResetarSenha> Achar(int id)
+        {
+            return await _netDeliveryAppContext.ResetarSenhas.FindAsync(id);
         }
     }
 }

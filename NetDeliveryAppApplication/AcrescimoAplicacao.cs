@@ -16,48 +16,53 @@ namespace NetDeliveryAppAplicacao
             _mapper = mapper;
         }
 
-        public List<AcrescimoDTO> Listar()
+        public async Task<List<AcrescimoDTO>> Listar()
         {
-            return _mapper.Map<List<AcrescimoDTO>>(_acrescimoRepository.Listar());
+            return _mapper.Map<List<AcrescimoDTO>>(await _acrescimoRepository.Listar());
         }
-        public AcrescimoDTO Encontrar(int id)
+        public async Task<AcrescimoDTO> Encontrar(int id)
         {
             if (_acrescimoRepository.Existe(id))
             {
-                return _mapper.Map<AcrescimoDTO>(_acrescimoRepository.Encontrar(id));
+                return _mapper.Map<AcrescimoDTO>(await _acrescimoRepository.Encontrar(id));
             }
             else
                 throw new Exception("Acrescimo não existe.");
         }
 
-        public void Editar(AcrescimoDTO acrescimoDTO)
+        public async Task Editar(AcrescimoDTO acrescimoDTO)
         {
-            if (_acrescimoRepository.Existe(acrescimoDTO.Id))
+            var acrescimo = await _acrescimoRepository.Achar(acrescimoDTO.Id);
+            if (acrescimo == null)
             {
-                _acrescimoRepository.Editar(_mapper.Map<Acrescimo>(acrescimoDTO));
-                _acrescimoRepository.Salvar();
+                throw new Exception("Acrescimo não encontrado.");
             }
             else
-                throw new Exception("Acrescimo não existe.");
+                _acrescimoRepository.Editar(_mapper.Map<Acrescimo>(acrescimoDTO));
+        }
+
+        public async Task<bool> Salvar()
+        {
+            return await _acrescimoRepository.Salvar();
         }
 
         public void Adicionar(AcrescimoDTO acrescimoDTO)
         {
             _acrescimoRepository.Adicionar(_mapper.Map<Acrescimo>(acrescimoDTO));
-            _acrescimoRepository.Salvar();
         }
 
-        public void Deletar(int id)
+        public async Task Deletar(int id)
         {
-            if (_acrescimoRepository.Existe(id))
+            var acrescimo = await _acrescimoRepository.Achar(id);
+            if (acrescimo == null)
             {
-                var acrescimoMap = _mapper.Map<Acrescimo>(_acrescimoRepository.Encontrar(id));
-
-                _acrescimoRepository.Deletar(acrescimoMap);
-                _acrescimoRepository.Salvar();
+                throw new Exception("Acrescimo não existe.");
             }
             else
-                throw new Exception("Acrescimo não existe.");
+            {
+                var acrescimoDTO = _mapper.Map<Acrescimo>(acrescimo);
+                _acrescimoRepository.Deletar(acrescimoDTO.Id);
+            }
         }
     }
 }

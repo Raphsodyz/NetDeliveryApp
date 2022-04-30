@@ -22,9 +22,8 @@ namespace NetDeliveryAppAplicacao.DTOs
         public decimal Valor { get; set; }
 
         [Display(Name = "Categoria")]
-        [Required(ErrorMessage = "O campo não pode estar vazio.")]
         [RegularExpression("^[0-9]*$", ErrorMessage = "Digite somente números.")]
-        public virtual int CategoriaId { get; set; }
+        public int? CategoriaId { get; set; }
         public CategoriaDTO? Categoria { get; set; }
     }
 }

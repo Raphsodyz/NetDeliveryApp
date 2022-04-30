@@ -1,11 +1,8 @@
-﻿using NetDeliveryAppData.Contexto;
+﻿using Microsoft.EntityFrameworkCore;
+using NetDeliveryAppData.Contexto;
 using NetDeliveryAppDominio.Entidades;
 using NetDeliveryAppDominio.Interfaces.Repositorios;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace NetDeliveryAppData.Repositorio
 {
@@ -16,24 +13,30 @@ namespace NetDeliveryAppData.Repositorio
 
         }
 
-        public override List<Categoria> Listar()
+        public override async Task<List<Categoria>> Listar()
         {
-            return _netDeliveryAppContext.Categorias.ToList();
+            return await _netDeliveryAppContext.Categorias.ToListAsync();
         }
 
-        public override Categoria Encontrar(int id)
+        public override async Task<Categoria> Encontrar(int id)
         {
-            return _netDeliveryAppContext.Categorias.Where(c => c.Id == id).First();
+            return await _netDeliveryAppContext.Categorias.Where(c => c.Id == id).FirstAsync();
         }
 
-        public override void Deletar(Categoria entidade)
+        public override async void Deletar(int id)
         {
-            base.Deletar(entidade);
+            var entidade = await _netDeliveryAppContext.Categorias.FindAsync(id);
+            _netDeliveryAppContext.Categorias.Remove(entidade);
         }
 
         public override bool Existe(int id)
         {
             return _netDeliveryAppContext.Categorias.Any(c => c.Id == id);
+        }
+
+        public override async Task<Categoria> Achar(int id)
+        {
+            return await _netDeliveryAppContext.Categorias.FindAsync(id);
         }
     }
 }

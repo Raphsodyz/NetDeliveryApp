@@ -16,48 +16,53 @@ namespace NetDeliveryAppAplicacao
             _mapper = mapper;
         }
 
-        public List<PedidoDTO> Listar()
+        public async Task<List<PedidoDTO>> Listar()
         {
-            return _mapper.Map<List<PedidoDTO>>(_pedidoRepository.Listar());
+            return _mapper.Map<List<PedidoDTO>>(await _pedidoRepository.Listar());
         }
-        public PedidoDTO Encontrar(int id)
+        public async Task<PedidoDTO> Encontrar(int id)
         {
             if (_pedidoRepository.Existe(id))
             {
-                return _mapper.Map<PedidoDTO>(_pedidoRepository.Encontrar(id));
+                return _mapper.Map<PedidoDTO>(await _pedidoRepository.Encontrar(id));
             }
             else
                 throw new Exception("Pedido não existe.");
         }
 
-        public void Editar(PedidoDTO pedidoDTO)
+        public async Task Editar(PedidoDTO pedidoDTO)
         {
-            if (_pedidoRepository.Existe(pedidoDTO.Id))
+            var pedido = await _pedidoRepository.Achar(pedidoDTO.Id);
+            if (pedido == null)
             {
-                _pedidoRepository.Editar(_mapper.Map<Pedido>(pedidoDTO));
-                _pedidoRepository.Salvar();
+                throw new Exception("Produto não encontrado.");
             }
             else
-                throw new Exception("Pedido não existe.");
+                _pedidoRepository.Editar(_mapper.Map<Pedido>(pedidoDTO));
+        }
+
+        public async Task<bool> Salvar()
+        {
+            return await _pedidoRepository.Salvar();
         }
 
         public void Adicionar(PedidoDTO pedidoDTO)
         {
             _pedidoRepository.Adicionar(_mapper.Map<Pedido>(pedidoDTO));
-            _pedidoRepository.Salvar();
         }
 
-        public void Deletar(int id)
+        public async Task Deletar(int id)
         {
-            if (_pedidoRepository.Existe(id))
+            var pedido = await _pedidoRepository.Achar(id);
+            if (pedido == null)
             {
-                var pedidoDTO = _mapper.Map<Pedido>(_pedidoRepository.Encontrar(id));
-
-                _pedidoRepository.Deletar(pedidoDTO);
-                _pedidoRepository.Salvar();
+                throw new Exception("Produto não existe.");
             }
             else
-                throw new Exception("Pedido não existe.");
+            {
+                var pedidoDTO = _mapper.Map<ProdutoDTO>(pedido);
+                _pedidoRepository.Deletar(pedidoDTO.Id);
+            }
         }
     }
 }
