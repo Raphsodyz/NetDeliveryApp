@@ -8,8 +8,47 @@
             <div id="features-wrapper">
                 <div class="container">
                     <div class="row">
-                        <div class="col-4 col-12-medium" v-for="produtos in post" :key="produtos.id">
-                            <section class="box feature" v-if="produtos.categoria.id == 1">
+                        <div class="col-4 col-12-medium" v-for="produtos in categoria1" :key="produtos.id">
+                            <section class="box feature">
+                                <a href="#" class="image featured"><img :src="produtos.foto" alt="" /></a>
+                                <div class="inner">
+                                    <header>
+                                        <h2>{{produtos.nome}}</h2>
+                                        <h3>R${{produtos.valor}}</h3>
+                                    </header>
+                                    <p>{{produtos.ingredientes}}</p>
+                                </div>
+                            </section>
+                        </div>
+                        <h1>Bebidas</h1>
+                        <div class="col-4 col-12-medium" v-for="produtos in categoria2" :key="produtos.id">
+                            <section class="box feature">
+                                <a href="#" class="image featured"><img :src="produtos.foto" alt="" /></a>
+                                <div class="inner">
+                                    <header>
+                                        <h2>{{produtos.nome}}</h2>
+                                        <h3>R${{produtos.valor}}</h3>
+                                    </header>
+                                    <p>{{produtos.ingredientes}}</p>
+                                </div>
+                            </section>
+                        </div>
+                        <h1>Sucos</h1>
+                        <div class="col-4 col-12-medium" v-for="produtos in categoria3" :key="produtos.id">
+                            <section class="box feature">
+                                <a href="#" class="image featured"><img :src="produtos.foto" alt="" /></a>
+                                <div class="inner">
+                                    <header>
+                                        <h2>{{produtos.nome}}</h2>
+                                        <h3>R${{produtos.valor}}</h3>
+                                    </header>
+                                    <p>{{produtos.ingredientes}}</p>
+                                </div>
+                            </section>
+                        </div>
+                        <h1>Cervejas</h1>
+                        <div class="col-4 col-12-medium" v-for="produtos in categoria4" :key="produtos.id">
+                            <section class="box feature">
                                 <a href="#" class="image featured"><img :src="produtos.foto" alt="" /></a>
                                 <div class="inner">
                                     <header>
@@ -57,6 +96,28 @@
                             this.loading = false;
                             return;
                         });
+                }
+            },
+            computed: {
+                categoria1: function () {
+                    return this.post.filter(function (posts) {
+                        return posts.categoria.id === 1
+                    })
+                },
+                categoria2: function () {
+                    return this.post.filter(function (posts) {
+                        return posts.categoria.id === 2
+                    })
+                },
+                categoria3: function () {
+                    return this.post.filter(function (posts) {
+                        return posts.categoria.id === 3
+                    })
+                },
+                categoria4: function () {
+                    return this.post.filter(function (posts) {
+                        return posts.categoria.id === 4
+                    })
                 }
             }
         });
