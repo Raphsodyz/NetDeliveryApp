@@ -72,7 +72,8 @@
                          title-tag="h2"
                          body-class="b-row"
                          no-close-on-backdrop
-                         :title="modal.nome">
+                         :title="modal.nome"
+                         v-model="show">
                     <b-img-lazy :src="modal.foto" fluid-grow :alt="modal.nome" />
                     <p class="my-4" style="text-align: center;
                                         font-family: 'PT Sans', sans-serif;
@@ -80,68 +81,50 @@
                         {{modal.ingredientes}}
                     </p>
 
-                    <b-form @submit="carrinho" v-if="show">
-                        <b-form-group id="entrada1"
-                                      label="Lanche"
-                                      label-for="lanche">
-                            <b-form-input id="lanche"
-                                          v-model="carrinho.lanche"
-                                          type="hidden"
-                                          placeholder="Nome do lanche">
-                                {{modal.nome}}
-                            </b-form-input>
-                        </b-form-group>
+                    <b-form-group id="entrada1"
+                                  label="Alguma observação sobre o lanche?"
+                                  label-for="observacao">
+                        <b-form-textarea id="observacao"
+                                      v-model="observacao"
+                                      placeholder="Digite aqui!"
+                                      rows="3"
+                                      max-rows="6"
+                        ></b-form-textarea>
+                    </b-form-group>
+                    <br />
 
-                        <b-form-group id="entrada2"
-                                      label="Valor do lanche"
-                                      label-for="valorLanche">
-                            <b-form-input id="valorLanche"
-                                          v-model="carrinho.valorLanche"
-                                          type="hidden"
-                                          placeholder="Valor do lanche">
-                                {{modal.valor}}
-                            </b-form-input>
-                        </b-form-group>
+                    <b-form-group id="entrada2"
+                                  label="Quantos?"
+                                  label-for="quantidade"
+                                  description="Se vazio, entenderemos que é somente um.">
+                        <b-form-input id="quantidade"
+                                      v-model="quantidade"
+                                      type="number"
+                        ></b-form-input>
+                    </b-form-group>
+                    <br />
 
-                        <b-form-group id="entrada3"
-                                      label="Alguma observação sobre o lanche?"
-                                      label-for="observacao">
-                            <b-form-input id="observacao"
-                                          v-model="carrinho.observacao"
-                                          type="textarea"
-                                          placeholder="Digite aqui!"></b-form-input>
-                        </b-form-group>
-
-                        <b-form-group id="entrada4"
-                                      label="Quantidade?"
-                                      label-for="quantidade"
-                                      description="Se vazio, entenderemos que é somente um.">
-                            <b-form-input id="quantidade"
-                                          v-model="carrinho.quantidade"
-                                          type="number"></b-form-input>
-                        </b-form-group>
-
-                        <b-form-group id="entrada5"
-                                      v-slot="{ ariaDescribedby }">
-                            <b-form-checkbox-group id="acrescimos"
-                                                   v-model="carrinho.acrescimosValor"
-                                                   :aria-describedby="ariaDescribedby"
-                                                   v-for="acrescimo in acrescimosLista"
-                                                   :key="acrescimo.id">
-                                <b-form-checkbox :value="acrescimo.valor">
+                    <b-form-group id="entrada3"
+                                  label="Acrescimos?"
+                                  label-for="acrescimos">
+                        <b-form-checkbox-group id="acrescimos"
+                                               v-model="acrescimos">
+                            <div v-for="acrescimo in acrescimosLista"
+                                 :key="acrescimo.id">
+                                <b-form-checkbox :value="acrescimo">
                                     {{acrescimo.nome}} R${{acrescimo.valor}}
                                 </b-form-checkbox>
-                            </b-form-checkbox-group>
-                        </b-form-group>
-
-                        <template #modal-footer>
-                            <div class="w-100">
-                                <b-button block
-                                          variant="dark"
-                                          type="submit">Adicionar ao carrinho</b-button>
                             </div>
-                        </template>
-                    </b-form>
+                        </b-form-checkbox-group>
+                    </b-form-group>
+
+                    <template #modal-footer>
+                        <div class="w-100">
+                            <b-button class="button"
+                                      block
+                                      @click="Adicionar">Adicionar ao carrinho</b-button>
+                        </div>
+                    </template>
                 </b-modal>
             </div>
         </div>
@@ -158,18 +141,13 @@
             data() {
                 return {
                     loading: false,
-                    post: null,
+                    post: {},
                     modal: {},
-                    acrescimosLista: null,
-                    carrinho: {
-                        lanche: '',
-                        valorLanche: '',
-                        observacao: '',
-                        quantidade: '',
-                        acrescimosValor: [],
-                        total: parseInt(this.quantidade) * (parseFloat(this.valorLanche) + (this.acrescimosValor.reduce((anterior, atual) => anterior + atual, 0)))
-                    },
-                    show: true,
+                    acrescimosLista: {},
+                    observacao: '',
+                    quantidade: 1,
+                    acrescimos: [],
+                    show: false,
                 }
             },
             created() {
@@ -178,6 +156,19 @@
             },
             watch: {
                 '$route': 'fetchData'
+            },
+            mounted() {
+                if (localStorage.observacao) {
+                    this.observacao = localStorage.observacao;
+                }
+
+                if (localStorage.quantidade) {
+                    this.quantidade = localStorage.quantidade;
+                }
+
+                if (localStorage.getItem('acrescimos')) {
+                    this.acrescimos = JSON.parse(localStorage.getItem('acrescimos'));
+                }
             },
             methods: {
                 fetchData() {
@@ -201,20 +192,26 @@
                         .catch((error) => {
                             console.log(error);
                         });
-                },
-                getAcrescimos() {
-                    axios.get('https://localhost:5001/api/Acrescimos/Listar')
-                        .then((resposta) => {
-                            this.acrescimosLista = resposta.data
+
+                    fetch('Acrescimos/Listar')
+                        .then(a => a.json())
+                        .then(json => {
+                            this.acrescimosLista = json;
+                            return;
                         })
                         .catch((error) => {
                             console.log(error);
-                        })
+                        });
                 },
-                submit(event) {
-                    event.preventDefault();
-                    alert(JSON.stringify(this.carrinho));
-                    console.log(this.carrinho);
+                Adicionar() {
+                    localStorage.setItem('lanche', JSON.stringify(this.modal));
+                    localStorage.observacao = this.observacao;
+                    localStorage.quantidade = this.quantidade;
+                    localStorage.setItem('acrescimos', JSON.stringify(this.acrescimos));
+                    this.show = false;
+                    this.observacao = '';
+                    this.quantidade = 1;
+                    this.acrescimos = [];
                 }
             },
             computed: {

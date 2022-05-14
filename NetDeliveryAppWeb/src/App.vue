@@ -10,7 +10,7 @@
                 <ul class="actions">
                     <li>
                         <a href="#header"
-                           class="button icon solid solo fa-arrow-down scrolly">Vamos l�!</a>
+                           class="button icon solid solo fa-arrow-down scrolly">Vamos lá!</a>
                     </li>
                 </ul>
             </div>
@@ -44,7 +44,7 @@
             </footer>
             <div id="copyright">
                 <ul>
-                    <li>&copy; Untitled</li>
+                    <li>&copy; NetDeliveryApp</li>
                     <li>Design: <a href="https://html5up.net">HTML5 UP</a></li>
                 </ul>
             </div>
