@@ -88,11 +88,10 @@
                                   label="Alguma observação sobre o lanche?"
                                   label-for="observacao">
                         <b-form-textarea id="observacao"
-                                      v-model="observacao"
-                                      placeholder="Digite aqui!"
-                                      rows="3"
-                                      max-rows="6"
-                        ></b-form-textarea>
+                                         v-model="observacao"
+                                         placeholder="Digite aqui!"
+                                         rows="3"
+                                         max-rows="6"></b-form-textarea>
                     </b-form-group>
                     <br />
                     <b-form-group id="entrada2"
@@ -101,8 +100,7 @@
                                   description="Se vazio, entenderemos que é somente um.">
                         <b-form-input id="quantidade"
                                       v-model="quantidade"
-                                      type="number"
-                        ></b-form-input>
+                                      type="number"></b-form-input>
                     </b-form-group>
                     <br />
                     <b-form-group id="entrada3"
@@ -154,7 +152,6 @@
             },
             created() {
                 this.fetchData();
-
             },
             watch: {
                 '$route': 'fetchData'
@@ -206,26 +203,36 @@
                         });
                 },
                 Adicionar() {
+
                     if (!localStorage.getItem("carrinho")) {
                         localStorage.setItem("carrinho", JSON.stringify([]));
                     }
+
+                    const itens = {};
+                    itens.lanche = JSON.stringify(this.modal.id);
+                    itens.observacao = this.observacao;
+                    itens.quantidade = this.quantidade;
+                    itens.acrescimos = JSON.stringify(this.acrescimos);
+
                     if (localStorage.getItem("carrinho").length === 2) {
                         const carrinho = JSON.parse(localStorage.getItem("carrinho"));
-                        carrinho.push(JSON.stringify(this.modal.id), this.observacao, this.quantidade, JSON.stringify(this.acrescimos));
-                        localStorage.setItem("carrinho", btoa(JSON.stringify(carrinho)));
-                        this.Itens = JSON.parse(atob(localStorage.getItem("carrinho")));
-                    } else {
-                        const carrinho = JSON.parse(atob(localStorage.getItem("carrinho")));
-                        carrinho.push(JSON.stringify(this.modal.id), this.observacao, this.quantidade, JSON.stringify(this.acrescimos));
+                        carrinho.push({ itens: itens });
                         localStorage.setItem("carrinho", btoa(JSON.stringify(carrinho)));
                         this.Itens = JSON.parse(atob(localStorage.getItem("carrinho")));
                     }
-                    console.log(this.Itens);
+                    else {
+                        const carrinho = JSON.parse(atob(localStorage.getItem("carrinho")));
+                        carrinho.push({ itens: itens });
+                        localStorage.setItem("carrinho", btoa(JSON.stringify(carrinho)));
+                        this.Itens = JSON.parse(atob(localStorage.getItem("carrinho")));
+                    }
+
                     this.show = false;
                     this.observacao = '';
                     this.quantidade = 1;
                     this.acrescimos = [];
                 },
+
                 botaoX() {
                     this.show = false;
                     this.observacao = '';
