@@ -20,7 +20,7 @@
             <nav id="nav">
                 <ul class="links">
                     <li class="active">
-                        <router-link to="/">Início</router-link>
+                        <router-link to="/">Menu</router-link>
                     </li>
                     <li>
                         <router-link to="/Carrinho">Carrinho</router-link>

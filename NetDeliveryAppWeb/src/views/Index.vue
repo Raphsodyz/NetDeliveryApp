@@ -69,11 +69,14 @@
             <div>
                 <b-modal centered
                          id="modal-1"
-                         title-tag="h2"
                          body-class="b-row"
                          no-close-on-backdrop
-                         :title="modal.nome"
+                         no-close-on-esc
                          v-model="show">
+                    <template #modal-header>
+                        <h2>{{modal.nome}}</h2>
+                        <b-button size="sm" class="button" @click="botaoX()">X</b-button>
+                    </template>
                     <b-img-lazy :src="modal.foto" fluid-grow :alt="modal.nome" />
                     <p class="my-4" style="text-align: center;
                                         font-family: 'PT Sans', sans-serif;
@@ -92,7 +95,6 @@
                         ></b-form-textarea>
                     </b-form-group>
                     <br />
-
                     <b-form-group id="entrada2"
                                   label="Quantos?"
                                   label-for="quantidade"
@@ -103,7 +105,6 @@
                         ></b-form-input>
                     </b-form-group>
                     <br />
-
                     <b-form-group id="entrada3"
                                   label="Acrescimos?"
                                   label-for="acrescimos">
@@ -111,7 +112,7 @@
                                                v-model="acrescimos">
                             <div v-for="acrescimo in acrescimosLista"
                                  :key="acrescimo.id">
-                                <b-form-checkbox :value="acrescimo">
+                                <b-form-checkbox :value="acrescimo.id">
                                     {{acrescimo.nome}} R${{acrescimo.valor}}
                                 </b-form-checkbox>
                             </div>
@@ -144,6 +145,7 @@
                     post: {},
                     modal: {},
                     acrescimosLista: {},
+                    Itens: [],
                     observacao: '',
                     quantidade: 1,
                     acrescimos: [],
@@ -204,10 +206,27 @@
                         });
                 },
                 Adicionar() {
-                    localStorage.setItem('lanche', JSON.stringify(this.modal));
-                    localStorage.observacao = this.observacao;
-                    localStorage.quantidade = this.quantidade;
-                    localStorage.setItem('acrescimos', JSON.stringify(this.acrescimos));
+                    if (!localStorage.getItem("carrinho")) {
+                        localStorage.setItem("carrinho", JSON.stringify([]));
+                    }
+                    if (localStorage.getItem("carrinho").length === 2) {
+                        const carrinho = JSON.parse(localStorage.getItem("carrinho"));
+                        carrinho.push(JSON.stringify(this.modal.id), this.observacao, this.quantidade, JSON.stringify(this.acrescimos));
+                        localStorage.setItem("carrinho", btoa(JSON.stringify(carrinho)));
+                        this.Itens = JSON.parse(atob(localStorage.getItem("carrinho")));
+                    } else {
+                        const carrinho = JSON.parse(atob(localStorage.getItem("carrinho")));
+                        carrinho.push(JSON.stringify(this.modal.id), this.observacao, this.quantidade, JSON.stringify(this.acrescimos));
+                        localStorage.setItem("carrinho", btoa(JSON.stringify(carrinho)));
+                        this.Itens = JSON.parse(atob(localStorage.getItem("carrinho")));
+                    }
+                    console.log(this.Itens);
+                    this.show = false;
+                    this.observacao = '';
+                    this.quantidade = 1;
+                    this.acrescimos = [];
+                },
+                botaoX() {
                     this.show = false;
                     this.observacao = '';
                     this.quantidade = 1;
