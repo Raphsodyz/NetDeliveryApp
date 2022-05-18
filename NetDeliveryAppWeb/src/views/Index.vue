@@ -4,64 +4,91 @@
             Um momento, as informações estão sendo carregadas...
         </div>
         <div v-if="post" class="content">
-            <h1>Hamburguers</h1>
             <div id="features-wrapper">
                 <div class="container">
                     <div class="row">
-                        <div class="col-4 col-12-medium" v-for="produtos in categoria1" :key="produtos.id">
-                            <section class="box feature">
-                                <a v-b-modal.modal-1 @click="capturar(produtos.id)" class="image featured"><b-img-lazy :src="produtos.foto" :alt="modal.nome" /></a>
-                                <div class="inner">
-                                    <header>
-                                        <h2 class="titulo">{{produtos.nome}}</h2>
-                                        <p class="card-text">{{produtos.ingredientes}}</p>
-                                        <br />
-                                        <h2 class="produto-valor">R${{produtos.valor}}</h2>
-                                    </header>
+                        <div style="float: right;">
+                            <b-dropdown id="dropdown-1" variant="button" text="Escolha..">
+                                <div v-for="categoria in categorias" :key="categoria.id">
+                                    <b-dropdown-item @click="capturarCategoria(categoria.id)">{{categoria.nome}}</b-dropdown-item>
                                 </div>
-                            </section>
+                            </b-dropdown>
                         </div>
-                        <h1>Bebidas</h1>
-                        <div class="col-4 col-12-medium" v-for="produtos in categoria2" :key="produtos.id">
-                            <section class="box feature">
-                                <a v-b-modal.modal-1 @click="capturar(produtos.id)" class="image featured"><b-img-lazy :src="produtos.foto" :alt="modal.nome" /></a>
-                                <div class="inner">
-                                    <header>
-                                        <h2 class="titulo">{{produtos.nome}}</h2>
-                                        <p class="card-text">{{produtos.ingredientes}}</p>
-                                        <br />
-                                        <h2 class="produto-valor">R${{produtos.valor}}</h2>
-                                    </header>
-                                </div>
-                            </section>
+                        <div v-if="categoriaSelecionada">
+                            <h1>Hamburguers</h1>
+                            <div class="col-4 col-12-medium" v-for="produtos in categoria1" :key="produtos.id">
+                                <section class="box feature">
+                                    <a v-b-modal.modal-1 @click="capturarProduto(produtos.id)" class="image featured"><b-img-lazy :src="produtos.foto" :alt="modal.nome" /></a>
+                                    <div class="inner">
+                                        <header>
+                                            <h2 class="titulo">{{produtos.nome}}</h2>
+                                            <p class="card-text">{{produtos.ingredientes}}</p>
+                                            <br />
+                                            <h2 class="produto-valor">R${{produtos.valor}}</h2>
+                                        </header>
+                                    </div>
+                                </section>
+                            </div>
+                            <h1>Bebidas</h1>
+                            <div class="col-4 col-12-medium" v-for="produtos in categoria2" :key="produtos.id">
+                                <section class="box feature">
+                                    <a v-b-modal.modal-1 @click="capturar(produtos.id)" class="image featured"><b-img-lazy :src="produtos.foto" :alt="modal.nome" /></a>
+                                    <div class="inner">
+                                        <header>
+                                            <h2 class="titulo">{{produtos.nome}}</h2>
+                                            <p class="card-text">{{produtos.ingredientes}}</p>
+                                            <br />
+                                            <h2 class="produto-valor">R${{produtos.valor}}</h2>
+                                        </header>
+                                    </div>
+                                </section>
+                            </div>
+                            <h1>Sucos</h1>
+                            <div class="col-4 col-12-medium" v-for="produtos in categoria3" :key="produtos.id">
+                                <section class="box feature">
+                                    <a v-b-modal.modal-1 @click="capturar(produtos.id)" class="image featured"><b-img-lazy :src="produtos.foto" :alt="modal.nome" /></a>
+                                    <div class="inner">
+                                        <header>
+                                            <h2 class="titulo">{{produtos.nome}}</h2>
+                                            <p class="card-text">{{produtos.ingredientes}}</p>
+                                            <br />
+                                            <h2 class="produto-valor">R${{produtos.valor}}</h2>
+                                        </header>
+                                    </div>
+                                </section>
+                            </div>
+                            <h1>Cervejas</h1>
+                            <div class="col-4 col-12-medium" v-for="produtos in categoria4" :key="produtos.id">
+                                <section class="box feature">
+                                    <a v-b-modal.modal-1 @click="capturar(produtos.id)" class="image featured"><b-img-lazy :src="produtos.foto" :alt="modal.nome" /></a>
+                                    <div class="inner">
+                                        <header>
+                                            <h2 class="titulo">{{produtos.nome}}</h2>
+                                            <p class="card-text">{{produtos.ingredientes}}</p>
+                                            <br />
+                                            <h2 class="produto-valor">R${{produtos.valor}}</h2>
+                                        </header>
+                                    </div>
+                                </section>
+                            </div>
                         </div>
-                        <h1>Sucos</h1>
-                        <div class="col-4 col-12-medium" v-for="produtos in categoria3" :key="produtos.id">
-                            <section class="box feature">
-                                <a v-b-modal.modal-1 @click="capturar(produtos.id)" class="image featured"><b-img-lazy :src="produtos.foto" :alt="modal.nome" /></a>
-                                <div class="inner">
-                                    <header>
-                                        <h2 class="titulo">{{produtos.nome}}</h2>
-                                        <p class="card-text">{{produtos.ingredientes}}</p>
-                                        <br />
-                                        <h2 class="produto-valor">R${{produtos.valor}}</h2>
-                                    </header>
-                                </div>
-                            </section>
+                        <div v-if="!categoriaSelecionada">
+                            <div class="col-4 col-12-medium" v-for="produtos in produtoFiltrado" :key="produtos.id">
+                                <section class="box feature">
+                                    <a v-b-modal.modal-1 @click="capturarProduto(produtos.id)" class="image featured"><b-img-lazy :src="produtos.foto" :alt="modal.nome" /></a>
+                                    <div class="inner">
+                                        <header>
+                                            <h2 class="titulo">{{produtos.nome}}</h2>
+                                            <p class="card-text">{{produtos.ingredientes}}</p>
+                                            <br />
+                                            <h2 class="produto-valor">R${{produtos.valor}}</h2>
+                                        </header>
+                                    </div>
+                                </section>
+                            </div>
                         </div>
-                        <h1>Cervejas</h1>
-                        <div class="col-4 col-12-medium" v-for="produtos in categoria4" :key="produtos.id">
-                            <section class="box feature">
-                                <a v-b-modal.modal-1 @click="capturar(produtos.id)" class="image featured"><b-img-lazy :src="produtos.foto" :alt="modal.nome" /></a>
-                                <div class="inner">
-                                    <header>
-                                        <h2 class="titulo">{{produtos.nome}}</h2>
-                                        <p class="card-text">{{produtos.ingredientes}}</p>
-                                        <br />
-                                        <h2 class="produto-valor">R${{produtos.valor}}</h2>
-                                    </header>
-                                </div>
-                            </section>
+                        <div v-if="temItens">
+                            <b-button block to="/Carrinho" class="button" id="carrinhoBtn">Carrinho <font-awesome-icon icon="fa-solid fa-burger" /></b-button>
                         </div>
                     </div>
                 </div>
@@ -141,6 +168,7 @@
                 return {
                     loading: false,
                     post: {},
+                    categorias: {},
                     modal: {},
                     acrescimosLista: {},
                     Itens: [],
@@ -148,6 +176,9 @@
                     quantidade: 1,
                     acrescimos: [],
                     show: false,
+                    temItens: false,
+                    categoriaSelecionada: true,
+                    produtoFiltrado: {},
                 }
             },
             created() {
@@ -157,6 +188,14 @@
                 '$route': 'fetchData'
             },
             mounted() {
+                if (!localStorage.getItem("carrinho")) {
+                    localStorage.setItem("carrinho", JSON.stringify([]));
+                }
+
+                if (localStorage.getItem("carrinho").length < 2) {
+                    localStorage.setItem("carrinho", JSON.stringify([]));
+                }
+
                 if (localStorage.observacao) {
                     this.observacao = localStorage.observacao;
                 }
@@ -167,6 +206,10 @@
 
                 if (localStorage.getItem('acrescimos')) {
                     this.acrescimos = JSON.parse(localStorage.getItem('acrescimos'));
+                }
+
+                if (localStorage.getItem('carrinho').length > 2) {
+                    this.temItens = true;
                 }
             },
             methods: {
@@ -181,10 +224,19 @@
                             this.loading = false;
                             return;
                         });
+
+                    fetch('Categorias/Listar')
+                        .then(c => c.json())
+                        .then(json => {
+                            this.categorias = json;
+                            return;
+                        })
+                        .catch((error) => {
+                            console.log(error)
+                        });
                 },
-                capturar(id) {
-                    var selecionado = id;
-                    axios.get('https://localhost:5001/api/Produtos/Encontrar/' + selecionado.toString())
+                capturarProduto(id) {
+                    axios.get('https://localhost:5001/api/Produtos/Encontrar/' + id.toString())
                         .then((resposta) => {
                             this.modal = resposta.data
                         })
@@ -204,10 +256,6 @@
                 },
                 Adicionar() {
 
-                    if (!localStorage.getItem("carrinho")) {
-                        localStorage.setItem("carrinho", JSON.stringify([]));
-                    }
-
                     const itens = {};
                     itens.lanche = JSON.stringify(this.modal.id);
                     itens.observacao = this.observacao;
@@ -226,8 +274,8 @@
                         localStorage.setItem("carrinho", btoa(JSON.stringify(carrinho)));
                         this.Itens = JSON.parse(atob(localStorage.getItem("carrinho")));
                     }
-
                     this.show = false;
+                    this.temItens = true;
                     this.observacao = '';
                     this.quantidade = 1;
                     this.acrescimos = [];
@@ -238,6 +286,13 @@
                     this.observacao = '';
                     this.quantidade = 1;
                     this.acrescimos = [];
+                },
+                capturarCategoria(id) {
+                    this.produtoFiltrado =
+                        this.post.filter(function (posts) {
+                            return posts.categoria.id === id
+                        });
+                    this.categoriaSelecionada = false;
                 }
             },
             computed: {
@@ -260,7 +315,7 @@
                     return this.post.filter(function (posts) {
                         return posts.categoria.id === 4
                     })
-                }
+                },
             }
         });
 </script>
