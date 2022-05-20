@@ -5,7 +5,7 @@
         </div>
         <div v-if="post" class="content">
             <div style="float: right;">
-                <b-dropdown id="dropdown-1" variant="button" text="Escolha..">
+                <b-dropdown id="dropdown-1" variant="button" text="Ordenar por..">
                     <div v-for="categoria in categorias" :key="categoria.id">
                         <b-dropdown-item @click="capturarCategoria(categoria.id)">{{categoria.nome}}</b-dropdown-item>
                     </div>
@@ -76,7 +76,12 @@
                     <div v-else class="row">
                         <div class="col-4 col-12-medium" v-for="produtos in produtoFiltrado" :key="produtos.id">
                             <section class="box feature">
-                                <a v-b-modal.modal-1 @click="capturarProduto(produtos.id)" class="image featured"><b-img-lazy :src="produtos.foto" :alt="modal.nome" /></a>
+                                <div v-if="produtoFiltrado[0].categoriaId === 1">
+                                    <a v-b-modal.modal-1 @click="capturarProduto(produtos.id)" class="image featured"><b-img-lazy :src="produtos.foto" :alt="modal.nome" /></a>
+                                </div>
+                                <div v-else>
+                                    <a v-b-modal.modal-2 @click="capturarProduto(produtos.id)" class="image featured"><b-img-lazy :src="produtos.foto" :alt="modal.nome" /></a>
+                                </div>
                                 <div class="inner">
                                     <header>
                                         <h2 class="titulo">{{produtos.nome}}</h2>
@@ -149,7 +154,10 @@
                     <div class="w-100">
                         <b-button class="button"
                                   block
-                                  @click="Adicionar">Adicionar ao carrinho</b-button>
+                                  style="float:right;"
+                                  @click="Adicionar">
+                        Adicionar ao carrinho
+                        </b-button>
                     </div>
                 </template>
             </b-modal>
@@ -194,7 +202,9 @@
                     <div class="w-100">
                         <b-button class="button"
                                   block
-                                  @click="Adicionar">Adicionar ao carrinho</b-button>
+                                  @click="Adicionar">
+                        Adicionar ao carrinho
+                        </b-button>
                     </div>
                 </template>
             </b-modal>
@@ -320,7 +330,6 @@
                         localStorage.setItem("carrinho", btoa(JSON.stringify(carrinho)));
                         this.Itens = JSON.parse(atob(localStorage.getItem("carrinho")));
                     }
-                    console.log(this.Itens);
                     this.modal1 = false;
                     this.modal2 = false;
                     this.temItens = true;

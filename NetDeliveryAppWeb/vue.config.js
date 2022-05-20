@@ -19,7 +19,6 @@ const keyFilePath = path.join(baseFolder, `${certificateName}.key`);
 
 module.exports = {
     devServer: {
-        open: 'Google Chrome',
         https: {
             key: fs.readFileSync(keyFilePath),
             cert: fs.readFileSync(certFilePath),
