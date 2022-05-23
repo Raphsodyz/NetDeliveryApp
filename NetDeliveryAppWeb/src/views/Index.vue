@@ -1,7 +1,7 @@
 <template>
     <div class="post">
         <div v-if="loading" class="loading">
-            Um momento, as informações estão sendo carregadas...
+            <h5>Um momento, as informações estão sendo carregadas...</h5>
         </div>
         <div v-if="post" class="content">
             <div style="float: right;">
@@ -15,7 +15,7 @@
             </div>
             <div id="features-wrapper">
                 <div class="container">
-                    <div v-if="semCategoria" class="row">
+                    <div v-show="semCategoria" class="row">
                         <h1>Hamburguers</h1>
                         <div class="col-4 col-12-medium" v-for="produtos in categoria1" :key="produtos.id">
                             <section class="box feature">
@@ -73,7 +73,7 @@
                             </section>
                         </div>
                     </div>
-                    <div v-else class="row">
+                    <div v-show="!semCategoria" class="row">
                         <div class="col-4 col-12-medium" v-for="produtos in produtoFiltrado" :key="produtos.id">
                             <section class="box feature">
                                 <div v-if="produtoFiltrado[0].categoriaId === 1">
@@ -130,10 +130,13 @@
                 <b-form-group id="entrada2"
                               label="Quantos?"
                               label-for="quantidade"
-                              description="Se vazio, entenderemos que é somente um.">
+                              description="Se vazio, entenderemos que é somente um."
+                              >
                     <b-form-input id="quantidade"
                                   v-model="quantidade"
-                                  type="number"></b-form-input>
+                                  type="number"
+                                  min="1"
+                                  oninput="validity.valid||(value='');"></b-form-input>
                 </b-form-group>
                 <br />
                 <b-form-group id="entrada3"
@@ -143,7 +146,7 @@
                                            v-model="acrescimos">
                         <div v-for="acrescimo in acrescimosLista"
                              :key="acrescimo.id">
-                            <b-form-checkbox :value="acrescimo.id">
+                            <b-form-checkbox :value="acrescimo">
                                 {{acrescimo.nome}} R${{acrescimo.valor}}
                             </b-form-checkbox>
                         </div>
@@ -192,17 +195,21 @@
                 <b-form-group id="entrada2"
                               label="Quantos?"
                               label-for="quantidade"
-                              description="Se vazio, entenderemos que é somente um.">
+                              description="Se vazio, entenderemos que é somente um."
+                              >
                     <b-form-input id="quantidade"
                                   v-model="quantidade"
-                                  type="number"></b-form-input>
+                                  type="number"
+                                  min="1"
+                                  oninput="validity.valid||(value='');"></b-form-input>
                 </b-form-group>
 
                 <template #modal-footer>
                     <div class="w-100">
                         <b-button class="button"
                                   block
-                                  @click="Adicionar">
+                                  @click="Adicionar"
+                                  style="float:right;">
                         Adicionar ao carrinho
                         </b-button>
                     </div>
@@ -216,6 +223,7 @@
 
     import axios from 'axios';
     import Vue from 'vue';
+    import _ from 'lodash';
 
     export default
         Vue.extend({
@@ -248,8 +256,19 @@
                     localStorage.setItem("carrinho", JSON.stringify([]));
                 }
 
-                if (localStorage.getItem("carrinho").length < 2) {
-                    localStorage.setItem("carrinho", JSON.stringify([]));
+                switch (true) {
+                    case localStorage.getItem("carrinho").length < 2:
+                        localStorage.setItem("carrinho", JSON.stringify([]));
+                        break;
+                    case localStorage.getItem('carrinho').length > 2:
+                        this.temItens = true;
+                        break;
+                    case localStorage.getItem("carrinho").length === 2:
+                        this.carrinho = localStorage.getItem("carrinho");
+                        break;
+                    default:
+                        console.log("Erro ao localizar o carrinho.");
+                        break;
                 }
 
                 if (localStorage.observacao) {
@@ -262,10 +281,6 @@
 
                 if (localStorage.getItem('acrescimos')) {
                     this.acrescimos = JSON.parse(localStorage.getItem('acrescimos'));
-                }
-
-                if (localStorage.getItem('carrinho').length > 2) {
-                    this.temItens = true;
                 }
             },
             methods: {
@@ -312,21 +327,15 @@
                 },
                 Adicionar() {
 
-                    const itens = {};
-                    itens.produto = JSON.stringify(this.modal.id);
-                    itens.observacao = this.observacao;
-                    itens.quantidade = this.quantidade;
-                    itens.acrescimos = JSON.stringify(this.acrescimos);
-
                     if (localStorage.getItem("carrinho").length === 2) {
                         const carrinho = JSON.parse(localStorage.getItem("carrinho"));
-                        carrinho.push({ itens: itens });
+                        carrinho.push({ produto: this.modal, observacao: this.observacao, quantidade: this.quantidade, acrescimos: this.acrescimos });
                         localStorage.setItem("carrinho", btoa(JSON.stringify(carrinho)));
                         this.Itens = JSON.parse(atob(localStorage.getItem("carrinho")));
                     }
                     else {
                         const carrinho = JSON.parse(atob(localStorage.getItem("carrinho")));
-                        carrinho.push({ itens: itens });
+                        carrinho.push({ produto: this.modal, observacao: this.observacao, quantidade: this.quantidade, acrescimos: this.acrescimos });
                         localStorage.setItem("carrinho", btoa(JSON.stringify(carrinho)));
                         this.Itens = JSON.parse(atob(localStorage.getItem("carrinho")));
                     }
