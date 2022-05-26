@@ -15,11 +15,18 @@
             </div>
             <div id="features-wrapper">
                 <div class="container">
-                    <div v-show="semCategoria" class="row">
-                        <h1>Hamburguers</h1>
-                        <div class="col-4 col-12-medium" v-for="produtos in categoria1" :key="produtos.id">
+                    <div v-show="semCategoria" class="row" v-for="categoria in categorias" :key="categoria.id">
+                        <h1>{{categoria.nome}}</h1>
+                        <!-- eslint-disable vue/no-use-v-if-with-v-for,vue/no-confusing-v-for-v-if -->
+                        <div class="col-4 col-12-medium" v-for="produtos in post" :key="produtos.id" v-if="produtos.categoria.id === categoria.id">
+                            <!-- eslint-enable -->
                             <section class="box feature">
-                                <a v-b-modal.modal-1 @click="capturarProduto(produtos.id)" class="image featured"><b-img-lazy :src="produtos.foto" :alt="modal.nome" /></a>
+                                <div v-if="produtos.categoria.id === 1">
+                                    <a v-b-modal.modal-1 @click="capturarProduto(produtos.id)" class="image featured"><b-img-lazy :src="produtos.foto" :alt="modal.nome" /></a>
+                                </div>
+                                <div v-else>
+                                    <a v-b-modal.modal-2 @click="capturarProduto(produtos.id)" class="image featured"><b-img-lazy :src="produtos.foto" :alt="modal.nome" /></a>
+                                </div>                                
                                 <div class="inner">
                                     <header>
                                         <h2 class="titulo">{{produtos.nome}}</h2>
@@ -30,48 +37,7 @@
                                 </div>
                             </section>
                         </div>
-                        <h1>Bebidas</h1>
-                        <div class="col-4 col-12-medium" v-for="produtos in categoria2" :key="produtos.id">
-                            <section class="box feature">
-                                <a v-b-modal.modal-2 @click="capturarProduto(produtos.id)" class="image featured"><b-img-lazy :src="produtos.foto" :alt="modal.nome" /></a>
-                                <div class="inner">
-                                    <header>
-                                        <h2 class="titulo">{{produtos.nome}}</h2>
-                                        <p class="card-text">{{produtos.ingredientes}}</p>
-                                        <br />
-                                        <h2 class="produto-valor">R${{produtos.valor}}</h2>
-                                    </header>
-                                </div>
-                            </section>
-                        </div>
-                        <h1>Sucos</h1>
-                        <div class="col-4 col-12-medium" v-for="produtos in categoria3" :key="produtos.id">
-                            <section class="box feature">
-                                <a v-b-modal.modal-2 @click="capturarProduto(produtos.id)" class="image featured"><b-img-lazy :src="produtos.foto" :alt="modal.nome" /></a>
-                                <div class="inner">
-                                    <header>
-                                        <h2 class="titulo">{{produtos.nome}}</h2>
-                                        <p class="card-text">{{produtos.ingredientes}}</p>
-                                        <br />
-                                        <h2 class="produto-valor">R${{produtos.valor}}</h2>
-                                    </header>
-                                </div>
-                            </section>
-                        </div>
-                        <h1>Cervejas</h1>
-                        <div class="col-4 col-12-medium" v-for="produtos in categoria4" :key="produtos.id">
-                            <section class="box feature">
-                                <a v-b-modal.modal-2 @click="capturarProduto(produtos.id)" class="image featured"><b-img-lazy :src="produtos.foto" :alt="modal.nome" /></a>
-                                <div class="inner">
-                                    <header>
-                                        <h2 class="titulo">{{produtos.nome}}</h2>
-                                        <p class="card-text">{{produtos.ingredientes}}</p>
-                                        <br />
-                                        <h2 class="produto-valor">R${{produtos.valor}}</h2>
-                                    </header>
-                                </div>
-                            </section>
-                        </div>
+                        <br />
                     </div>
                     <div v-show="!semCategoria" class="row">
                         <div class="col-4 col-12-medium" v-for="produtos in produtoFiltrado" :key="produtos.id">
@@ -97,133 +63,129 @@
                         <b-button block to="/Carrinho" class="button" id="carrinhoBtn">Carrinho <font-awesome-icon icon="fa-solid fa-burger" /></b-button>
                     </div>
                 </div>
+                <div>
+                    <b-modal centered
+                             id="modal-1"
+                             body-class="b-row"
+                             no-close-on-backdrop
+                             no-close-on-esc
+                             v-model="modal1">
+                        <template #modal-header>
+                            <h2>{{modal.nome}}</h2>
+                            <b-button size="sm" class="button" @click="botaoX()">X</b-button>
+                        </template>
+                        <b-img-lazy :src="modal.foto" fluid-grow :alt="modal.nome" />
+                        <p class="my-4" style="text-align: center;
+                                        font-family: 'PT Sans', sans-serif;
+                                        font-size: medium;">
+                            {{modal.ingredientes}}
+                        </p>
+
+                        <b-form-group id="entrada1"
+                                      label="Alguma observação sobre o lanche?"
+                                      label-for="observacao">
+                            <b-form-textarea id="observacao"
+                                             v-model="observacao"
+                                             placeholder="Digite aqui!"
+                                             rows="3"
+                                             max-rows="6"></b-form-textarea>
+                        </b-form-group>
+                        <br />
+                        <b-form-group id="entrada2"
+                                      label="Quantos?"
+                                      label-for="quantidade"
+                                      description="Se vazio, entenderemos que é somente um.">
+                            <b-form-input id="quantidade"
+                                          v-model="quantidade"
+                                          type="number"
+                                          min="1"
+                                          oninput="validity.valid||(value='');"></b-form-input>
+                        </b-form-group>
+                        <br />
+                        <b-form-group id="entrada3"
+                                      label="Acrescimos?"
+                                      label-for="acrescimos">
+                            <b-form-checkbox-group id="acrescimos"
+                                                   v-model="acrescimos">
+                                <div v-for="acrescimo in acrescimosLista"
+                                     :key="acrescimo.id">
+                                    <b-form-checkbox :value="acrescimo">
+                                        {{acrescimo.nome}} R${{acrescimo.valor}}
+                                    </b-form-checkbox>
+                                </div>
+                            </b-form-checkbox-group>
+                        </b-form-group>
+
+                        <template #modal-footer>
+                            <div class="w-100">
+                                <b-button class="button"
+                                          block
+                                          style="float:right;"
+                                          @click="Adicionar">
+                                    Adicionar ao carrinho
+                                </b-button>
+                            </div>
+                        </template>
+                    </b-modal>
+
+                    <b-modal centered
+                             id="modal-2"
+                             body-class="b-row"
+                             no-close-on-backdrop
+                             no-close-on-esc
+                             v-model="modal2">
+                        <template #modal-header>
+                            <h2>{{modal.nome}}</h2>
+                            <b-button size="sm" class="button" @click="botaoX()">X</b-button>
+                        </template>
+                        <b-img-lazy :src="modal.foto" fluid-grow :alt="modal.nome" />
+                        <p class="my-4" style="text-align: center;
+                                        font-family: 'PT Sans', sans-serif;
+                                        font-size: medium;">
+                            {{modal.volume}}
+                        </p>
+
+                        <b-form-group id="entrada1"
+                                      label="Alguma observação sobre o pedido?"
+                                      label-for="observacao">
+                            <b-form-textarea id="observacao"
+                                             v-model="observacao"
+                                             placeholder="Digite aqui!"
+                                             rows="3"
+                                             max-rows="6"></b-form-textarea>
+                        </b-form-group>
+                        <br />
+                        <b-form-group id="entrada2"
+                                      label="Quantos?"
+                                      label-for="quantidade"
+                                      description="Se vazio, entenderemos que é somente um.">
+                            <b-form-input id="quantidade"
+                                          v-model="quantidade"
+                                          type="number"
+                                          min="1"
+                                          oninput="validity.valid||(value='');"></b-form-input>
+                        </b-form-group>
+
+                        <template #modal-footer>
+                            <div class="w-100">
+                                <b-button class="button"
+                                          block
+                                          @click="Adicionar"
+                                          style="float:right;">
+                                    Adicionar ao carrinho
+                                </b-button>
+                            </div>
+                        </template>
+                    </b-modal>
+                </div>
             </div>
-        </div>
-        <div>
-            <b-modal centered
-                     id="modal-1"
-                     body-class="b-row"
-                     no-close-on-backdrop
-                     no-close-on-esc
-                     v-model="modal1">
-                <template #modal-header>
-                    <h2>{{modal.nome}}</h2>
-                    <b-button size="sm" class="button" @click="botaoX()">X</b-button>
-                </template>
-                <b-img-lazy :src="modal.foto" fluid-grow :alt="modal.nome" />
-                <p class="my-4" style="text-align: center;
-                                        font-family: 'PT Sans', sans-serif;
-                                        font-size: medium;">
-                    {{modal.ingredientes}}
-                </p>
-
-                <b-form-group id="entrada1"
-                              label="Alguma observação sobre o lanche?"
-                              label-for="observacao">
-                    <b-form-textarea id="observacao"
-                                     v-model="observacao"
-                                     placeholder="Digite aqui!"
-                                     rows="3"
-                                     max-rows="6"></b-form-textarea>
-                </b-form-group>
-                <br />
-                <b-form-group id="entrada2"
-                              label="Quantos?"
-                              label-for="quantidade"
-                              description="Se vazio, entenderemos que é somente um."
-                              >
-                    <b-form-input id="quantidade"
-                                  v-model="quantidade"
-                                  type="number"
-                                  min="1"
-                                  oninput="validity.valid||(value='');"></b-form-input>
-                </b-form-group>
-                <br />
-                <b-form-group id="entrada3"
-                              label="Acrescimos?"
-                              label-for="acrescimos">
-                    <b-form-checkbox-group id="acrescimos"
-                                           v-model="acrescimos">
-                        <div v-for="acrescimo in acrescimosLista"
-                             :key="acrescimo.id">
-                            <b-form-checkbox :value="acrescimo">
-                                {{acrescimo.nome}} R${{acrescimo.valor}}
-                            </b-form-checkbox>
-                        </div>
-                    </b-form-checkbox-group>
-                </b-form-group>
-
-                <template #modal-footer>
-                    <div class="w-100">
-                        <b-button class="button"
-                                  block
-                                  style="float:right;"
-                                  @click="Adicionar">
-                        Adicionar ao carrinho
-                        </b-button>
-                    </div>
-                </template>
-            </b-modal>
-
-            <b-modal centered
-                     id="modal-2"
-                     body-class="b-row"
-                     no-close-on-backdrop
-                     no-close-on-esc
-                     v-model="modal2">
-                <template #modal-header>
-                    <h2>{{modal.nome}}</h2>
-                    <b-button size="sm" class="button" @click="botaoX()">X</b-button>
-                </template>
-                <b-img-lazy :src="modal.foto" fluid-grow :alt="modal.nome" />
-                <p class="my-4" style="text-align: center;
-                                        font-family: 'PT Sans', sans-serif;
-                                        font-size: medium;">
-                    {{modal.volume}}
-                </p>
-
-                <b-form-group id="entrada1"
-                              label="Alguma observação sobre o pedido?"
-                              label-for="observacao">
-                    <b-form-textarea id="observacao"
-                                     v-model="observacao"
-                                     placeholder="Digite aqui!"
-                                     rows="3"
-                                     max-rows="6"></b-form-textarea>
-                </b-form-group>
-                <br />
-                <b-form-group id="entrada2"
-                              label="Quantos?"
-                              label-for="quantidade"
-                              description="Se vazio, entenderemos que é somente um."
-                              >
-                    <b-form-input id="quantidade"
-                                  v-model="quantidade"
-                                  type="number"
-                                  min="1"
-                                  oninput="validity.valid||(value='');"></b-form-input>
-                </b-form-group>
-
-                <template #modal-footer>
-                    <div class="w-100">
-                        <b-button class="button"
-                                  block
-                                  @click="Adicionar"
-                                  style="float:right;">
-                        Adicionar ao carrinho
-                        </b-button>
-                    </div>
-                </template>
-            </b-modal>
         </div>
     </div>
 </template>
 
 <script lang="js">
 
-    import axios from 'axios';
     import Vue from 'vue';
-    import _ from 'lodash';
 
     export default
         Vue.extend({
@@ -294,6 +256,9 @@
                             this.post = json;
                             this.loading = false;
                             return;
+                        })
+                        .catch((error) => {
+                            console.log(error)
                         });
 
                     fetch('Categorias/Listar')
@@ -305,15 +270,6 @@
                         .catch((error) => {
                             console.log(error)
                         });
-                },
-                capturarProduto(id) {
-                    axios.get('https://localhost:5001/api/Produtos/Encontrar/' + id.toString())
-                        .then((resposta) => {
-                            this.modal = resposta.data
-                        })
-                        .catch((error) => {
-                            console.log(error);
-                        });
 
                     fetch('Acrescimos/Listar')
                         .then(a => a.json())
@@ -324,6 +280,9 @@
                         .catch((error) => {
                             console.log(error);
                         });
+                },
+                capturarProduto(id) {
+                    this.modal = this.post.find(p => p.id === id);
                 },
                 Adicionar() {
 
@@ -361,28 +320,6 @@
                         });
                     this.semCategoria = false;
                 }
-            },
-            computed: {
-                categoria1: function () {
-                    return this.post.filter(function (posts) {
-                        return posts.categoria.id === 1
-                    })
-                },
-                categoria2: function () {
-                    return this.post.filter(function (posts) {
-                        return posts.categoria.id === 2
-                    })
-                },
-                categoria3: function () {
-                    return this.post.filter(function (posts) {
-                        return posts.categoria.id === 3
-                    })
-                },
-                categoria4: function () {
-                    return this.post.filter(function (posts) {
-                        return posts.categoria.id === 4
-                    })
-                },
             }
         });
 </script>

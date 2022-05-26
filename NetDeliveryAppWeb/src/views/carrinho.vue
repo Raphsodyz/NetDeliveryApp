@@ -1,7 +1,7 @@
 <template>
     <div class="post">
         <div v-if="loading" class="loading">
-            <h5>Um momento, as informações estão sendo carregadas...</h5>
+            <h5>Um momento, as informaÃ§Ãµes estÃ£o sendo carregadas...</h5>
         </div>
         <div id="features-wrapper">
             <div class="container">
