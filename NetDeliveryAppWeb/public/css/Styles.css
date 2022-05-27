@@ -73,6 +73,11 @@ footer, header, hgroup, menu, nav, section {
     font-size: medium;
 }
 
+.carrinhoLista {
+    overflow: hidden;
+    list-style-type: none;
+}
+
 body {
     line-height: 1;
 }
