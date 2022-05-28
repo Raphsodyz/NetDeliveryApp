@@ -5,18 +5,27 @@
         </div>
         <div id="features-wrapper">
             <b-container fluid>
-                <b-row class="row" v-if="carrinho.length < 1">
-                    <h4>Nada aqui para chamar de meu...</h4>
-                </b-row>
-                <b-row class="row" v-else>
-                    <div class="col-6 col-12-small">
+                <b-row>
+                    <div class="col-6 col-12-small" v-if="carrinho.length >= 1">
                         <h3>Confira seu pedido:</h3>
-                        <ul v-for="produtos in carrinho" :key="produtos.produto.id">
-                            <li class="carrinhoLista"><b-img v-bind="mainProps" rounded :src="produtos.produto.foto" fluid alt="produtos.produto.nome"></b-img>
-                            {{produtos.quantidade}} - {{produtos.produto.nome}} com acrescimo de {{produtos.acrescimos.nome}}
+                        <ul v-for="p in carrinho" :key="p.produto.id">
+                            <li class="carrinhoLista">
+                                <b-img style="vertical-align: middle;" v-bind="mainProps" rounded :src="p.produto.foto" fluid alt="p.produto.nome"></b-img>
+                                <span class="carrinhoTexto">
+                                    &nbsp; &nbsp;{{p.quantidade}}&nbsp;{{p.produto.nome}}
+                                    <br />
+                                    &nbsp; &nbsp;{{p.observacao}}
+                                    <br />
+                                    <template class="carrinhoTexto" v-for="a in p.acrescimos">
+                                        &nbsp; &nbsp;+ {{a.nome}}
+                                    </template>
+                                </span>
                             </li>
                         </ul>
                     </div>
+                    <template v-else>
+                        <h4>Nada aqui para chamar de meu...</h4>
+                    </template>
                 </b-row>
             </b-container>
         </div>
@@ -32,7 +41,7 @@
                 loading: false,
                 post: null,
                 carrinho: [],
-                mainProps: { blank: false, blankColor: '#777', width: 100, height: 100, class: 'm1' },
+                mainProps: { blank: false, blankColor: '#777', width: 120, height: 120, class: 'm1' },
             };
         },
         created() {

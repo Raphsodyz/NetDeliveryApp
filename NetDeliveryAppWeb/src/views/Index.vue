@@ -14,7 +14,7 @@
                 </b-dropdown>
             </div>
             <div id="features-wrapper">
-                <div class="container">
+                <b-container fluid>
                     <div v-show="semCategoria" class="row" v-for="categoria in categorias" :key="categoria.id">
                         <h1>{{categoria.nome}}</h1>
                         <!-- eslint-disable vue/no-use-v-if-with-v-for,vue/no-confusing-v-for-v-if -->
@@ -62,7 +62,7 @@
                     <div v-if="temItens">
                         <b-button block to="/Carrinho" class="button" id="carrinhoBtn">Carrinho <font-awesome-icon icon="fa-solid fa-burger" /></b-button>
                     </div>
-                </div>
+                </b-container>
                 <div>
                     <b-modal centered
                              id="modal-1"

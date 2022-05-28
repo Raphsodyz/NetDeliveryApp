@@ -76,6 +76,18 @@ footer, header, hgroup, menu, nav, section {
 .carrinhoLista {
     overflow: hidden;
     list-style-type: none;
+    display: flex;
+    align-items: center;
+}
+
+.carrinhoTexto {
+    display: table-cell;
+    height: 120px;
+    overflow: hidden;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 500px;
 }
 
 body {
