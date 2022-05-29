@@ -6,7 +6,7 @@
         <div id="features-wrapper">
             <b-container fluid>
                 <b-row>
-                    <div class="col-6 col-12-small" v-if="carrinho.length >= 1">
+                    <div class="col-6 col-12-small" v-if="carrinho.length">
                         <h3>Confira seu pedido:</h3>
                         <ul v-for="p in carrinho" :key="p.produto.id">
                             <li class="carrinhoLista">
@@ -39,7 +39,6 @@
         data() {
             return {
                 loading: false,
-                post: null,
                 carrinho: [],
                 mainProps: { blank: false, blankColor: '#777', width: 120, height: 120, class: 'm1' },
             };
@@ -51,7 +50,6 @@
             '$route': 'fetchData'
         },
         mounted() {
-
             if (!localStorage.getItem("carrinho")) {
                 localStorage.setItem("carrinho", JSON.stringify([]));
             }
@@ -64,7 +62,7 @@
                     this.carrinho = JSON.parse(atob(localStorage.getItem("carrinho")));
                     break;
                 case localStorage.getItem("carrinho").length === 2:
-                    this.carrinho = localStorage.getItem("carrinho");
+                    this.carrinho = false;
                     break;
                 default:
                     console.log('Erro ao abrir o carrinho.');
@@ -73,9 +71,8 @@
         },
         methods: {
             fetchData() {
-                this.post = null;
                 this.loading = false;
-            }
-        },
+            },
+        }
     });
 </script>
