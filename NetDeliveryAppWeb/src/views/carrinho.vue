@@ -6,7 +6,7 @@
         <div id="features-wrapper">
             <b-container fluid>
                 <b-row>
-                    <div class="col-6 col-12-small" v-if="carrinho.length">
+                    <div class="col-6 col-12-large" v-if="carrinho.length">
                         <h3>Confira seu pedido:</h3>
                         <ul v-for="p in carrinho" :key="p.produto.id">
                             <li class="carrinhoLista">
@@ -20,6 +20,8 @@
                                         &nbsp; &nbsp;+ {{a.nome}}
                                     </template>
                                 </span>
+                                <b-button style="float: right;" variant="primary">Atualizar</b-button>
+                                <b-button style="float: right;" variant="danger">Remover</b-button>
                             </li>
                         </ul>
                     </div>

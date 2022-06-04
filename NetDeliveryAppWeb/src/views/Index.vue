@@ -4,15 +4,7 @@
             <h5>Um momento, as informações estão sendo carregadas...</h5>
         </div>
         <div v-if="post" class="content">
-            <div style="float: right;">
-                <b-dropdown id="dropdown-1" variant="button" text="Ordenar por..">
-                    <div v-for="categoria in categorias" :key="categoria.id">
-                        <b-dropdown-item @click="capturarCategoria(categoria.id)">{{categoria.nome}}</b-dropdown-item>
-                    </div>
-                    <b-dropdown-divider></b-dropdown-divider>
-                    <b-dropdown-item @click="semCategoria = !semCategoria">Exibir todos</b-dropdown-item>
-                </b-dropdown>
-            </div>
+            <ordenar :categorias="categorias" :post="post" @dados="retorno" @menu="itens"/>
             <div id="features-wrapper">
                 <b-container fluid>
                     <div v-show="semCategoria" class="row" v-for="categoria in categorias" :key="categoria.id">
@@ -186,6 +178,7 @@
 <script lang="js">
 
     import Vue from 'vue';
+    import ordenar from '../components/OrdenarComponent.vue';
 
     export default
         Vue.extend({
@@ -206,6 +199,9 @@
                     semCategoria: true,
                     produtoFiltrado: {},
                 }
+            },
+            components: {
+                ordenar
             },
             created() {
                 this.fetchData();
@@ -313,12 +309,12 @@
                     this.quantidade = 1;
                     this.acrescimos = [];
                 },
-                capturarCategoria(id) {
-                    this.produtoFiltrado =
-                        this.post.filter(function (posts) {
-                            return posts.categoria.id === id
-                        });
-                    this.semCategoria = false;
+                retorno: function (produto, categoria) {
+                    this.produtoFiltrado = produto;
+                    this.semCategoria = categoria;
+                },
+                itens: function (todos) {
+                    this.semCategoria = todos;
                 }
             }
         });

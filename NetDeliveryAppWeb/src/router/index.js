@@ -13,12 +13,12 @@ const routes = [
   {
     path: '/Cadastro',
     name: 'Cadastro',
-    component: () => import('../views/cadastro.vue')
+    component: () => import('../views/Cadastro.vue')
   },
   {
     path: '/Carrinho',
     name: 'Carrinho',
-    component: () => import('../views/carrinho.vue')
+    component: () => import('../views/Carrinho.vue')
   }
 ]
 
