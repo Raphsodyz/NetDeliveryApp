@@ -15,18 +15,18 @@
         name: 'ordenar',
         props: {
             categorias: Array,
-            post: Array,
+            produtos: Array,
         },
         data: function () {
             return {
                 semCategoria: true,
-                produtoFiltrado: {},
+                produtoFiltrado: [],
             }
         },
         methods: {
             capturarCategoria(id) {
                 this.produtoFiltrado =
-                    this.post.filter((posts) => {
+                    this.produtos.filter((posts) => {
                         return posts.categoria.id === id
                     });
                 this.semCategoria = false;

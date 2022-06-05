@@ -18,7 +18,7 @@
             </p>
 
             <b-form-group id="entrada1"
-                          label="Alguma observação sobre o lanche?"
+                          label="Alguma observaÃ§Ã£o sobre o lanche?"
                           label-for="observacao">
                 <b-form-textarea id="observacao"
                                  v-model="observacao"
@@ -30,7 +30,7 @@
             <b-form-group id="entrada2"
                           label="Quantos?"
                           label-for="quantidade"
-                          description="Se vazio, entenderemos que é somente um.">
+                          description="Se vazio, entenderemos que Ã© somente um.">
                 <b-form-input id="quantidade"
                               v-model="quantidade"
                               type="number"
@@ -43,7 +43,7 @@
                           label-for="acrescimos">
                 <b-form-checkbox-group id="acrescimos"
                                        v-model="acrescimos">
-                    <div v-for="acrescimo in acrescimosLista"
+                    <div v-for="acrescimo in acrescimosData"
                          :key="acrescimo.id">
                         <b-form-checkbox :value="acrescimo">
                             {{acrescimo.nome}} R${{acrescimo.valor}}
@@ -66,13 +66,56 @@
     </div>
 </template>
 
-<script lang="js">
-    import Vue from 'vue'
-
-    export default
-        Vue.extend({
-            data: function () {
-
+<script>
+    export default {
+        name: 'modalsanduiche',
+        props: {
+            modal: Object,
+            acrescimosData: Array,
+        },
+        data: function () {
+            return {
+                modal1: false,
+                modal2: false,
+                observacao: '',
+                quantidade: 1,
+                acrescimos: [],
+                Itens: []
             }
-        })
+        },
+        methods: {
+            botaoX() {
+                this.modal1 = false;
+                this.modal2 = false;
+                this.observacao = '';
+                this.quantidade = 1;
+                this.acrescimos = [];
+
+                this.$emit('modalLimpo', this.modal1, this.modal2, this.observacao, this.quantidade, this.acrescimos)
+            },
+            Adicionar() {
+
+                if (localStorage.getItem("carrinho").length === 2) {
+                    const carrinho = JSON.parse(localStorage.getItem("carrinho"));
+                    carrinho.push({ produto: this.modal, observacao: this.observacao, quantidade: this.quantidade, acrescimos: this.acrescimos });
+                    localStorage.setItem("carrinho", btoa(JSON.stringify(carrinho)));
+                    this.Itens = JSON.parse(atob(localStorage.getItem("carrinho")));
+                }
+                else {
+                    const carrinho = JSON.parse(atob(localStorage.getItem("carrinho")));
+                    carrinho.push({ produto: this.modal, observacao: this.observacao, quantidade: this.quantidade, acrescimos: this.acrescimos });
+                    localStorage.setItem("carrinho", btoa(JSON.stringify(carrinho)));
+                    this.Itens = JSON.parse(atob(localStorage.getItem("carrinho")));
+                }
+                this.modal1 = false;
+                this.modal2 = false;
+                this.temItens = true;
+                this.observacao = '';
+                this.quantidade = 1;
+                this.acrescimos = [];
+
+                this.$emit('popularCarrinho', this.Itens, this.temItens = true, this.modal1, this.modal2, this.observacao, this.quantidade, this.acrescimos);
+            }
+        }
+    }
 </script>

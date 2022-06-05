@@ -4,172 +4,34 @@
             <h5>Um momento, as informações estão sendo carregadas...</h5>
         </div>
         <div v-if="post" class="content">
-            <ordenar :categorias="categorias" :post="post" @dados="retorno" @menu="itens"/>
+            <ordenar :categorias="categorias" :produtos="post" @dados="retorno" @menu="itens"/>
             <div id="features-wrapper">
                 <b-container fluid>
-                    <div v-show="semCategoria" class="row" v-for="categoria in categorias" :key="categoria.id">
-                        <h1>{{categoria.nome}}</h1>
-                        <!-- eslint-disable vue/no-use-v-if-with-v-for,vue/no-confusing-v-for-v-if -->
-                        <div class="col-4 col-12-medium" v-for="produtos in post" :key="produtos.id" v-if="produtos.categoria.id === categoria.id">
-                            <!-- eslint-enable -->
-                            <section class="box feature">
-                                <div v-if="produtos.categoria.id === 1">
-                                    <a v-b-modal.modal-1 @click="capturarProduto(produtos.id)" class="image featured"><b-img-lazy :src="produtos.foto" :alt="modal.nome" /></a>
-                                </div>
-                                <div v-else>
-                                    <a v-b-modal.modal-2 @click="capturarProduto(produtos.id)" class="image featured"><b-img-lazy :src="produtos.foto" :alt="modal.nome" /></a>
-                                </div>                                
-                                <div class="inner">
-                                    <header>
-                                        <h2 class="titulo">{{produtos.nome}}</h2>
-                                        <p class="card-text">{{produtos.ingredientes}}</p>
-                                        <br />
-                                        <h2 class="produto-valor">R${{produtos.valor}}</h2>
-                                    </header>
-                                </div>
-                            </section>
-                        </div>
-                        <br />
-                    </div>
-                    <div v-show="!semCategoria" class="row">
-                        <div class="col-4 col-12-medium" v-for="produtos in produtoFiltrado" :key="produtos.id">
-                            <section class="box feature">
-                                <div v-if="produtoFiltrado[0].categoriaId === 1">
-                                    <a v-b-modal.modal-1 @click="capturarProduto(produtos.id)" class="image featured"><b-img-lazy :src="produtos.foto" :alt="modal.nome" /></a>
-                                </div>
-                                <div v-else>
-                                    <a v-b-modal.modal-2 @click="capturarProduto(produtos.id)" class="image featured"><b-img-lazy :src="produtos.foto" :alt="modal.nome" /></a>
-                                </div>
-                                <div class="inner">
-                                    <header>
-                                        <h2 class="titulo">{{produtos.nome}}</h2>
-                                        <p class="card-text">{{produtos.ingredientes}}</p>
-                                        <br />
-                                        <h2 class="produto-valor">R${{produtos.valor}}</h2>
-                                    </header>
-                                </div>
-                            </section>
-                        </div>
-                    </div>
-                    <div v-if="temItens">
-                        <b-button block to="/Carrinho" class="button" id="carrinhoBtn">Carrinho <font-awesome-icon icon="fa-solid fa-burger" /></b-button>
-                    </div>
+                    <listadinamica :produtos="post" 
+                                   :categorias="categorias" 
+                                   :acrescimos="acrescimosLista" 
+                                   :semCategoria="semCategoria"
+                                   @selecionado="escolher_produto"
+                    />
+                    <listaordenada :produtos="produtoFiltrado"
+                                   :categorias="categorias" 
+                                   :acrescimos="acrescimosLista" 
+                                   :semCategoria="semCategoria"
+                                   @selecionado="escolher_produto"
+                    />
+                    <botaocarrinho :temItens="temItens"/>
                 </b-container>
-                <div>
-                    <b-modal centered
-                             id="modal-1"
-                             body-class="b-row"
-                             no-close-on-backdrop
-                             no-close-on-esc
-                             v-model="modal1">
-                        <template #modal-header>
-                            <h2>{{modal.nome}}</h2>
-                            <b-button size="sm" class="button" @click="botaoX()">X</b-button>
-                        </template>
-                        <b-img-lazy :src="modal.foto" fluid-grow :alt="modal.nome" />
-                        <p class="my-4" style="text-align: center;
-                                        font-family: 'PT Sans', sans-serif;
-                                        font-size: medium;">
-                            {{modal.ingredientes}}
-                        </p>
 
-                        <b-form-group id="entrada1"
-                                      label="Alguma observação sobre o lanche?"
-                                      label-for="observacao">
-                            <b-form-textarea id="observacao"
-                                             v-model="observacao"
-                                             placeholder="Digite aqui!"
-                                             rows="3"
-                                             max-rows="6"></b-form-textarea>
-                        </b-form-group>
-                        <br />
-                        <b-form-group id="entrada2"
-                                      label="Quantos?"
-                                      label-for="quantidade"
-                                      description="Se vazio, entenderemos que é somente um.">
-                            <b-form-input id="quantidade"
-                                          v-model="quantidade"
-                                          type="number"
-                                          min="1"
-                                          oninput="validity.valid||(value='');"></b-form-input>
-                        </b-form-group>
-                        <br />
-                        <b-form-group id="entrada3"
-                                      label="Acrescimos?"
-                                      label-for="acrescimos">
-                            <b-form-checkbox-group id="acrescimos"
-                                                   v-model="acrescimos">
-                                <div v-for="acrescimo in acrescimosLista"
-                                     :key="acrescimo.id">
-                                    <b-form-checkbox :value="acrescimo">
-                                        {{acrescimo.nome}} R${{acrescimo.valor}}
-                                    </b-form-checkbox>
-                                </div>
-                            </b-form-checkbox-group>
-                        </b-form-group>
-
-                        <template #modal-footer>
-                            <div class="w-100">
-                                <b-button class="button"
-                                          block
-                                          style="float:right;"
-                                          @click="Adicionar">
-                                    Adicionar ao carrinho
-                                </b-button>
-                            </div>
-                        </template>
-                    </b-modal>
-
-                    <b-modal centered
-                             id="modal-2"
-                             body-class="b-row"
-                             no-close-on-backdrop
-                             no-close-on-esc
-                             v-model="modal2">
-                        <template #modal-header>
-                            <h2>{{modal.nome}}</h2>
-                            <b-button size="sm" class="button" @click="botaoX()">X</b-button>
-                        </template>
-                        <b-img-lazy :src="modal.foto" fluid-grow :alt="modal.nome" />
-                        <p class="my-4" style="text-align: center;
-                                        font-family: 'PT Sans', sans-serif;
-                                        font-size: medium;">
-                            {{modal.volume}}
-                        </p>
-
-                        <b-form-group id="entrada1"
-                                      label="Alguma observação sobre o pedido?"
-                                      label-for="observacao">
-                            <b-form-textarea id="observacao"
-                                             v-model="observacao"
-                                             placeholder="Digite aqui!"
-                                             rows="3"
-                                             max-rows="6"></b-form-textarea>
-                        </b-form-group>
-                        <br />
-                        <b-form-group id="entrada2"
-                                      label="Quantos?"
-                                      label-for="quantidade"
-                                      description="Se vazio, entenderemos que é somente um.">
-                            <b-form-input id="quantidade"
-                                          v-model="quantidade"
-                                          type="number"
-                                          min="1"
-                                          oninput="validity.valid||(value='');"></b-form-input>
-                        </b-form-group>
-
-                        <template #modal-footer>
-                            <div class="w-100">
-                                <b-button class="button"
-                                          block
-                                          @click="Adicionar"
-                                          style="float:right;">
-                                    Adicionar ao carrinho
-                                </b-button>
-                            </div>
-                        </template>
-                    </b-modal>
-                </div>
+                <modalsanduiche :modal="modal"
+                                :acrescimosData="acrescimosLista"
+                                @modalLimpo="limpar"
+                                @popularCarrinho="popular_carrinho"
+                />
+                <modalbebida :modal="modal"
+                             :acrescimosData="acrescimosLista"
+                             @modalLimpo="limpar"
+                             @popularCarrinho="popular_carrinho"
+                />
             </div>
         </div>
     </div>
@@ -179,6 +41,11 @@
 
     import Vue from 'vue';
     import ordenar from '../components/OrdenarComponent.vue';
+    import listadinamica from '../components/ListaDinamicaComponent.vue';
+    import listaordenada from '../components/ListaOrdenadaComponent.vue';
+    import botaocarrinho from '../components/BotãoCarrinho.vue';
+    import modalsanduiche from '../components/SanduicheModalComponent.vue';
+    import modalbebida from '../components/BebidaModalComponent.vue';
 
     export default
         Vue.extend({
@@ -197,11 +64,16 @@
                     modal2: false,
                     temItens: false,
                     semCategoria: true,
-                    produtoFiltrado: {},
+                    produtoFiltrado: [],
                 }
             },
             components: {
-                ordenar
+                ordenar,
+                listadinamica,
+                listaordenada,
+                botaocarrinho,
+                modalsanduiche,
+                modalbebida
             },
             created() {
                 this.fetchData();
@@ -277,44 +149,31 @@
                             console.log(error);
                         });
                 },
-                capturarProduto(id) {
-                    this.modal = this.post.find(p => p.id === id);
-                },
-                Adicionar() {
-
-                    if (localStorage.getItem("carrinho").length === 2) {
-                        const carrinho = JSON.parse(localStorage.getItem("carrinho"));
-                        carrinho.push({ produto: this.modal, observacao: this.observacao, quantidade: this.quantidade, acrescimos: this.acrescimos });
-                        localStorage.setItem("carrinho", btoa(JSON.stringify(carrinho)));
-                        this.Itens = JSON.parse(atob(localStorage.getItem("carrinho")));
-                    }
-                    else {
-                        const carrinho = JSON.parse(atob(localStorage.getItem("carrinho")));
-                        carrinho.push({ produto: this.modal, observacao: this.observacao, quantidade: this.quantidade, acrescimos: this.acrescimos });
-                        localStorage.setItem("carrinho", btoa(JSON.stringify(carrinho)));
-                        this.Itens = JSON.parse(atob(localStorage.getItem("carrinho")));
-                    }
-                    this.modal1 = false;
-                    this.modal2 = false;
-                    this.temItens = true;
-                    this.observacao = '';
-                    this.quantidade = 1;
-                    this.acrescimos = [];
-                },
-
-                botaoX() {
-                    this.modal1 = false;
-                    this.modal2 = false;
-                    this.observacao = '';
-                    this.quantidade = 1;
-                    this.acrescimos = [];
-                },
                 retorno: function (produto, categoria) {
                     this.produtoFiltrado = produto;
                     this.semCategoria = categoria;
                 },
                 itens: function (todos) {
                     this.semCategoria = todos;
+                },
+                escolher_produto: function (selecionado) {
+                    this.modal = selecionado;
+                },
+                limpar: function (m1, m2, o, q, a) {
+                    this.modal1 = m1;
+                    this.modal2 = m2;
+                    this.observacao = o;
+                    this.quantidade = q;
+                    this.acrescimos = a;
+                },
+                popular_carrinho: function (i, ti, m1, m2, o, q, a) {
+                    this.Itens = i;
+                    this.temItens = ti;
+                    this.modal1 = m1;
+                    this.modal2 = m2;
+                    this.observacao = o;
+                    this.quantidade = q;
+                    this.acrescimos = a;
                 }
             }
         });
