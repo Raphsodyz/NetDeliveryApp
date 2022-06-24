@@ -35,7 +35,7 @@ namespace NetDeliveryAppData.Contexto
                 .AddJsonFile("appsettings.json")
                 .Build();
 
-                string connection = _configuration.GetSection("ConnectionStrings").GetSection("default").Value;
+                var connection = _configuration.GetSection("ConnectionStrings").GetSection("default").Value;
                 optionsBuilder.UseMySql(connection, ServerVersion.AutoDetect(connection));
             }
         }

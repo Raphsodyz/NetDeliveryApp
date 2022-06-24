@@ -15,7 +15,7 @@ namespace NetDeliveryAppAplicacao.DTOs
         [Required(ErrorMessage = "O campo 'Nome' não pode estar vazio.")]
         [Display(Name = "Nome")]
         [StringLength(50, ErrorMessage = "Digite um nome válido.", MinimumLength = 2)]
-        public string Nome { get; set; } = null!;
+        public string Nome { get; set; }
 
         [Display(Name = "Ingredientes")]
         [StringLength(200, ErrorMessage = "Digite todos os ingredientes.", MinimumLength = 2)]
@@ -30,17 +30,17 @@ namespace NetDeliveryAppAplicacao.DTOs
 
         [Display(Name = "Sabor")]
         [StringLength(20, ErrorMessage = "Digite um sabor válido.", MinimumLength = 2)]
-        public string? Sabor { get; set; } = null!;
+        public string? Sabor { get; set; }
 
         [Required(ErrorMessage = "O campo 'Volume' não pode estar vazio.")]
         [Display(Name = "Volume")]
         [StringLength(50, ErrorMessage = "Digite um volume válido.", MinimumLength = 2)]
-        public string? Volume { get; set; } = null!;
+        public string? Volume { get; set; }
 
         [Display(Name = "Foto")]
         [DataType(DataType.ImageUrl)]
         [StringLength(5000, ErrorMessage = "Digite uma link válido.", MinimumLength = 2)]
-        public string? Foto { get; set; } = null!;
+        public string? Foto { get; set; }
 
         [Display(Name = "Categoria")]
         public virtual int? CategoriaId { get; set; }

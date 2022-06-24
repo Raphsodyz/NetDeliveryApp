@@ -14,8 +14,8 @@
     export default {
         name: 'ordenar',
         props: {
-            categorias: Array,
-            produtos: Array,
+            categorias: Object,
+            produtos: Object,
         },
         data: function () {
             return {

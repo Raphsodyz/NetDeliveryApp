@@ -1,8 +1,6 @@
 <template>
     <div class="post">
-        <div v-if="loading" class="loading">
-            <h5>Um momento, as informações estão sendo carregadas...</h5>
-        </div>
+        <carregando :show="loading"/>
         <div v-if="post" class="content">
             <ordenar :categorias="categorias" :produtos="post" @dados="retorno" @menu="itens"/>
             <div id="features-wrapper">
@@ -46,6 +44,7 @@
     import botaocarrinho from '../components/BotãoCarrinho.vue';
     import modalsanduiche from '../components/SanduicheModalComponent.vue';
     import modalbebida from '../components/BebidaModalComponent.vue';
+    import carregando from '../components/Carregando.vue';
 
     export default
         Vue.extend({
@@ -73,7 +72,8 @@
                 listaordenada,
                 botaocarrinho,
                 modalsanduiche,
-                modalbebida
+                modalbebida,
+                carregando
             },
             created() {
                 this.fetchData();

@@ -31,9 +31,9 @@
     export default {
         name: 'listadinamica',
         props: {
-            categorias: Array,
-            produtos: Array,
-            acrescimos: Array,
+            categorias: Object,
+            produtos: Object,
+            acrescimos: Object,
             semCategoria: Boolean
         },
         data: function () {
