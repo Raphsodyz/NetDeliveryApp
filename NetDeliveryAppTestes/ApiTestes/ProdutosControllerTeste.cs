@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -41,6 +42,53 @@ namespace ProdutosControllerTest.ApiTestes
 
             //Assert
             Assert.IsType<OkObjectResult>(resultado);
+        }
+        
+        [Fact]
+        public async Task Listar_ProdutosDoBanco_RetornarOk()
+        {
+            //Arrange
+            List<ProdutoDTO> produtos = new List<ProdutoDTO>();
+
+            var repositoryTest = new Mock<IProdutoAplicacao>();
+            repositoryTest.Setup(r => r.Listar())
+                .ReturnsAsync(produtos);
+
+            var controller = new ProdutosController(repositoryTest.Object);
+
+            //Act
+            var resultado = await controller.Listar();
+
+            //Assert
+            Assert.IsType<OkObjectResult>(resultado);
+        }
+
+        [Fact]
+
+        public async Task Listar_BancoIndisponivel_RetornarBadRequest()
+        {
+            //Arrange
+            List<IProdutoAplicacao> produtos = new List<IProdutoAplicacao>();
+            for(int i = 0; i < produtos.Count; i++)
+            {
+                var controller = new ProdutosController(produtos[i]);
+
+                //Act
+                var resultado = await controller.Listar();
+
+                //Assert
+                Assert.IsType<BadRequestObjectResult>(resultado);
+            }
+        }
+
+        [Fact]
+        public async Task Editar_UsuarioNaoAutorizado_RetornarUnauthorized() 
+        {
+            //Arrange
+
+            //Act
+
+            //Assert
         }
     }
 }

@@ -32,7 +32,7 @@ namespace NetDeliveryAppAplicacao
         public async Task Editar(ProdutoDTO produtoDTO)
         {
             var produto = await _produtoRepository.Achar(produtoDTO.Id);
-            if(produto == null)
+            if(!_produtoRepository.Existe(produto.Id))
             {
                 throw new Exception("Produto não encontrado.");
             }
