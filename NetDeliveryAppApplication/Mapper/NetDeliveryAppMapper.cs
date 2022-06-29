@@ -3,6 +3,7 @@ using NetDeliveryAppDominio.Entidades;
 using NetDeliveryAppAplicacao.DTOs;
 using NetDeliveryAppDominio.Identity.Usuarios;
 using NetDeliveryAppDominio.Identity;
+using NetDeliveryAppAplicacao.DTOs.IdentityDTO;
 
 namespace NetDeliveryAppAplicacao.Mapper
 {

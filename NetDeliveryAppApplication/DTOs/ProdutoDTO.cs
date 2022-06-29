@@ -32,7 +32,6 @@ namespace NetDeliveryAppAplicacao.DTOs
         [StringLength(20, ErrorMessage = "Digite um sabor válido.", MinimumLength = 2)]
         public string? Sabor { get; set; }
 
-        [Required(ErrorMessage = "O campo 'Volume' não pode estar vazio.")]
         [Display(Name = "Volume")]
         [StringLength(50, ErrorMessage = "Digite um volume válido.", MinimumLength = 2)]
         public string? Volume { get; set; }

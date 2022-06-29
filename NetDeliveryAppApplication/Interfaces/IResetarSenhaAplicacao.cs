@@ -1,4 +1,5 @@
 ﻿using NetDeliveryAppAplicacao.DTOs;
+using NetDeliveryAppAplicacao.DTOs.IdentityDTO;
 using NetDeliveryAppDominio.Identity;
 using System;
 using System.Collections.Generic;

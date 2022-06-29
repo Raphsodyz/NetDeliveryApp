@@ -1,19 +1,7 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using NetDeliveryAppAplicacao.DTOs;
-using NetDeliveryAppAplicacao.Interfaces;
-using NetDeliveryAppData.Contexto;
-using NetDeliveryAppDominio.Email;
-using NetDeliveryAppDominio.Identity;
-using NetDeliveryAppDominio.Identity.Usuarios;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+using NetDeliveryAppAplicacao.DTOs.IdentityDTO;
+using NetDeliveryAppAplicacao.Interfaces.Identity;
 
 namespace NetDeliveryAppServicos.Controllers
 {
@@ -21,25 +9,10 @@ namespace NetDeliveryAppServicos.Controllers
     [ApiController]
     public class UsuariosController : ControllerBase
     {
-        private readonly IConfiguration _configuration;
-        private readonly UserManager<Usuario> _userManager;
-        private readonly SignInManager<Usuario> _signInManager;
-        private readonly IMapper _mapper;
-        private readonly IResetarSenhaAplicacao _resetarSenhaAplicacao;
-        private readonly IEmailSender _emailSender;
-        public UsuariosController(IConfiguration configuration,
-                                  UserManager<Usuario> userManager,
-                                  SignInManager<Usuario> signInManager,
-                                  IMapper mapper,
-                                  IResetarSenhaAplicacao resetarSenhaAplicacao,
-                                  IEmailSender emailSender)
+        private readonly IUsuariosAplicacao _usuariosAplicacao;
+        public UsuariosController(IUsuariosAplicacao usuariosAplicacao)
         {
-            _configuration = configuration;
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _mapper = mapper;
-            _resetarSenhaAplicacao = resetarSenhaAplicacao;
-            _emailSender = emailSender;
+            _usuariosAplicacao = usuariosAplicacao;
         }
 
         [HttpGet("Encontrar")]
@@ -54,12 +27,10 @@ namespace NetDeliveryAppServicos.Controllers
         {
             try
             {
-                var usuario = _mapper.Map<Usuario>(usuarioDTO);
-                var registrar = await _userManager.CreateAsync(usuario, usuarioDTO.PasswordHash);
-
+                var registrar = await _usuariosAplicacao.Registrar(usuarioDTO);
                 if (registrar.Succeeded)
                 {
-                    return Created("Usuario", _mapper.Map<UsuarioDTO>(usuario));
+                    return Created("Usuario", usuarioDTO);
                 }
                 else
                 {
@@ -78,21 +49,17 @@ namespace NetDeliveryAppServicos.Controllers
         {
             try
             {
-                var usuario = await _userManager.FindByEmailAsync(loginDTO.Email);
-                var resultado = await _signInManager.CheckPasswordSignInAsync(usuario, loginDTO.PasswordHash, true);
+                var resultado = await _usuariosAplicacao.Login(loginDTO);
                 if (resultado.Succeeded)
                 {
-                    var appUsuario = await _userManager.Users
-                        .FirstOrDefaultAsync(u => u.NormalizedEmail == loginDTO.Email.ToUpper());
-
-                    var retorno = _mapper.Map<LoginDTO>(appUsuario);
+                    var tokenUsuario = _usuariosAplicacao.EmailNormalizado(loginDTO);
                     return Ok(new
                     {
-                        token = GerarJWT(appUsuario).Result,
-                        usuario = retorno
+                        token = _usuariosAplicacao.JWT(tokenUsuario).Result,
+                        usuario = tokenUsuario.UserName
                     });
                 }
-                    return Unauthorized();
+                    return Unauthorized("Email ou senha incorreta.");
             }
             catch(Exception ex)
             {
@@ -106,35 +73,17 @@ namespace NetDeliveryAppServicos.Controllers
         {
             try
             {
-                if(email == null)
+                if(email == null)  
                 {
                     return BadRequest("O campo não pode estar vazio.");
                 }
 
-                var usuario = await _userManager.FindByEmailAsync(email);
-                var token = await _userManager.GeneratePasswordResetTokenAsync(usuario);
-                var chave = new SymmetricSecurityKey(Encoding.ASCII
-                .GetBytes(_configuration.GetSection("AppSettings:Token").Value));
-
-                var otp = new SigningCredentials(chave, SecurityAlgorithms.HmacSha512Signature);
-
-                var resetarSenha = new ResetarSenhaDTO()
+                var usuario = await _usuariosAplicacao.UsuarioExiste(email);
+                if(usuario == null)
                 {
-                    Email = email,
-                    OTP = otp.ToString(),
-                    Token = token,
-                    UsuarioId = usuario.Id,
-                    Data = DateTime.Now
-                };
-
-                var retorno = _mapper.Map<ResetarSenhaDTO>(resetarSenha);
-
-                _resetarSenhaAplicacao.Adicionar(retorno);
-
-                await _emailSender.SendEmailAsync(email, "NetDeliveryApp - Resetar Senha", "Olá" +
-                    email + "<br><br> Seu token para resetar a senha se encontra abaixo: <br><br><b>"
-                    + otp + "</b><br><br>Obrigado!<br>netdeliveryapp.com");
-
+                    return BadRequest("Usuário não encontrado.");
+                }
+                await _usuariosAplicacao.OTPEmail(usuario, email);
                 return Ok("Token Enviado com sucesso no e-mail.");
             }
             catch(Exception ex)
@@ -147,62 +96,31 @@ namespace NetDeliveryAppServicos.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ResetarSenha(string email, string otp, string novaSenha)
         {
-            if (email == null)
+            try
             {
-                return BadRequest("O campo não pode estar vazio.");
+                if (email == null)
+                {
+                    return BadRequest("O campo não pode estar vazio.");
+                }
+
+                var usuario = await _usuariosAplicacao.UsuarioExiste(email);
+                if (usuario == null)
+                {
+                    return BadRequest("Usuário não encontrado.");
+                }
+                var reset = await _usuariosAplicacao.ResetarSenha(usuario, otp, novaSenha);
+
+                if (!reset.Succeeded)
+                {
+                    return BadRequest("Seu OTP está expirado. por favor, gere um novo.");
+                }
+                return Ok("Senha resetada com sucesso!");
             }
-
-            var usuario = await _userManager.FindByEmailAsync(email);
-            var detalhes = _resetarSenhaAplicacao.ResetarSenhaDetalhes(otp, _mapper.Map<UsuarioDTO>(usuario));
-
-            var tokenExpirado = detalhes.Data.AddMinutes(15);
-
-            if(tokenExpirado < DateTime.Now)
+            catch(Exception ex)
             {
-                return BadRequest("Seu OTP está expirado. por favor, gere um novo.");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Reset de contas indisponível.\b{ex.Message}");
             }
-
-            var resultado = await _userManager.ResetPasswordAsync(usuario, detalhes.Token, novaSenha);
-
-            if (!resultado.Succeeded)
-            {
-                return BadRequest("Falha.");
-            }
-
-            return Ok("Senha resetada com sucesso!");
-        }
-
-        private async Task<string> GerarJWT(Usuario usuario)
-        {
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
-                new Claim(ClaimTypes.Name, usuario.Email)
-            };
-
-            var tipos = await _userManager.GetRolesAsync(usuario);
-
-            foreach(var tipo in tipos)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, tipo));
-            }
-
-            var chave = new SymmetricSecurityKey(Encoding.ASCII
-                .GetBytes(_configuration.GetSection("AppSettings:Token").Value));
-
-            var credenciais = new SigningCredentials(chave, SecurityAlgorithms.HmacSha512Signature);
-
-            var descricaoToken = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.Now.AddDays(1),
-                SigningCredentials = credenciais
-            };
-
-            var manipulador = new JwtSecurityTokenHandler();
-            var token = manipulador.CreateToken(descricaoToken);
-
-            return manipulador.WriteToken(token);
-        }        
+            
+        }      
     }
 }

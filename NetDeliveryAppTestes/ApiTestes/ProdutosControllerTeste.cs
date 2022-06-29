@@ -1,9 +1,14 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using FluentAssertions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NetDeliveryAppAplicacao.DTOs;
+using NetDeliveryAppAplicacao.DTOs.IdentityDTO;
 using NetDeliveryAppAplicacao.Interfaces;
+using NetDeliveryAppAplicacao.Interfaces.Identity;
+using NetDeliveryAppDominio.Identity.Usuarios;
 using NetDeliveryAppServicos.Controllers;
 using Xunit;
 
@@ -48,11 +53,14 @@ namespace ProdutosControllerTest.ApiTestes
         public async Task Listar_ProdutosDoBanco_RetornarOk()
         {
             //Arrange
-            List<ProdutoDTO> produtos = new List<ProdutoDTO>();
+            List<ProdutoDTO> ListaProdutos = new List<ProdutoDTO>();
+            ProdutoDTO produto = new ProdutoDTO();
+
+            ListaProdutos.Add(produto);
 
             var repositoryTest = new Mock<IProdutoAplicacao>();
             repositoryTest.Setup(r => r.Listar())
-                .ReturnsAsync(produtos);
+                .ReturnsAsync(ListaProdutos);
 
             var controller = new ProdutosController(repositoryTest.Object);
 
@@ -82,9 +90,51 @@ namespace ProdutosControllerTest.ApiTestes
         }
 
         [Fact]
+        public async Task Adicionar_NovoProduto_RetornarCreated()
+        {
+            //Arrange
+            var admin = new LoginDTO()
+            {
+                Email = "",
+                PasswordHash = ""
+            };
+
+            var novoProduto = new ProdutoDTO()
+            {
+                Id = 7,
+                Nome = "Qualquer coisa",
+                Valor = 10
+            };
+
+            var loginTest = new Mock<IUsuariosAplicacao>();
+            var lController = new UsuariosController(loginTest.Object);
+
+            var repositoryTest = new Mock<IProdutoAplicacao>();
+            var pController = new ProdutosController(repositoryTest.Object);
+
+            //Act
+            var resultado = await pController.Adicionar(novoProduto);
+
+            //Assert
+            var itemCriado = (resultado as CreatedAtActionResult).Value as ProdutoDTO;
+            novoProduto.Should().BeEquivalentTo(itemCriado,
+                options => options.ComparingByMembers<ProdutoDTO>()
+                    .ExcludingMissingMembers()
+            );
+            itemCriado.Id.Should().Be(7);
+            itemCriado.Valor.Should().Be(10);
+        }
+
+        [Fact]
         public async Task Editar_UsuarioNaoAutorizado_RetornarUnauthorized() 
         {
             //Arrange
+            ProdutoDTO produto = new ProdutoDTO();
+
+            var repositoryTest = new Mock<IProdutoAplicacao>();
+            repositoryTest.Setup(r => r.Editar(It.IsAny<ProdutoDTO>())).Returns((ProdutoDTO p) => { return p; });
+
+            var controller = new ProdutosController(repositoryTest.Object);
 
             //Act
 

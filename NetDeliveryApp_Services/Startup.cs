@@ -6,10 +6,13 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using NetDeliveryAppAplicacao;
 using NetDeliveryAppAplicacao.Interfaces;
+using NetDeliveryAppAplicacao.Interfaces.Identity;
 using NetDeliveryAppData.Contexto;
 using NetDeliveryAppData.Repositorio;
+using NetDeliveryAppData.Repositorio.Identity;
 using NetDeliveryAppDominio.Email;
 using NetDeliveryAppDominio.Identity.Usuarios;
+using NetDeliveryAppDominio.Interfaces.Identity;
 using NetDeliveryAppDominio.Interfaces.Repositorios;
 using System.Text;
 
@@ -87,6 +90,7 @@ namespace NetDeliveryAppServicos
             services.AddTransient<ICategoriaRepository, CategoriaRepository>();
             services.AddTransient<IProdutoRepository, ProdutosRepository>();
             services.AddTransient<IResetarSenhaRepository, ResetarSenhaRepository>();
+            services.AddTransient<IUsuarioRepository, UsuariosRepository>();
 
             services.AddTransient<IAcrescimoAplicacao, AcrescimoAplicacao>();
             services.AddTransient<ICategoriaAplicacao, CategoriaAplicacao>();
@@ -94,6 +98,7 @@ namespace NetDeliveryAppServicos
             services.AddTransient<IProdutoAplicacao, ProdutoAplicacao>();
             services.AddTransient<IPedidoAplicacao, PedidoAplicacao>();
             services.AddTransient<IResetarSenhaAplicacao, ResetarSenhaAplicacao>();
+            services.AddTransient<IUsuariosAplicacao, UsuariosAplicacao>();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         }

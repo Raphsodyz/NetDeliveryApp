@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using NetDeliveryAppAplicacao.DTOs;
+using NetDeliveryAppAplicacao.DTOs.IdentityDTO;
 using NetDeliveryAppAplicacao.Interfaces;
 using NetDeliveryAppDominio.Identity;
 using NetDeliveryAppDominio.Identity.Usuarios;
