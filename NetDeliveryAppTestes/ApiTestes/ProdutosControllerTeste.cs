@@ -1,8 +1,13 @@
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Moq;
 using NetDeliveryAppAplicacao.DTOs;
 using NetDeliveryAppAplicacao.DTOs.IdentityDTO;
@@ -93,21 +98,18 @@ namespace ProdutosControllerTest.ApiTestes
         public async Task Adicionar_NovoProduto_RetornarCreated()
         {
             //Arrange
-            var admin = new LoginDTO()
-            {
-                Email = "",
-                PasswordHash = ""
-            };
-
             var novoProduto = new ProdutoDTO()
             {
                 Id = 7,
                 Nome = "Qualquer coisa",
-                Valor = 10
+                Ingredientes = "",
+                Valor = 10,
+                Sabor = "",
+                Volume = "",
+                Foto = "",
+                CategoriaId = 0,
+                Categoria = new CategoriaDTO()
             };
-
-            var loginTest = new Mock<IUsuariosAplicacao>();
-            var lController = new UsuariosController(loginTest.Object);
 
             var repositoryTest = new Mock<IProdutoAplicacao>();
             var pController = new ProdutosController(repositoryTest.Object);

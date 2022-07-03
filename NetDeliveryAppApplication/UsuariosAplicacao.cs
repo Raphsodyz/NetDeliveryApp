@@ -49,7 +49,7 @@ namespace NetDeliveryAppAplicacao
             {
                 return SignInResult.Success;
             }
-             throw new Exception("Email ou senha incorreta.");
+            return SignInResult.Failed;
         }
 
         public Usuario EmailNormalizado(LoginDTO loginDTO)
