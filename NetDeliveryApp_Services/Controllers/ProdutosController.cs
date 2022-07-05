@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NetDeliveryAppAplicacao.DTOs;
 using NetDeliveryAppAplicacao.Interfaces;
@@ -71,6 +72,7 @@ namespace NetDeliveryAppServicos.Controllers
                 _produtoAplicacao.Adicionar(produtoDTO);
                 await _produtoAplicacao.Salvar();
                 return Created("Get", new { id = produtoDTO.Id });
+
             }
             catch (Exception ex)
             {

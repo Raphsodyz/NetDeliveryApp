@@ -1,11 +1,6 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using NetDeliveryAppDominio.Identity;
 using NetDeliveryAppDominio.Identity.Usuarios;
 using NetDeliveryAppDominio.Interfaces.Identity;
 using NetDeliveryAppDominio.Interfaces.Repositorios;

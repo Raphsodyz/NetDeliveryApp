@@ -1,19 +1,10 @@
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Moq;
 using NetDeliveryAppAplicacao.DTOs;
-using NetDeliveryAppAplicacao.DTOs.IdentityDTO;
 using NetDeliveryAppAplicacao.Interfaces;
-using NetDeliveryAppAplicacao.Interfaces.Identity;
-using NetDeliveryAppDominio.Identity.Usuarios;
 using NetDeliveryAppServicos.Controllers;
 using Xunit;
 
@@ -118,16 +109,50 @@ namespace ProdutosControllerTest.ApiTestes
             var resultado = await pController.Adicionar(novoProduto);
 
             //Assert
-            var itemCriado = (resultado as CreatedAtActionResult).Value as ProdutoDTO;
-            novoProduto.Should().BeEquivalentTo(itemCriado,
-                options => options.ComparingByMembers<ProdutoDTO>()
-                    .ExcludingMissingMembers()
-            );
-            itemCriado.Id.Should().Be(7);
-            itemCriado.Valor.Should().Be(10);
+            Assert.IsType<CreatedResult>(resultado);
+
+            novoProduto.Id.Should().NotBe(null, "Não pode ser vazio o ID.");
+            novoProduto.Valor.Should().NotBe(null, "Não pode ser vazio o Valor.");
+            novoProduto.Nome.Should().NotBeNull();
+            novoProduto.Id.Should().Be(7);
+            novoProduto.Valor.Should().Be(10);
+            novoProduto.Categoria.Should().BeOfType<CategoriaDTO>();
         }
 
         [Fact]
+        public async Task Adicionar_ProdutoIncompleto_RetornarBadrequest()
+        {
+            //Arrange
+            var novoProduto = new ProdutoDTO()
+            {
+                Id = 5,
+                Nome = null,
+                Ingredientes = "",
+                Valor = -10,
+                Sabor = "",
+                Volume = "",
+                Foto = "",
+                CategoriaId = 0,
+                Categoria = new CategoriaDTO()
+            };
+
+            var repositoryTest = new Mock<IProdutoAplicacao>();
+            var pController = new ProdutosController(repositoryTest.Object);
+
+            //Act
+            var resultado = await pController.Adicionar(novoProduto);
+
+            //Assert
+            Assert.IsType<BadRequestObjectResult>(resultado);
+            Assert.True(novoProduto.Valor < 0);
+
+            novoProduto.Id.Should().NotBe(null, "Não pode ser vazio o ID.");
+            novoProduto.Valor.Should().NotBe(null, "Não pode ser vazio o Valor.");
+            novoProduto.Id.Should().Be(5);
+            novoProduto.Categoria.Should().BeOfType<CategoriaDTO>();
+        }
+
+        [Fact(Skip = "Em andamento")]
         public async Task Editar_UsuarioNaoAutorizado_RetornarUnauthorized() 
         {
             //Arrange

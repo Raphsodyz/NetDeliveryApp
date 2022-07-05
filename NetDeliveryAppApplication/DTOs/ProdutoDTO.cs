@@ -25,7 +25,7 @@ namespace NetDeliveryAppAplicacao.DTOs
         [DisplayFormat(DataFormatString = "{0:C2}")]
         [DataType(DataType.Currency)]
         [Display(Name = "Valor")]
-        [Range(0, double.MaxValue, ErrorMessage = "Por favor, digite somente números.")]
+        [Range(0, double.MaxValue, ErrorMessage = "Por favor, digite um preço válido.")]
         public decimal Valor { get; set; }
 
         [Display(Name = "Sabor")]
