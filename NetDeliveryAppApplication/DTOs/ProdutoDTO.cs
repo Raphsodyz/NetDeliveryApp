@@ -38,7 +38,7 @@ namespace NetDeliveryAppAplicacao.DTOs
 
         [Display(Name = "Foto")]
         [DataType(DataType.ImageUrl)]
-        [StringLength(5000, ErrorMessage = "Digite uma link válido.", MinimumLength = 2)]
+        [StringLength(5000, ErrorMessage = "Digite um link válido.", MinimumLength = 2)]
         public string? Foto { get; set; }
 
         [Display(Name = "Categoria")]

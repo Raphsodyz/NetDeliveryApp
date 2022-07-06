@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
@@ -92,12 +93,12 @@ namespace ProdutosControllerTest.ApiTestes
             var novoProduto = new ProdutoDTO()
             {
                 Id = 7,
-                Nome = "Qualquer coisa",
-                Ingredientes = "",
+                Nome = "Açaí",
+                Ingredientes = "Creme de açaí, adicionais a gosto.",
                 Valor = 10,
-                Sabor = "",
-                Volume = "",
-                Foto = "",
+                Sabor = "açaí",
+                Volume = "500ml",
+                Foto = "https://www.acai.com.br/acai.jpg",
                 CategoriaId = 0,
                 Categoria = new CategoriaDTO()
             };
@@ -123,18 +124,7 @@ namespace ProdutosControllerTest.ApiTestes
         public async Task Adicionar_ProdutoIncompleto_RetornarBadrequest()
         {
             //Arrange
-            var novoProduto = new ProdutoDTO()
-            {
-                Id = 5,
-                Nome = null,
-                Ingredientes = "",
-                Valor = -10,
-                Sabor = "",
-                Volume = "",
-                Foto = "",
-                CategoriaId = 0,
-                Categoria = new CategoriaDTO()
-            };
+            ProdutoDTO novoProduto = null;
 
             var repositoryTest = new Mock<IProdutoAplicacao>();
             var pController = new ProdutosController(repositoryTest.Object);
@@ -144,12 +134,54 @@ namespace ProdutosControllerTest.ApiTestes
 
             //Assert
             Assert.IsType<BadRequestObjectResult>(resultado);
-            Assert.True(novoProduto.Valor < 0);
+        }
 
-            novoProduto.Id.Should().NotBe(null, "Não pode ser vazio o ID.");
-            novoProduto.Valor.Should().NotBe(null, "Não pode ser vazio o Valor.");
-            novoProduto.Id.Should().Be(5);
-            novoProduto.Categoria.Should().BeOfType<CategoriaDTO>();
+        [Fact]
+        public void Adicionar_DataAnnotationTeste_ProdutoCorreto()
+        {
+            //Assert
+            var novoProduto = new ProdutoDTO()
+            {
+                Id = 0,
+                Nome = "Açaí",
+                Ingredientes = "Creme de açaí, adicionais a gosto.",
+                Valor = 15,
+                Sabor = "açaí",
+                Volume = "500ml",
+                Foto = "https://www.acai.com.br/acai.jpg",
+                CategoriaId = 0,
+                Categoria = new CategoriaDTO()
+            };
+
+            //Act
+            var erros = validarObjeto(novoProduto);
+
+            //Assert
+            Assert.True(erros.Count == 0);
+        }
+
+        [Fact]
+        public void Adicionar_DataAnnotationTeste_ProdutoComErros()
+        {
+            //Assert
+            var novoProduto = new ProdutoDTO()
+            {
+                Id = 0,
+                Nome = "",
+                Ingredientes = "",
+                Valor = -15,
+                Sabor = "",
+                Volume = "",
+                Foto = "",
+                CategoriaId = 0,
+                Categoria = new CategoriaDTO()
+            };
+
+            //Act
+            var erros = validarObjeto(novoProduto);
+
+            //Assert
+            Assert.True(erros.Count == 6);
         }
 
         [Fact(Skip = "Em andamento")]
@@ -166,6 +198,14 @@ namespace ProdutosControllerTest.ApiTestes
             //Act
 
             //Assert
+        }
+
+        private IList<ValidationResult> validarObjeto(ProdutoDTO produto)
+        {
+            var validar = new List<ValidationResult>();
+            var contexto = new ValidationContext(produto, null, null);
+            Validator.TryValidateObject(produto, contexto, validar, true);
+            return validar;
         }
     }
 }
