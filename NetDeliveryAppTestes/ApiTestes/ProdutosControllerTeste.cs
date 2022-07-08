@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
@@ -73,17 +74,22 @@ namespace ProdutosControllerTest.ApiTestes
         public async Task Listar_BancoIndisponivel_RetornarBadRequest()
         {
             //Arrange
-            List<IProdutoAplicacao> produtos = new List<IProdutoAplicacao>();
-            for(int i = 0; i < produtos.Count; i++)
-            {
-                var controller = new ProdutosController(produtos[i]);
+            List<ProdutoDTO> ListaProdutos = new List<ProdutoDTO>();
+            ProdutoDTO produto = new ProdutoDTO();
 
-                //Act
-                var resultado = await controller.Listar();
+            ListaProdutos.Add(produto);
 
-                //Assert
-                Assert.IsType<BadRequestObjectResult>(resultado);
-            }
+            var repositoryTest = new Mock<IProdutoAplicacao>();
+            repositoryTest.Setup(r => r.Listar())
+                .Throws<Exception>();
+
+            var controller = new ProdutosController(repositoryTest.Object);
+
+            //Act
+            var resultado = await controller.Listar();
+
+            //Assert
+            Assert.IsType<BadRequestObjectResult>(resultado);
         }
 
         [Fact]
@@ -154,7 +160,7 @@ namespace ProdutosControllerTest.ApiTestes
             };
 
             //Act
-            var erros = validarObjeto(novoProduto);
+            var erros = ValidarObjeto(novoProduto);
 
             //Assert
             Assert.True(erros.Count == 0);
@@ -178,29 +184,82 @@ namespace ProdutosControllerTest.ApiTestes
             };
 
             //Act
-            var erros = validarObjeto(novoProduto);
+            var erros = ValidarObjeto(novoProduto);
 
             //Assert
             Assert.True(erros.Count == 6);
         }
 
-        [Fact(Skip = "Em andamento")]
-        public async Task Editar_UsuarioNaoAutorizado_RetornarUnauthorized() 
+        [Fact]
+        public async Task Editar_ProdutoExistente_RetornarOk() 
         {
             //Arrange
-            ProdutoDTO produto = new ProdutoDTO();
+            ProdutoDTO produto = new ProdutoDTO()
+            {
+                Id = 0,
+                Nome = "Açaí",
+                Ingredientes = "Creme de açaí, adicionais a gosto.",
+                Valor = 15,
+                Sabor = "açaí",
+                Volume = "500ml",
+                Foto = "https://www.acai.com.br/acai.jpg",
+                CategoriaId = 0,
+                Categoria = new CategoriaDTO()
+            };
 
             var repositoryTest = new Mock<IProdutoAplicacao>();
-            repositoryTest.Setup(r => r.Editar(It.IsAny<ProdutoDTO>())).Returns((ProdutoDTO p) => { return p; });
+            repositoryTest.Setup(r => r.Editar(produto));
+
+            var produtoEditado = new ProdutoDTO()
+            {
+                Id = produto.Id + 3,
+                Nome = "Sorvete de " + produto.Nome,
+                Valor = 20
+            };
 
             var controller = new ProdutosController(repositoryTest.Object);
 
             //Act
+            var resultado = await controller.Editar(produtoEditado);
 
             //Assert
+            resultado.Should().BeOfType<OkResult>();
+
+            produtoEditado.Id.Should().Be(3);
+            produtoEditado.Nome.Should().Be("Sorvete de Açaí");
+            produtoEditado.Valor.Should().Be(20);
         }
 
-        private IList<ValidationResult> validarObjeto(ProdutoDTO produto)
+        [Fact]
+        public async Task Editar_ProdutoExistente_RetornarErro()
+        {
+            //Arrange
+            ProdutoDTO produto = new ProdutoDTO()
+            {
+                Id = 0,
+                Nome = "Açaí",
+                Ingredientes = "Creme de açaí, adicionais a gosto.",
+                Valor = 15,
+                Sabor = "açaí",
+                Volume = "500ml",
+                Foto = "https://www.acai.com.br/acai.jpg",
+                CategoriaId = 0,
+                Categoria = new CategoriaDTO()
+            };
+
+            var repositoryTest = new Mock<IProdutoAplicacao>();
+            repositoryTest.Setup(r => r.Editar(produto)).Throws<Exception>();
+
+            var controller = new ProdutosController(repositoryTest.Object);
+
+            //Act
+            var resultado = await controller.Editar(produto);
+
+            //Assert
+            resultado.Should().BeOfType<BadRequestObjectResult>();
+        }
+
+        private static IList<ValidationResult> ValidarObjeto(ProdutoDTO produto)
         {
             var validar = new List<ValidationResult>();
             var contexto = new ValidationContext(produto, null, null);
