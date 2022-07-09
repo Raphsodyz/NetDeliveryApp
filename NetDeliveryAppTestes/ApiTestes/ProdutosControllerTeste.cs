@@ -208,7 +208,7 @@ namespace ProdutosControllerTest.ApiTestes
             };
 
             var repositoryTest = new Mock<IProdutoAplicacao>();
-            repositoryTest.Setup(r => r.Editar(produto));
+            repositoryTest.Setup(r => r.Editar(It.IsAny<ProdutoDTO>())).Returns(Task.FromResult(produto));
 
             var produtoEditado = new ProdutoDTO()
             {
@@ -257,6 +257,64 @@ namespace ProdutosControllerTest.ApiTestes
 
             //Assert
             resultado.Should().BeOfType<BadRequestObjectResult>();
+        }
+
+        [Fact]
+        public async Task Deletar_ProdutoExistente_RetornarOk()
+        {
+            //Arrange
+            ProdutoDTO produto = new ProdutoDTO()
+            {
+                Id = 0,
+                Nome = "Açaí",
+                Ingredientes = "Creme de açaí, adicionais a gosto.",
+                Valor = 15,
+                Sabor = "açaí",
+                Volume = "500ml",
+                Foto = "https://www.acai.com.br/acai.jpg",
+                CategoriaId = 0,
+                Categoria = new CategoriaDTO()
+            };
+
+            var repositoryTest = new Mock<IProdutoAplicacao>();
+            repositoryTest.Setup(r => r.Deletar(It.IsAny<int>())).Returns(Task.FromResult(produto));
+
+            var controller = new ProdutosController(repositoryTest.Object);
+
+            //Act
+            var resultado = await controller.Deletar(It.IsAny<int>());
+
+            //Assert
+            resultado.Should().BeOfType<OkResult>();
+        }
+
+        [Fact]
+        public async Task Deletar_ProdutoInexistente_RetornarNotFound()
+        {
+            //Arrange
+            ProdutoDTO produto = new ProdutoDTO()
+            {
+                Id = 0,
+                Nome = "Açaí",
+                Ingredientes = "Creme de açaí, adicionais a gosto.",
+                Valor = 15,
+                Sabor = "açaí",
+                Volume = "500ml",
+                Foto = "https://www.acai.com.br/acai.jpg",
+                CategoriaId = 0,
+                Categoria = new CategoriaDTO()
+            };
+
+            var repositoryTest = new Mock<IProdutoAplicacao>();
+            repositoryTest.Setup(r => r.Deletar(It.IsAny<int>())).Throws<Exception>();
+
+            var controller = new ProdutosController(repositoryTest.Object);
+
+            //Act
+            var resultado = await controller.Deletar(It.IsAny<int>());
+
+            //Assert
+            resultado.Should().BeOfType<NotFoundObjectResult>();
         }
 
         private static IList<ValidationResult> ValidarObjeto(ProdutoDTO produto)

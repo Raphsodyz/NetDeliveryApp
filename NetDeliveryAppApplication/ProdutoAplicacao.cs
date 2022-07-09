@@ -57,11 +57,8 @@ namespace NetDeliveryAppAplicacao
             {
                 throw new Exception("Produto não existe.");
             }
-            else
-            {
-                var produtoDTO = _mapper.Map<ProdutoDTO>(produto);
-                _produtoRepository.Deletar(produtoDTO.Id);
-            }
+            var produtoDTO = _mapper.Map<ProdutoDTO>(produto);
+            _produtoRepository.Deletar(produtoDTO.Id);
         }
     }
 }
