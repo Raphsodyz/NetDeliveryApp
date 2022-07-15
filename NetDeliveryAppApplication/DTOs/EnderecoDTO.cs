@@ -11,6 +11,7 @@ namespace NetDeliveryAppAplicacao.DTOs
     public class EnderecoDTO
     {
         [Key]
+        [Range(0, int.MaxValue, ErrorMessage = "ID inválido.")]
         public int Id { get; set; }
 
         [Required(ErrorMessage = "O campo 'Rua' não pode estar vazio.")]
@@ -20,8 +21,8 @@ namespace NetDeliveryAppAplicacao.DTOs
 
         [Required(ErrorMessage = "O campo 'Número' não pode estar vazio.")]
         [Display(Name = "Número")]
-        [Range(0.0, int.MaxValue, ErrorMessage = "O campo {0} tem que ser maior que {1}.")]
-        [RegularExpression("^[0-9]*$", ErrorMessage = "Digite somente números.")]
+        [Range(0, int.MaxValue, ErrorMessage = "Número inválido.")]
+        [RegularExpression("^-?[0-9]*$", ErrorMessage = "Digite somente números.")]
         public int Numero { get; set; }
 
         [Required(ErrorMessage = "O campo 'Bairro' não pode estar vazio.")]
@@ -29,12 +30,13 @@ namespace NetDeliveryAppAplicacao.DTOs
         [StringLength(50, ErrorMessage = "Digite um bairro válido.", MinimumLength = 2)]
         public string Bairro { get; set; } = null!;
 
+        [Required(ErrorMessage = "O campo 'Cidade' não pode estar vazio.")]
         [Display(Name = "Cidade")]
         [StringLength(50, ErrorMessage = "Digite uma cidade válida.", MinimumLength = 2)]
         public string? Cidade { get; set; }
 
         [Display(Name = "Observação")]
-        [StringLength(2000, ErrorMessage = "Digite uma observação válida.", MinimumLength = 2)]
+        [StringLength(2000, ErrorMessage = "Digite uma observação válida.")]
         public string? Observacao { get; set; }
     }
 }

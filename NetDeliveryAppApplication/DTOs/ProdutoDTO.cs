@@ -10,6 +10,7 @@ namespace NetDeliveryAppAplicacao.DTOs
     public class ProdutoDTO
     {
         [Key]
+        [Range(0, int.MaxValue, ErrorMessage = "ID inválido.")]
         public int Id { get; set; }
 
         [Required(ErrorMessage = "O campo 'Nome' não pode estar vazio.")]
@@ -43,6 +44,8 @@ namespace NetDeliveryAppAplicacao.DTOs
 
         [Display(Name = "Categoria")]
         public virtual int? CategoriaId { get; set; }
+
+        [Required(ErrorMessage = "O campo 'Categoria' não pode estar vazio.")]
         public CategoriaDTO? Categoria { get; set; }
     }
 }

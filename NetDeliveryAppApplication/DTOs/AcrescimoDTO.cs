@@ -6,6 +6,7 @@ namespace NetDeliveryAppAplicacao.DTOs
     public class AcrescimoDTO
     {
         [Key]
+        [Range(0, int.MaxValue, ErrorMessage = "ID inválido.")]
         public int Id { get; set; }
 
         [Required(ErrorMessage = "O campo 'Nome' não pode estar vazio.")]
@@ -24,6 +25,8 @@ namespace NetDeliveryAppAplicacao.DTOs
         [Display(Name = "Categoria")]
         [RegularExpression("^[0-9]*$", ErrorMessage = "Digite somente números.")]
         public int? CategoriaId { get; set; }
+
+        [Required(ErrorMessage = "O campo 'Categoria' não pode estar vazio.")]
         public CategoriaDTO? Categoria { get; set; }
     }
 }

@@ -143,7 +143,7 @@ namespace ProdutosControllerTest.ApiTestes
         }
 
         [Fact]
-        public void Adicionar_DataAnnotationTeste_ProdutoCorreto()
+        public void Adicionar_DataAnnotationProdutoTeste_ProdutoCorreto()
         {
             //Assert
             var novoProduto = new ProdutoDTO()

@@ -11,6 +11,7 @@ namespace NetDeliveryAppAplicacao.DTOs
     public class CategoriaDTO
     {
         [Key]
+        [Range(0, int.MaxValue, ErrorMessage = "ID inválido.")]
         public int Id { get; set; }
 
         [Required(ErrorMessage = "O campo 'Nome' não pode estar vazio.")]
