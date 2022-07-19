@@ -1,9 +1,11 @@
 ﻿using NetDeliveryAppDominio.Entidades;
+using NetDeliveryAppDominio.Identity.Usuarios;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace NetDeliveryAppAplicacao.DTOs
@@ -11,13 +13,15 @@ namespace NetDeliveryAppAplicacao.DTOs
     public class PedidoDTO
     {
         [Key]
+        [JsonIgnore]
+        [Range(0, double.MaxValue, ErrorMessage = "Por favor, insira um valor válido.")]
         public int Id { get; set; }
 
         [Required(ErrorMessage = "O campo 'Valor' não pode estar vazio.")]
         [DisplayFormat(DataFormatString = "{0:C2}")]
         [DataType(DataType.Currency)]
         [Display(Name = "Valor")]
-        [Range(0, double.MaxValue, ErrorMessage = "Por favor, digite somente números.")]
+        [Range(0, double.MaxValue, ErrorMessage = "Por favor, insira um valor válido.")]
         [RegularExpression(@"-?\d+(?:\.\d+)?", ErrorMessage = "Por favor, digite somente números.")]
         public decimal Valor { get; set; }
 
@@ -27,11 +31,11 @@ namespace NetDeliveryAppAplicacao.DTOs
 
         [Display(Name = "Horário do pedido")]
         [DataType(DataType.DateTime)]
-        public DateTime DataPedido { get; set; }
+        public DateTime DataPedido { get; set; } = DateTime.Now;
 
         [Required(ErrorMessage = "O campo 'Itens' não pode estar vazio.")]
         [Display(Name = "Itens")]
-        [StringLength(3000, ErrorMessage = "O item não é válido.", MinimumLength = 2)]
+        [StringLength(3000, ErrorMessage = "O item não é válido.")]
         public string Itens { get; set; } = null!;
 
         [Required(ErrorMessage = "O campo 'Pagamento' não pode estar vazio.")]
@@ -45,8 +49,10 @@ namespace NetDeliveryAppAplicacao.DTOs
 
         [Required(ErrorMessage = "O campo 'Entregue' não pode estar vazio.")]
         [Display(Name = "Entregue?")]
-        [Range(typeof(bool), "true", "true", ErrorMessage = "O campo deve estar selecionado.")]
         public bool Entregue { get; set; }
+        [JsonIgnore]
         public int UsuarioId { get; set; }
+        [JsonIgnore]
+        public Usuario usuario { get; set; }
     }
 }
