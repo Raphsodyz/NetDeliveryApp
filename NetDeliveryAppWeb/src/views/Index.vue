@@ -19,7 +19,6 @@
                     />
                     <botaocarrinho :temItens="temItens"/>
                 </b-container>
-
                 <modalsanduiche :modal="modal"
                                 :acrescimosData="acrescimosLista"
                                 @modalLimpo="limpar"

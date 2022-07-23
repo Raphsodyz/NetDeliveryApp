@@ -30,7 +30,7 @@ namespace NetDeliveryAppServicos.Controllers
                 var registrar = await _usuariosAplicacao.Registrar(usuarioDTO);
                 if (registrar.Succeeded)
                 {
-                    return Created("Usuario", usuarioDTO);
+                    return Created("Usuario", usuarioDTO.Email);
                 }
                 else
                 {
