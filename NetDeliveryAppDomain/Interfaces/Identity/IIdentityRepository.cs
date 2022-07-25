@@ -10,7 +10,7 @@ namespace NetDeliveryAppDominio.Interfaces.Identity
         Task<SignInResult> Login(Usuario usuario, string senha);
         Usuario EmailNormalizado(Usuario usuario);
         Task<string> JWT(Usuario usuario);
-        Task<IdentityResult> ResetarSenha(Usuario usuario, string otp, string novaSenha);
-        Task OTPEmail(Usuario usuario, string email);
+        Task<IdentityResult> ResetarSenha(string email, string otp, string novaSenha);
+        Task<IdentityResult> OTPEmail(Usuario usuario, string email);
     }
 }

@@ -62,21 +62,38 @@ namespace NetDeliveryAppAplicacao
             return await _usuarioRepository.JWT(usuario);
         }
 
-        public async Task<IdentityResult> ResetarSenha(Usuario usuario, string otp, string novaSenha)
+        public async Task<IdentityResult> ResetarSenha(string email, string otp, string novaSenha)
         {
-            var reset = await _usuarioRepository.ResetarSenha(_mapper.Map<Usuario>(usuario), otp, novaSenha);
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(otp) || string.IsNullOrEmpty(novaSenha))
+            {
+                return IdentityResult.Failed();
+            }
+            var usuario = await _usuarioRepository.UsuarioExiste(email);
+            if(usuario == null)
+            {
+                throw new Exception("Usuario não encontrado.");
+            }
 
-            if (reset.Succeeded)
+            var reset = await _usuarioRepository.ResetarSenha(usuario.Email, otp, novaSenha);
+
+            if (!reset.Succeeded)
+            {
+                return IdentityResult.Failed();
+            }
+
+            return IdentityResult.Success;
+            
+        }
+
+        public async Task<IdentityResult> OTPEmail(Usuario usuario, string email)
+        {
+            var codigoOTP = await _usuarioRepository.OTPEmail(usuario, email);
+            if (codigoOTP.Succeeded)
             {
                 return IdentityResult.Success;
             }
             else
-                throw new Exception("Seu código OTP expirou. Por gentileza, solicite um novo na opção 'Esqueci minha senha'.");
-        }
-
-        public async Task OTPEmail(Usuario usuario, string email)
-        {
-            await _usuarioRepository.OTPEmail(_mapper.Map<Usuario>(usuario), email);
+                throw new Exception();
         }
     }
 }

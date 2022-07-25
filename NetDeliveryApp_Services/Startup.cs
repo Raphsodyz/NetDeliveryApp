@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using NetDeliveryAppAplicacao;
@@ -10,7 +9,6 @@ using NetDeliveryAppAplicacao.Interfaces.Identity;
 using NetDeliveryAppData.Contexto;
 using NetDeliveryAppData.Repositorio;
 using NetDeliveryAppData.Repositorio.Identity;
-using NetDeliveryAppDominio.Email;
 using NetDeliveryAppDominio.Identity.Usuarios;
 using NetDeliveryAppDominio.Interfaces.Identity;
 using NetDeliveryAppDominio.Interfaces.Repositorios;
@@ -34,8 +32,6 @@ namespace NetDeliveryAppServicos
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
             services.AddDbContext<NetDeliveryAppContext>();
-
-            services.AddTransient<IEmailSender, EmailSender>();
 
             IdentityBuilder builder = services.AddIdentityCore<Usuario>(options => {
                 options.SignIn.RequireConfirmedEmail = false;
@@ -70,7 +66,7 @@ namespace NetDeliveryAppServicos
                     {
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII
-                            .GetBytes(Configuration.GetSection("AppSettings:Token").Value)),
+                            .GetBytes(Configuration.GetSection("Token").Value)),
                         ValidateIssuer = false,
                         ValidateAudience = false
                     };

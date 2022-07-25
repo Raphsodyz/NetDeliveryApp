@@ -1,5 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MailKit.Net.Smtp;
+using MailKit.Security;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MimeKit;
+using MimeKit.Text;
 using NetDeliveryAppAplicacao.DTOs.IdentityDTO;
 using NetDeliveryAppAplicacao.Interfaces.Identity;
 
@@ -21,7 +25,7 @@ namespace NetDeliveryAppServicos.Controllers
             return Ok(new UsuarioDTO());
         }
 
-        [HttpPost("Registro")]
+        [HttpPost("Cadastro")]
         [AllowAnonymous]
         public async Task<IActionResult> Registrar(UsuarioDTO usuarioDTO)
         {
@@ -67,7 +71,7 @@ namespace NetDeliveryAppServicos.Controllers
             }
         }
 
-        [HttpPost("Codigo")]
+        [HttpPost("EnviarCodigo")]
         [AllowAnonymous]
         public async Task<IActionResult>EnviarCodigo(string email)
         {
@@ -81,7 +85,7 @@ namespace NetDeliveryAppServicos.Controllers
                 var usuario = await _usuariosAplicacao.UsuarioExiste(email);
                 if(usuario == null)
                 {
-                    return BadRequest("Usuário não encontrado.");
+                    return BadRequest("Esta conta não existe.");
                 }
                 await _usuariosAplicacao.OTPEmail(usuario, email);
                 return Ok("Token Enviado com sucesso no e-mail.");
@@ -98,29 +102,24 @@ namespace NetDeliveryAppServicos.Controllers
         {
             try
             {
-                if (email == null)
-                {
-                    return BadRequest("O campo não pode estar vazio.");
-                }
-
                 var usuario = await _usuariosAplicacao.UsuarioExiste(email);
                 if (usuario == null)
                 {
                     return BadRequest("Usuário não encontrado.");
                 }
-                var reset = await _usuariosAplicacao.ResetarSenha(usuario, otp, novaSenha);
+                var reset = await _usuariosAplicacao.ResetarSenha(email, otp, novaSenha);
 
                 if (!reset.Succeeded)
                 {
-                    return BadRequest("Seu OTP está expirado. por favor, gere um novo.");
+                    return BadRequest("Seu código OTP é inválido ou está expirado. Por favor, gere um novo em 'Esqueci minha senha'.");
                 }
                 return Ok("Senha resetada com sucesso!");
             }
             catch(Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Reset de contas indisponível.\b{ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Reset de senhas indisponível.\b{ex.Message}");
             }
             
-        }      
+        }
     }
 }

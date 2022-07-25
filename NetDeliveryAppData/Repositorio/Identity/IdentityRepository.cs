@@ -12,19 +12,16 @@ namespace NetDeliveryAppData.Repositorio.Identity
         protected readonly IConfiguration _configuration;
         protected readonly UserManager<Usuario> _userManager;
         protected readonly SignInManager<Usuario> _signInManager;
-        protected readonly IEmailSender _emailSender;
         protected readonly IResetarSenhaRepository _resetarSenhaRepository;
 
         public IdentityRepository(IConfiguration configuration,
                                   UserManager<Usuario> userManager,
                                   SignInManager<Usuario> signInManager,
-                                  IEmailSender emailSender,
                                   IResetarSenhaRepository resetarSenhaRepository)
         {
             _configuration = configuration;
             _userManager = userManager;
             _signInManager = signInManager;
-            _emailSender = emailSender;
             _resetarSenhaRepository = resetarSenhaRepository;
         }
 
@@ -49,7 +46,7 @@ namespace NetDeliveryAppData.Repositorio.Identity
         }
 
         public abstract Task<string> JWT(Usuario usuario);
-        public abstract Task<IdentityResult> ResetarSenha(Usuario usuario, string otp, string novaSenha);
-        public abstract Task OTPEmail(Usuario usuario, string email);
+        public abstract Task<IdentityResult> ResetarSenha(string email, string otp, string novaSenha);
+        public abstract Task<IdentityResult> OTPEmail(Usuario usuario, string email);
     }
 }
