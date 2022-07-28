@@ -37,7 +37,8 @@ namespace NetDeliveryAppServicos.Controllers
         {
             try
             {
-                return Ok(await _enderecoAplicacao.Encontrar(id));
+                var endereco = await _enderecoAplicacao.Encontrar(id);
+                return Ok(endereco);
             }
             catch (Exception ex)
             {
@@ -70,7 +71,7 @@ namespace NetDeliveryAppServicos.Controllers
             {
                 _enderecoAplicacao.Adicionar(enderecoDTO);
                 await _enderecoAplicacao.Salvar();
-                return Created("Get", new { id = enderecoDTO.Id });
+                return Created("Adicionar", new { Adicionado = enderecoDTO.Id });
             }
             catch (Exception ex)
             {

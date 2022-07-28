@@ -27,7 +27,7 @@ namespace NetDeliveryAppAplicacao
                 return _mapper.Map<CategoriaDTO>(await _categoriaRepository.Encontrar(id));
             }
             else
-                throw new Exception("Categoria não existe.");
+                throw new Exception("Esta categoria não existe.");
         }
 
         public async Task Editar(CategoriaDTO categoriaDTO)

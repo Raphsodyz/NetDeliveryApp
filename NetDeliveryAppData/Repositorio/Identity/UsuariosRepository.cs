@@ -108,8 +108,8 @@ namespace NetDeliveryAppData.Repositorio.Identity
                 GetSection("Email").Value));
             enviar.To.Add(MailboxAddress.Parse(email));
             enviar.Subject = "[NetDeliveryApp] Seu código de reset de senha";
-            string mensagem = "Olá" +
-                    email + "<br> Seu token para resetar a senha se encontra abaixo: <br><br><b>"
+            string mensagem = "Olá&nbsp;" +
+                    email + "<br> Seu token para resetar a senha se encontra abaixo: <br><b>"
                     + "<h2>" + otp + "</h2>" + "</b><br>Obrigado!<br>netdeliveryapp.com";
             enviar.Body = new TextPart(TextFormat.Html) { Text = mensagem };
 

@@ -35,7 +35,8 @@ namespace NetDeliveryAppServicos.Controllers
         {
             try
             {
-                return Ok(await _pedidoAplicacao.Encontrar(id));
+                var pedido = await _pedidoAplicacao.Encontrar(id);
+                return Ok(pedido);
             }
             catch (Exception ex)
             {
@@ -68,7 +69,7 @@ namespace NetDeliveryAppServicos.Controllers
             {
                 _pedidoAplicacao.Adicionar(pedidoDTO);
                 await _pedidoAplicacao.Salvar();
-                return Created("Get", new { id = pedidoDTO.Id });
+                return Created("Adicionar", new { Adicionado = pedidoDTO.Id });
             }
             catch (Exception ex)
             {

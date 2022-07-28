@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace NetDeliveryAppAplicacao.DTOs
@@ -43,9 +44,10 @@ namespace NetDeliveryAppAplicacao.DTOs
         public string? Foto { get; set; }
 
         [Display(Name = "Categoria")]
-        public virtual int? CategoriaId { get; set; }
-
         [Required(ErrorMessage = "O campo 'Categoria' não pode estar vazio.")]
+        [Range(0, int.MaxValue)]
+        public virtual int? CategoriaId { get; set; }
+        [JsonIgnore]
         public CategoriaDTO? Categoria { get; set; }
     }
 }

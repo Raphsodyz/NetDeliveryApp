@@ -50,7 +50,9 @@ namespace NetDeliveryAppAplicacao.DTOs
         [Required(ErrorMessage = "O campo 'Entregue' não pode estar vazio.")]
         [Display(Name = "Entregue?")]
         public bool Entregue { get; set; }
-        [JsonIgnore]
+        [Display(Name = "Categoria")]
+        [Range(0, int.MaxValue)]
+        [Required(ErrorMessage = "O campo usuário não pode estar vazio.")]
         public int UsuarioId { get; set; }
         [JsonIgnore]
         public Usuario usuario { get; set; }

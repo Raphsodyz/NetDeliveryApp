@@ -93,7 +93,7 @@ namespace NetDeliveryAppAplicacao
                 return IdentityResult.Success;
             }
             else
-                throw new Exception();
+                throw new Exception("Serviço indisponível no momento.");
         }
     }
 }

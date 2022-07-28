@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
+using System.Text.Json.Serialization;
 
 namespace NetDeliveryAppAplicacao.DTOs
 {
@@ -23,10 +23,10 @@ namespace NetDeliveryAppAplicacao.DTOs
         public decimal Valor { get; set; }
 
         [Display(Name = "Categoria")]
-        [RegularExpression("^[0-9]*$", ErrorMessage = "Digite somente números.")]
+        [RegularExpression("^[0-9]*$", ErrorMessage = "Insira um ID válido.")]
         public int? CategoriaId { get; set; }
 
-        [Required(ErrorMessage = "O campo 'Categoria' não pode estar vazio.")]
+        [JsonIgnore]
         public CategoriaDTO? Categoria { get; set; }
     }
 }

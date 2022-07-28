@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using NetDeliveryAppDominio.Entidades;
 using System.ComponentModel.DataAnnotations;
-
+using System.Text.Json.Serialization;
 
 namespace NetDeliveryAppDominio.Identity.Usuarios
 {
@@ -13,6 +13,7 @@ namespace NetDeliveryAppDominio.Identity.Usuarios
         public override string PasswordHash { get; set; }
         public string? Foto { get; set; } = null!;
         public int? EnderecoId { get; set; }
+        [JsonIgnore]
         public Endereco Endereco { get; set; }
         public List<UsuarioTipo> UsuariosTipo { get; set; }
     }

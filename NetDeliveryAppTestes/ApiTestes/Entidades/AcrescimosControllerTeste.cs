@@ -169,8 +169,7 @@ namespace NetDeliveryAppTestes.ApiTestes
                 Id = -5,
                 Nome = null,
                 Valor = -24,
-                CategoriaId = 0,
-                Categoria = null
+                CategoriaId = -4,
             };
 
             //Act

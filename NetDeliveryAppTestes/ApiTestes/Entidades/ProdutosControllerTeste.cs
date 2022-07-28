@@ -133,10 +133,10 @@ namespace ProdutosControllerTest.ApiTestes
             ProdutoDTO novoProduto = null;
 
             var repositoryTest = new Mock<IProdutoAplicacao>();
-            var pController = new ProdutosController(repositoryTest.Object);
+            var controller = new ProdutosController(repositoryTest.Object);
 
             //Act
-            var resultado = await pController.Adicionar(novoProduto);
+            var resultado = await controller.Adicionar(novoProduto);
 
             //Assert
             Assert.IsType<BadRequestObjectResult>(resultado);

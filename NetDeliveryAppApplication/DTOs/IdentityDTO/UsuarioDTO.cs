@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace NetDeliveryAppAplicacao.DTOs.IdentityDTO;
 
@@ -42,6 +43,9 @@ public class UsuarioDTO
     [DataType(DataType.ImageUrl)]
     [StringLength(5000, ErrorMessage = "Digite uma link válido.", MinimumLength = 2)]
     public string? Foto { get; set; }
+    [Required(ErrorMessage = "O campo endereço não pode estar vazio.")]
+    [Range(0, int.MaxValue)]
     public int? EnderecoId { get; set; }
+    [JsonIgnore]
     public EnderecoDTO Endereco { get; set; }
 }

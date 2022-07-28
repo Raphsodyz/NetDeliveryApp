@@ -1,9 +1,5 @@
-﻿using MailKit.Net.Smtp;
-using MailKit.Security;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MimeKit;
-using MimeKit.Text;
 using NetDeliveryAppAplicacao.DTOs.IdentityDTO;
 using NetDeliveryAppAplicacao.Interfaces.Identity;
 
@@ -85,14 +81,14 @@ namespace NetDeliveryAppServicos.Controllers
                 var usuario = await _usuariosAplicacao.UsuarioExiste(email);
                 if(usuario == null)
                 {
-                    return BadRequest("Esta conta não existe.");
+                    return NotFound("Esta conta não existe.");
                 }
                 await _usuariosAplicacao.OTPEmail(usuario, email);
                 return Ok("Token Enviado com sucesso no e-mail.");
             }
             catch(Exception ex)
             {
-                return BadRequest($"{ex.Message}");
+                return StatusCode(StatusCodes.Status500InternalServerError, $"{ex.Message}");
             }
         }
 

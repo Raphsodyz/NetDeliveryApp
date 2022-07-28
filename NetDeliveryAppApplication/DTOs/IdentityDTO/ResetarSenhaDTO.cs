@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace NetDeliveryAppAplicacao.DTOs.IdentityDTO;
 
@@ -28,6 +29,9 @@ public class ResetarSenhaDTO
     [Required(ErrorMessage = "O campo não pode estar vazio.")]
     [DataType(DataType.Date)]
     public DateTime Data { get; set; }
+    [Required(ErrorMessage = "O campo usuário não pode estar vazio.")]
+    [Range(0, int.MaxValue)]
     public int UsuarioId { get; set; }
+    [JsonIgnore]
     public UsuarioDTO Usuario { get; set; }
 }
