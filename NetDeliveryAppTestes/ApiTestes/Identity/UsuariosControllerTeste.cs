@@ -43,7 +43,7 @@ namespace NetDeliveryAppTestes.ApiTestes.Identity
             //Arrange
             var usuario = new LoginDTO()
             {
-                Email = "arthurvsr@gmail.com",
+                Email = "rfgergewrgwergwreg@gmail.com",
                 PasswordHash = "1234"
             };
 
@@ -66,7 +66,7 @@ namespace NetDeliveryAppTestes.ApiTestes.Identity
             //Arrange
             var usuario = new LoginDTO()
             {
-                Email = "arthurvsr@gmail.com",
+                Email = "rgergwergwrgwrg@gmail.com",
                 PasswordHash = "1234"
             };
 
@@ -91,7 +91,7 @@ namespace NetDeliveryAppTestes.ApiTestes.Identity
             {
                 UserName = "Arthur",
                 PhoneNumber = "999999999",
-                Email = "arthurvsr@gmail.com",
+                Email = "rgergwergwergwerg@gmail.com",
                 PasswordHash = "1234",
                 Foto = "wregergerg",
                 EnderecoId = 0,
@@ -133,7 +133,7 @@ namespace NetDeliveryAppTestes.ApiTestes.Identity
             {
                 UserName = "Arthur",
                 PhoneNumber = "999999999",
-                Email = "arthurvsr@gmail.com",
+                Email = "ergergwergwergwrg@gmail.com",
                 PasswordHash = "1234",
                 Foto = "wregergerg",
                 EnderecoId = 0,
@@ -264,6 +264,118 @@ namespace NetDeliveryAppTestes.ApiTestes.Identity
 
             //Act
             var resultado = await controller.EnviarCodigo(email);
+
+            //Assert
+            Assert.IsType<Microsoft.AspNetCore.Mvc.ObjectResult>(resultado);
+        }
+
+        [Fact]
+        public async Task ResetarSenha_SenhaResetadaComSucesso_RetornarOk()
+        {
+            //Arrange
+            var usuario = new Usuario()
+            {
+                UserName = "Arthur",
+                PhoneNumber = "999999999",
+                Email = "fgwergwergwegw@gmail.com",
+                PasswordHash = "1234",
+                Foto = "wregergerg",
+                EnderecoId = 0,
+                Endereco = new Endereco()
+            };
+
+            var identityTest = new Mock<IUsuariosAplicacao>();
+            identityTest.Setup(i => i.UsuarioExiste(usuario.Email))
+                .Returns(Task.FromResult(usuario));
+            identityTest.Setup(i => i.ResetarSenha(usuario.Email, It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(Task.FromResult(IdentityResult.Success));
+
+            var controller = new UsuariosController(identityTest.Object);
+
+            //Act
+            var resultado = await controller.ResetarSenha(usuario.Email, It.IsAny<string>(), It.IsAny<string>());
+
+            //Assert
+            Assert.IsType<Microsoft.AspNetCore.Mvc.OkObjectResult>(resultado);
+        }
+
+        [Fact]
+        public async Task ResetarSenha_EmailNãoEncontrado_RetornarBadRequest()
+        {
+            //Arrange
+            Usuario usuario = null;
+            string email = null;
+
+            var identityTest = new Mock<IUsuariosAplicacao>();
+            identityTest.Setup(i => i.UsuarioExiste(email))
+                .Returns(Task.FromResult(usuario));
+            identityTest.Setup(i => i.ResetarSenha(email, It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(Task.FromResult(IdentityResult.Failed()));
+
+            var controller = new UsuariosController(identityTest.Object);
+
+            //Act
+            var resultado = await controller.ResetarSenha(email, It.IsAny<string>(), It.IsAny<string>());
+
+            //Assert
+            Assert.IsType<Microsoft.AspNetCore.Mvc.BadRequestObjectResult>(resultado);
+        }
+
+        [Fact]
+        public async Task ResetarSenha_ServiçoIndisponível_Retornar500()
+        {
+            //Arrange
+            var usuario = new Usuario()
+            {
+                UserName = "Arthur",
+                PhoneNumber = "999999999",
+                Email = "fgwergwergwegw@gmail.com",
+                PasswordHash = "1234",
+                Foto = "wregergerg",
+                EnderecoId = 0,
+                Endereco = new Endereco()
+            };
+
+            var identityTest = new Mock<IUsuariosAplicacao>();
+            identityTest.Setup(i => i.UsuarioExiste(usuario.Email))
+                .Returns(Task.FromResult(usuario));
+            identityTest.Setup(i => i.ResetarSenha(usuario.Email, It.IsAny<string>(), It.IsAny<string>()))
+                .Returns(Task.FromResult(IdentityResult.Failed()));
+
+            var controller = new UsuariosController(identityTest.Object);
+
+            //Act
+            var resultado = await controller.ResetarSenha(usuario.Email, It.IsAny<string>(), It.IsAny<string>());
+
+            //Assert
+            Assert.IsType<Microsoft.AspNetCore.Mvc.BadRequestObjectResult>(resultado);
+        }
+
+        [Fact]
+        public async Task ResetarSenha_OTPExpirado_RetornarBadRequest()
+        {
+            //Arrange
+            var usuario = new Usuario()
+            {
+                UserName = "Arthur",
+                PhoneNumber = "999999999",
+                Email = "fgwergwergwegw@gmail.com",
+                PasswordHash = "1234",
+                Foto = "wregergerg",
+                EnderecoId = 0,
+                Endereco = new Endereco()
+            };
+
+            var identityTest = new Mock<IUsuariosAplicacao>();
+            identityTest.Setup(i => i.UsuarioExiste(usuario.Email))
+                .Throws<Exception>();
+            identityTest.Setup(i => i.ResetarSenha(usuario.Email, It.IsAny<string>(), It.IsAny<string>()))
+                .Throws<Exception>();
+
+            var controller = new UsuariosController(identityTest.Object);
+
+            //Act
+            var resultado = await controller.ResetarSenha(usuario.Email, It.IsAny<string>(), It.IsAny<string>());
 
             //Assert
             Assert.IsType<Microsoft.AspNetCore.Mvc.ObjectResult>(resultado);
